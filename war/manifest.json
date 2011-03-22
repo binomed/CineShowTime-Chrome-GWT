@@ -1,0 +1,19 @@
+{
+  "name": "CineShowTime for Chrome",
+  "version": "1.0",
+  "description": "The best way to get your showtimes.",
+  "app": {
+    "launch": {
+      "local_path": "CineShowTime_Chrome_GWT.html"
+    }
+  },
+  "omnibox": { "keyword" : "cine" },
+  "icons": {
+    "16": "images/icon_16.png",
+    "128": "images/icon_128.png"
+  },
+  "permissions": [
+    "unlimitedStorage",
+    "notifications"
+  ]
+}
