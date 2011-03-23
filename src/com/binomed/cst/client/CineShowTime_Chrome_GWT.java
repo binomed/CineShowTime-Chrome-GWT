@@ -81,13 +81,14 @@ public class CineShowTime_Chrome_GWT implements EntryPoint {
 				sendButton.setFocus(true);
 			}
 		});
-
+		
 		// Create a handler for the sendButton and nameField
 		class MyHandler implements ClickHandler, KeyUpHandler {
 			/**
 			 * Fired when the user clicks on the sendButton.
 			 */
 			public void onClick(ClickEvent event) {
+				Omnibox.alert("Hello friend");
 				sendNameToServer();
 			}
 
