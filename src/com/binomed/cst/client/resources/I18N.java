@@ -7,10 +7,16 @@ public interface I18N extends Constants {
 
 	public static final I18N instance = GWT.create(I18N.class);
 
+	// Header
+	String appName();
+
 	// Main panel
 	String theaterTabLabel();
 
 	String parametersTabLabel();
+
+	// Theater view
+	String addFavorites();
 
 	// Search panel
 	String locationLabel();

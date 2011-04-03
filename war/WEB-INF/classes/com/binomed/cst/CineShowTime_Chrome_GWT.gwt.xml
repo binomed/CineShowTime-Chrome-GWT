@@ -10,6 +10,9 @@
   <!-- <inherits name='com.google.gwt.user.theme.chrome.Chrome'/> -->
   <!-- <inherits name='com.google.gwt.user.theme.dark.Dark'/>     -->
 
+  <!-- Inherits modules -->
+  <inherits name='com.google.gwt.maps.GoogleMaps' />
+
   <!-- Specify the app entry point class.                         -->
   <entry-point class='com.binomed.cst.client.CineShowTime_Chrome_GWT'/>
 
