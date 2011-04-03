@@ -1,0 +1,54 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+			 xmlns:g="urn:import:com.google.gwt.user.client.ui"
+			 xmlns:searchCst="urn:import:com.binomed.cst.client.ui">
+	
+	<ui:with field="res" type="com.binomed.cst.client.resources.CstResource" />
+	<ui:with field="i18n" type="com.binomed.cst.client.resources.I18N" />
+	
+	<g:DockLayoutPanel unit="EM" styleName="{style.mainPanel}" >
+		<!-- Header -->
+		<g:north size='5'>
+			<g:HTMLPanel>
+				<h1>CineShowTime</h1>			
+			</g:HTMLPanel>
+		</g:north>
+		<!-- App Body -->
+		<g:center>
+			<g:TabLayoutPanel barHeight="2" barUnit="EM" ui:field="appBodyPanel">
+				<g:tab>
+					<g:customHeader><g:Label text="{i18n.theaterTabLabel}" /></g:customHeader>
+					<g:VerticalPanel styleName="{style.allWidth}">
+						<searchCst:SearchTheater />
+						<g:VerticalPanel ui:field="theatersContent"></g:VerticalPanel>
+					</g:VerticalPanel>
+				</g:tab>
+				<g:tab>
+					<g:customHeader><g:Label text="{i18n.parametersTabLabel}" /></g:customHeader>
+					<g:VerticalPanel ui:field="paramsContent" styleName="{style.allWidth}" />
+				</g:tab>		
+			</g:TabLayoutPanel>
+		</g:center>
+		<!-- Footer -->
+		<g:south size='1'>
+			<g:HorizontalPanel>
+				<g:HTMLPanel>links...</g:HTMLPanel>
+			</g:HorizontalPanel>
+		</g:south>
+	</g:DockLayoutPanel>
+	
+	<ui:style>
+		.mainPanel {
+			background-color: black;
+		    color: #FFFFFF;
+		    margin-left: 10%;
+		    margin-right: 10%;
+		}
+		
+		.allWidth {
+		    width: 100%;
+		}
+		
+	</ui:style>
+
+</ui:UiBinder> 
