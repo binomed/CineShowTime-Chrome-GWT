@@ -2,7 +2,7 @@ package com.binomed.cst.client.geolocation;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
-public class Geolocation {
+class Geolocation {
 
 	private static GeolocationCallback geoCallback;
 

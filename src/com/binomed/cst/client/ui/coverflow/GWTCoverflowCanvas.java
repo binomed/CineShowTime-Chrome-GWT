@@ -54,16 +54,19 @@ public final class GWTCoverflowCanvas {
 
 	public void setFrontGradient() {
 		canvas.getContext2d().translate(0, 0);
-		CanvasGradient gradient = canvas.getContext2d().createLinearGradient(0, 0, canvas.getCoordinateSpaceWidth() / 2, 0);
+		CanvasGradient gradient = canvas.getContext2d().createLinearGradient(0, 0,
+				canvas.getCoordinateSpaceWidth() / 2, 0);
 		gradient.addColorStop(1, "transparent");
 		gradient.addColorStop(0.1, Coverflow.BACKGROUND_COLOR);
 		canvas.getContext2d().setFillStyle(gradient);
 		canvas.getContext2d().fillRect(0, 0, canvas.getCoordinateSpaceWidth() / 2, canvas.getCoordinateSpaceHeight());
-		CanvasGradient gradient2 = canvas.getContext2d().createLinearGradient(canvas.getCoordinateSpaceWidth() / 2, 0, canvas.getCoordinateSpaceWidth(), 0);
+		CanvasGradient gradient2 = canvas.getContext2d().createLinearGradient(canvas.getCoordinateSpaceWidth() / 2, 0,
+				canvas.getCoordinateSpaceWidth(), 0);
 		gradient2.addColorStop(0.9, Coverflow.BACKGROUND_COLOR);
 		gradient2.addColorStop(0, "transparent");
 		canvas.getContext2d().setFillStyle(gradient2);
-		canvas.getContext2d().fillRect(canvas.getCoordinateSpaceWidth() / 2, 0, canvas.getCoordinateSpaceWidth(), canvas.getCoordinateSpaceHeight());
+		canvas.getContext2d().fillRect(canvas.getCoordinateSpaceWidth() / 2, 0, canvas.getCoordinateSpaceWidth(),
+				canvas.getCoordinateSpaceHeight());
 	}
 
 	public void setMouseMoveEvent(CoverflowMouseEvent event) {
