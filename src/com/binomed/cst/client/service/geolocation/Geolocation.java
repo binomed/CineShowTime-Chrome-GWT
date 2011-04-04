@@ -1,4 +1,4 @@
-package com.binomed.cst.client.geolocation;
+package com.binomed.cst.client.service.geolocation;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
@@ -12,9 +12,7 @@ class Geolocation {
 
 	/**
 	 * Constructor taking a callback managing responses and errors
-	 * 
-	 * @param callback
-	 *            GeolocationCallback
+	 * @param callback GeolocationCallback
 	 */
 	public Geolocation(GeolocationCallback callback) {
 		geoCallback = callback;
@@ -29,16 +27,14 @@ class Geolocation {
 		}
 
 		$wnd.navigator.geolocation.getCurrentPosition(
-		@com.binomed.cst.client.geolocation.Geolocation::geoLocationCallback(Lcom/binomed/cst/client/geolocation/Position;),
-		@com.binomed.cst.client.geolocation.Geolocation::geoLocationCallbackError(Lcom/google/gwt/core/client/JavaScriptObject;),
+		@com.binomed.cst.client.service.geolocation.Geolocation::geoLocationCallback(Lcom/binomed/cst/client/service/geolocation/Position;),
+		@com.binomed.cst.client.service.geolocation.Geolocation::geoLocationCallbackError(Lcom/google/gwt/core/client/JavaScriptObject;),
 		{enableHighAccuracy:true, maximumAge:60000});
 	}-*/;
 
 	/**
 	 * Execute callback when the location is returned
-	 * 
-	 * @param position
-	 *            Location position
+	 * @param position Location position
 	 */
 	private static void geoLocationCallback(Position position) {
 		geoCallback.onLocation(position);
@@ -46,9 +42,7 @@ class Geolocation {
 
 	/**
 	 * Execute callback when an error occured during geolocation
-	 * 
-	 * @param jso
-	 *            Error returned
+	 * @param jso Error returned
 	 */
 	private static void geoLocationCallbackError(JavaScriptObject jso) {
 		geoCallback.onError(jso);

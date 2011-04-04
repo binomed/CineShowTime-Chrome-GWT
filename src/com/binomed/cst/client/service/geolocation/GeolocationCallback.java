@@ -1,4 +1,4 @@
-package com.binomed.cst.client.geolocation;
+package com.binomed.cst.client.service.geolocation;
 
 import com.google.gwt.core.client.JavaScriptObject;
 

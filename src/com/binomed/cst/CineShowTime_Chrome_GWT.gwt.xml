@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module rename-to='cineshowtime_chrome_gwt'>
-  <!-- Inherit the core Web Toolkit stuff.                        -->
+  <!-- Inherit the core Web Toolkit stuff.  -->
   <inherits name='com.google.gwt.user.User'/>
+  <inherits name="com.google.gwt.http.HTTP" />
+  <inherits name="com.google.gwt.i18n.I18N"/>
+  <inherits name="com.google.gwt.resources.Resources" />
+  <inherits name="com.google.gwt.place.Place"/>
+  <inherits name="com.google.gwt.activity.Activity"/>
 
-  <!-- Inherit the default GWT style sheet.  You can change       -->
-  <!-- the theme of your GWT application by uncommenting          -->
-  <!-- any one of the following lines.                            -->
+  <!-- Inherit the default GWT style sheet.  -->
   <inherits name='com.google.gwt.user.theme.standard.Standard'/>
-  <!-- <inherits name='com.google.gwt.user.theme.chrome.Chrome'/> -->
-  <!-- <inherits name='com.google.gwt.user.theme.dark.Dark'/>     -->
 
   <!-- Inherits modules -->
   <inherits name='com.google.gwt.maps.GoogleMaps' />
@@ -18,6 +19,5 @@
 
   <!-- Specify the paths for translatable code                    -->
   <source path='client'/>
-  <source path='shared'/>
 
 </module>
