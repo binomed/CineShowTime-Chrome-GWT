@@ -5,6 +5,7 @@ import java.util.Map;
 import com.binomed.cineshowtime.client.service.ws.callback.ImdbRequestCallback;
 import com.binomed.cineshowtime.client.service.ws.callback.MovieRequestCallback;
 import com.binomed.cineshowtime.client.service.ws.callback.NearTheatersRequestCallback;
+import com.binomed.cineshowtime.parsing.ParserNearResultDomXml;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
@@ -60,8 +61,8 @@ public class CineShowTimeService extends AbstractCineShowTimeService {
 				// }
 				// // Execute custom callback
 				// callback.onResponse(handler.getNearRespBean());
-				callback.onResponse(response.getStatusText() + " - " + response.getHeadersAsString() + " / " + response.getText());
-				// callback.onNearResp(ParserNearResultDomXml.parseResult(response.getText()));
+				// callback.onResponse(response.getStatusText() + " - " + response.getHeadersAsString() + " / " + response.getText());
+				callback.onNearResp(ParserNearResultDomXml.parseResult(response.getText()));
 
 			}
 

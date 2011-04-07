@@ -1,6 +1,5 @@
 package com.binomed.cineshowtime.model;
 
-import java.io.InputStream;
 import java.util.List;
 
 public class MovieBean {
@@ -32,8 +31,6 @@ public class MovieBean {
 	private String urlImdb;
 
 	private String urlWikipedia;
-
-	private InputStream imgStream;
 
 	private Double rate;
 
@@ -139,14 +136,6 @@ public class MovieBean {
 
 	public void setUrlImdb(String urlImdb) {
 		this.urlImdb = urlImdb;
-	}
-
-	public InputStream getImgStream() {
-		return imgStream;
-	}
-
-	public void setImgStream(InputStream imgStream) {
-		this.imgStream = imgStream;
 	}
 
 	public Double getRate() {

@@ -1,5 +1,6 @@
 package com.binomed.cineshowtime.client.service.ws.callback;
 
+import com.binomed.cineshowtime.model.NearResp;
 
 public interface NearTheatersRequestCallback {
 
@@ -8,6 +9,6 @@ public interface NearTheatersRequestCallback {
 
 	void onError(Throwable exception);
 
-	// void onNearResp(NearResp nearResp);
+	void onNearResp(NearResp nearResp);
 
 }

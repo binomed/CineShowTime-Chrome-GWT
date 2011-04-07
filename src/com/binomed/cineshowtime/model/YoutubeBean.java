@@ -1,6 +1,5 @@
 package com.binomed.cineshowtime.model;
 
-import java.io.InputStream;
 
 public class YoutubeBean {
 
@@ -9,8 +8,6 @@ public class YoutubeBean {
 	private String urlImg;
 
 	private String videoName;
-
-	private InputStream imgStream;
 
 	public YoutubeBean() {
 		super();
@@ -38,14 +35,6 @@ public class YoutubeBean {
 
 	public void setVideoName(String videoName) {
 		this.videoName = videoName;
-	}
-
-	public InputStream getImgStream() {
-		return imgStream;
-	}
-
-	public void setImgStream(InputStream imgStream) {
-		this.imgStream = imgStream;
 	}
 
 }

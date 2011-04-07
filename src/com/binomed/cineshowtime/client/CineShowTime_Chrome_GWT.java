@@ -8,6 +8,7 @@ import com.binomed.cineshowtime.client.service.geolocation.UserGeolocationCallba
 import com.binomed.cineshowtime.client.service.ws.CineShowTimeService;
 import com.binomed.cineshowtime.client.service.ws.callback.NearTheatersRequestCallback;
 import com.binomed.cineshowtime.client.ui.MainWindow;
+import com.binomed.cineshowtime.model.NearResp;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.maps.client.geocode.Placemark;
@@ -50,11 +51,11 @@ public class CineShowTime_Chrome_GWT implements EntryPoint {
 				Window.alert("Error=" + exception.getMessage());
 			}
 
-			// @Override
-			// public void onNearResp(NearResp nearResp) {
-			// Window.alert(nearResp.getTheaterList().get(0).getTheaterName());
-			//
-			// }
+			@Override
+			public void onNearResp(NearResp nearResp) {
+				Window.alert(nearResp.getTheaterList().get(0).getTheaterName());
+
+			}
 		});
 	}
 
