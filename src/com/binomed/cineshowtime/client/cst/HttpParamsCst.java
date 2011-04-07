@@ -1,4 +1,4 @@
-package com.binomed.cineshowtime.cst;
+package com.binomed.cineshowtime.client.cst;
 
 public class HttpParamsCst {
 

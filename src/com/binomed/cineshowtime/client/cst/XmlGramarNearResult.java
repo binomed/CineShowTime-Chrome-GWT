@@ -1,8 +1,9 @@
-package com.binomed.cineshowtime.cst;
+package com.binomed.cineshowtime.client.cst;
 
-public interface XmlGramarMovieResult {
+public interface XmlGramarNearResult {
 
-	public static final String NODE_MOVIE_RESP = "MOVIE_RESP"; //$NON-NLS-1$
+	public static final String NODE_NEAR_RESP = "NEAR_RESP"; //$NON-NLS-1$
+	public static final String NODE_MOVIE_LIST = "MOVIE_LIST"; //$NON-NLS-1$
 	public static final String NODE_MOVIE = "MOVIE"; //$NON-NLS-1$
 	public static final String NODE_THEATER_LIST = "THEATER_LIST"; //$NON-NLS-1$
 	public static final String NODE_THEATER = "THEATER"; //$NON-NLS-1$
@@ -12,6 +13,7 @@ public interface XmlGramarMovieResult {
 
 	public static final String ATTR_ID = "ID"; //$NON-NLS-1$
 	public static final String ATTR_MORE_RESULTS = "MORE_RESULTS"; //$NON-NLS-1$
+	public static final String ATTR_NEAR_RESP = "NEAR_RESP"; //$NON-NLS-1$
 	public static final String ATTR_IMDB_ID = "IMDB_ID"; //$NON-NLS-1$
 	public static final String ATTR_RATE = "RATE"; //$NON-NLS-1$
 	public static final String ATTR_MOVIE_NAME = "MOVIE_NAME"; //$NON-NLS-1$

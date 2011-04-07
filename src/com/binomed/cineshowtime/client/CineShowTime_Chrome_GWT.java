@@ -3,12 +3,12 @@ package com.binomed.cineshowtime.client;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.binomed.cineshowtime.client.model.NearResp;
 import com.binomed.cineshowtime.client.service.geolocation.UserGeolocation;
 import com.binomed.cineshowtime.client.service.geolocation.UserGeolocationCallback;
 import com.binomed.cineshowtime.client.service.ws.CineShowTimeService;
 import com.binomed.cineshowtime.client.service.ws.callback.NearTheatersRequestCallback;
 import com.binomed.cineshowtime.client.ui.MainWindow;
-import com.binomed.cineshowtime.model.NearResp;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.maps.client.geocode.Placemark;
