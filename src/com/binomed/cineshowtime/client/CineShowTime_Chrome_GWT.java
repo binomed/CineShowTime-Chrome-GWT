@@ -53,7 +53,7 @@ public class CineShowTime_Chrome_GWT implements EntryPoint {
 
 			@Override
 			public void onNearResp(NearResp nearResp) {
-				Window.alert(nearResp.getTheaterList().get(0).getTheaterName());
+				Window.alert(nearResp.getTheaterList().get(3).getTheaterName());
 
 			}
 		});

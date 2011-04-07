@@ -10,7 +10,7 @@ public class AbstractParser implements XmlGramarNearResult {
 	protected static String getString(Node node, String attr) {
 		String result = null;
 		if (node != null && ((Element) node).getAttribute(attr) != null) {
-			result = URL.decode(((Element) node).getAttribute(attr));
+			result = URL.decodeQueryString(((Element) node).getAttribute(attr));
 		}
 		return result;
 	}
