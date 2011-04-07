@@ -1,3 +1,6 @@
 
 /test-classes
 /test
+/war/WEB-INF/classes
+/war/WEB-INF/deploy
+/war/cineshowtime_chrome_gwt
