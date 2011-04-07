@@ -15,13 +15,15 @@
 		</g:north>
 		<!-- App Body -->
 		<g:center>			
-			<g:TabLayoutPanel barHeight="2" barUnit="EM" ui:field="appBodyPanel">
-				<g:tab>
+			<g:TabLayoutPanel barHeight="2" width="100%" height="100%" barUnit="EM" ui:field="appBodyPanel">
+				<g:tab >
 					<g:customHeader><g:Label text="{i18n.theaterTabLabel}" /></g:customHeader>
-					<g:VerticalPanel styleName="{style.allWidth}">
-						<cst:SearchTheater />
-						<cst:TheaterView />
-					</g:VerticalPanel>
+					<g:ScrollPanel>
+						<g:VerticalPanel>
+							<cst:SearchTheater />
+							<g:VerticalPanel ui:field="theatersContent" />
+						</g:VerticalPanel>
+					</g:ScrollPanel>
 				</g:tab>
 				<g:tab>
 					<g:customHeader><g:Label text="{i18n.parametersTabLabel}" /></g:customHeader>
@@ -30,7 +32,7 @@
 			</g:TabLayoutPanel>
 		</g:center>
 		<!-- Footer -->
-		<g:south size='1'>
+		<g:south size='2'>
 			<g:HorizontalPanel>
 				<g:HTMLPanel>links...</g:HTMLPanel>
 			</g:HorizontalPanel>

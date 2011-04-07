@@ -5,7 +5,7 @@ import com.google.gwt.core.client.JavaScriptObject;
 /**
  * Implementation of a native position returned by geolocation
  */
-public final class Position extends JavaScriptObject {
+final class Position extends JavaScriptObject {
 
 	protected Position() {
 	}

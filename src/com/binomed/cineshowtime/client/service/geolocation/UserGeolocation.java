@@ -1,5 +1,6 @@
 package com.binomed.cineshowtime.client.service.geolocation;
 
+import com.binomed.cineshowtime.client.cst.GoogleKeys;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.maps.client.Maps;
@@ -21,7 +22,7 @@ public class UserGeolocation {
 
 	public void getUserGeolocation(final UserGeolocationCallback callback) {
 		// Asynchronously loads the Maps API.
-		Maps.loadMapsApi("MapKeyHere!!!", "2", false, new Runnable() {
+		Maps.loadMapsApi(GoogleKeys.GOOGLE_MAPS_KEY, "2", false, new Runnable() {
 			@Override
 			public void run() {
 				final Geocoder geocoder = new Geocoder();

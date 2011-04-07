@@ -7,15 +7,17 @@ import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.URL;
 
-public class AbstractCineShowTimeService {
-
-	private static final String APP_ENGINE_URL = "http://9.binomed-cineshowtime-chrome.appspot.com";
+class AbstractCineShowTimeWS implements CineShowTimeWSParams {
 
 	/**
 	 * Execute a GET request to the CineShowTime server
-	 * @param urlContext the CineShowTime URL Context
-	 * @param params URL Context parameters
-	 * @param requestCallback Callback
+	 * 
+	 * @param urlContext
+	 *            the CineShowTime URL Context
+	 * @param params
+	 *            URL Context parameters
+	 * @param requestCallback
+	 *            Callback
 	 */
 	protected void doGet(String urlContext, Map<String, String> params, RequestCallback requestCallback) {
 		// Build the full URL
@@ -37,7 +39,9 @@ public class AbstractCineShowTimeService {
 
 	/**
 	 * Format and encode URL Params
-	 * @param params URL Params
+	 * 
+	 * @param params
+	 *            URL Params
 	 * @return URL Parameters encoded
 	 */
 	private String getFormatedParams(Map<String, String> params) {

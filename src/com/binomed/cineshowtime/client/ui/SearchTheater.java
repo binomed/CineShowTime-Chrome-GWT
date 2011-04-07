@@ -27,9 +27,8 @@ public class SearchTheater extends Composite {
 		// Initialization
 		initWidget(uiBinder.createAndBindUi(this));
 		// Disclosure panel
-		searchPanel.setHeader(new HTML("Rechercher"));
+		searchPanel.setHeader(new HTML("<font color=\"#FFFFFF\"><b>Rechercher</b></font>"));
 		searchPanel.setAnimationEnabled(true);
-		searchPanel.setOpen(true);
 	}
 
 	@UiHandler("searchButton")

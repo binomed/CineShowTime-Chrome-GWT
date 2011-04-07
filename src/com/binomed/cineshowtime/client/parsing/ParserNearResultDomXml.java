@@ -18,6 +18,7 @@ import com.google.gwt.xml.client.XMLParser;
 public class ParserNearResultDomXml extends AbstractParser {
 
 	public static NearResp parseResult(String response) {
+
 		NearResp nearResp = new NearResp();
 
 		Document messageDom = XMLParser.parse(response);

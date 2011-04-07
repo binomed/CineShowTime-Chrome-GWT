@@ -1,13 +1,7 @@
 package com.binomed.cineshowtime.client;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import com.binomed.cineshowtime.client.model.NearResp;
 import com.binomed.cineshowtime.client.service.geolocation.UserGeolocation;
 import com.binomed.cineshowtime.client.service.geolocation.UserGeolocationCallback;
-import com.binomed.cineshowtime.client.service.ws.CineShowTimeService;
-import com.binomed.cineshowtime.client.service.ws.callback.NearTheatersRequestCallback;
 import com.binomed.cineshowtime.client.ui.MainWindow;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.JsArray;
@@ -30,33 +24,8 @@ public class CineShowTime_Chrome_GWT implements EntryPoint {
 		MainWindow mainWindow = new MainWindow();
 		RootLayoutPanel.get().add(mainWindow);
 
-		testHttpCall();
-		testUserLocation();
+		// testUserLocation();
 
-	}
-
-	private void testHttpCall() {
-		CineShowTimeService service = CineShowTimeService.getInstance();
-		Map<String, String> params = new HashMap<String, String>();
-		params.put("lat", String.valueOf(47.216842));
-		params.put("long", String.valueOf(-1.556744));
-		service.getNearTheaters(params, new NearTheatersRequestCallback() {
-			@Override
-			public void onResponse(String response) {
-				Window.alert(response);
-			}
-
-			@Override
-			public void onError(Throwable exception) {
-				Window.alert("Error=" + exception.getMessage());
-			}
-
-			@Override
-			public void onNearResp(NearResp nearResp) {
-				Window.alert(nearResp.getTheaterList().get(3).getTheaterName());
-
-			}
-		});
 	}
 
 	private void testUserLocation() {

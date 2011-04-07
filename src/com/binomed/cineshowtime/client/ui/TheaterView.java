@@ -1,10 +1,19 @@
 package com.binomed.cineshowtime.client.ui;
 
+import java.util.Map;
+
+import com.binomed.cineshowtime.client.cst.GoogleKeys;
+import com.binomed.cineshowtime.client.model.MovieBean;
+import com.binomed.cineshowtime.client.model.TheaterBean;
 import com.binomed.cineshowtime.client.ui.coverflow.Coverflow;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.JsArray;
 import com.google.gwt.maps.client.MapWidget;
 import com.google.gwt.maps.client.Maps;
 import com.google.gwt.maps.client.control.SmallMapControl;
+import com.google.gwt.maps.client.geocode.Geocoder;
+import com.google.gwt.maps.client.geocode.LocationCallback;
+import com.google.gwt.maps.client.geocode.Placemark;
 import com.google.gwt.maps.client.geom.LatLng;
 import com.google.gwt.maps.client.overlay.Marker;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -33,16 +42,13 @@ public class TheaterView extends Composite {
 	@UiField
 	VerticalPanel theaterCoverflow;
 
-	public TheaterView() {
+	public TheaterView(final TheaterBean theater, Map<String, MovieBean> movies) {
 		// Initialization
 		initWidget(uiBinder.createAndBindUi(this));
 		// Disclosure panel
-		HTML headerHtml = new HTML("Nom du cinéma - Lieu");
-		headerHtml.addStyleName("color:#FFFFFF");
-		// headerHtml.addStyleName("color:FFFFFF")setStyleName("style.panel");
+		HTML headerHtml = new HTML("<font color=\"#FFFFFF\">" + theater.getTheaterName() + "</font>");
 		theaterPanel.setHeader(headerHtml);
 		theaterPanel.setAnimationEnabled(true);
-		theaterPanel.setOpen(true);
 
 		// Images url to load in the coverflow
 		final String[] imagesUrls = new String[] { "http://www.google.fr/movies/image?tbn=5fb488cff09bee9a&size=100x150", //
@@ -54,35 +60,52 @@ public class TheaterView extends Composite {
 				"http://www.google.fr/movies/image?tbn=afa72d7f8fb104f8&size=100x150" };
 
 		// Update theater informations
-		theaterName.setText("Multiplexe Gaumont Nantes");
-		theaterPlace.setText("12 place du Commerce, 44000 Nantes");
-		theaterPhone.setText("08 92 68 75 55");
+		theaterName.setText(theater.getTheaterName());
+		theaterPhone.setText(theater.getPhoneNumber());
+		if (theater.getPlace() != null) {
+			theaterPlace.setText(theater.getPlace().getSearchQuery());
 
-		// Asynchronously loads the Maps API.
-		Maps.loadMapsApi("MapKeyHere!!!", "2", false, new Runnable() {
+			// Asynchronously loads the Maps API.
+			Maps.loadMapsApi(GoogleKeys.GOOGLE_MAPS_KEY, "2", false, new Runnable() {
+				@Override
+				public void run() {
+					getAndBuildMapTheater(theater.getPlace().getSearchQuery());
+				}
+			});
+
+			// Add the coverflow
+			Coverflow coverflow = new Coverflow(800, 300);
+			coverflow.init(imagesUrls);
+			theaterCoverflow.add(coverflow.getCanvas());
+		}
+	}
+
+	private void getAndBuildMapTheater(String address) {
+		final Geocoder geocoder = new Geocoder();
+		geocoder.getLocations(address, new LocationCallback() {
 			@Override
-			public void run() {
-				buildMapUi();
+			public void onSuccess(JsArray<Placemark> locations) {
+				if (locations != null && locations.length() > 0) {
+					// Open a map centered on Theater
+					final LatLng theaterLocalisation = locations.get(0).getPoint();
+					final MapWidget map = new MapWidget(theaterLocalisation, 2);
+					map.setSize("300px", "200px");
+					map.setZoomLevel(16);
+					// Add some controls for the zoom level
+					map.addControl(new SmallMapControl());
+					// Add a marker
+					map.addOverlay(new Marker(theaterLocalisation));
+					theaterMap.add(map);
+				}
+			}
+
+			@Override
+			public void onFailure(int statusCode) {
+				// TODO Auto-generated method stub
+
 			}
 		});
 
-		// Add the coverflow
-		Coverflow coverflow = new Coverflow(800, 300);
-		coverflow.init(imagesUrls);
-		theaterCoverflow.add(coverflow.getCanvas());
-	}
-
-	private void buildMapUi() {
-		// Open a map centered on Theater
-		LatLng theaterLocalisation = LatLng.newInstance(47.212973, -1.558114);
-		final MapWidget map = new MapWidget(theaterLocalisation, 2);
-		map.setSize("300px", "200px");
-		map.setZoomLevel(16);
-		// Add some controls for the zoom level
-		map.addControl(new SmallMapControl());
-		// Add a marker
-		map.addOverlay(new Marker(theaterLocalisation));
-		theaterMap.add(map);
 	}
 
 	interface TheaterViewUiBinder extends UiBinder<Widget, TheaterView> {
