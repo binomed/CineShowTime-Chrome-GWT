@@ -10,7 +10,10 @@
 		<!-- Header -->
 		<g:north size='5'>
 			<g:HTMLPanel>
-				<h1>CineShowTime</h1>			
+				<p align="center"><!--  -->
+				<g:Image resource='{res.Icone_512_512}' width="48px" height="48px" /><g:Image resource='{res.logo}' />
+				</p>
+							
 			</g:HTMLPanel>
 		</g:north>
 		<!-- App Body -->

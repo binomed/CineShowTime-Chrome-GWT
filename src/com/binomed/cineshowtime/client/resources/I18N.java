@@ -31,4 +31,14 @@ public interface I18N extends Constants {
 
 	String favoriteLink();
 
+	// Movie view
+
+	String imdbLink();
+
+	String groupResume();
+
+	String groupBA();
+
+	String groupCritiques();
+
 }

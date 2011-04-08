@@ -6,6 +6,7 @@ import com.binomed.cineshowtime.client.cst.GoogleKeys;
 import com.binomed.cineshowtime.client.model.MovieBean;
 import com.binomed.cineshowtime.client.model.TheaterBean;
 import com.binomed.cineshowtime.client.ui.coverflow.Coverflow;
+import com.binomed.cineshowtime.client.ui.coverflow.IMovieOpen;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.maps.client.MapWidget;
@@ -42,7 +43,7 @@ public class TheaterView extends Composite {
 	@UiField
 	VerticalPanel theaterCoverflow;
 
-	public TheaterView(final TheaterBean theater, Map<String, MovieBean> movies) {
+	public TheaterView(final TheaterBean theater, Map<String, MovieBean> movies, IMovieOpen movieOpenListener) {
 		// Initialization
 		initWidget(uiBinder.createAndBindUi(this));
 		// Disclosure panel
@@ -74,7 +75,7 @@ public class TheaterView extends Composite {
 			});
 
 			// Add the coverflow
-			Coverflow coverflow = new Coverflow(800, 300);
+			Coverflow coverflow = new Coverflow(800, 300, theater, movieOpenListener);
 			coverflow.init(imagesUrls);
 			theaterCoverflow.add(coverflow.getCanvas());
 		}

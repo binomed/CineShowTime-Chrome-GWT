@@ -1,9 +1,11 @@
 package com.binomed.cineshowtime.client.ui;
 
+import com.binomed.cineshowtime.client.model.MovieBean;
 import com.binomed.cineshowtime.client.model.NearResp;
 import com.binomed.cineshowtime.client.model.TheaterBean;
 import com.binomed.cineshowtime.client.service.ws.CineShowTimeWS;
 import com.binomed.cineshowtime.client.service.ws.callback.NearTheatersRequestCallback;
+import com.binomed.cineshowtime.client.ui.coverflow.IMovieOpen;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -24,6 +26,8 @@ public class MainWindow extends Composite {
 	@UiField
 	VerticalPanel theatersContent;
 
+	private NearResp nearRespTmp;
+
 	public MainWindow() {
 		// Initialization
 		initWidget(uiBinder.createAndBindUi(this));
@@ -41,8 +45,9 @@ public class MainWindow extends Composite {
 			@Override
 			public void onNearResp(NearResp nearResp) {
 				if (nearResp != null) {
+					nearRespTmp = nearResp;
 					for (TheaterBean theater : nearResp.getTheaterList()) {
-						theatersContent.add(new TheaterView(theater, nearResp.getMapMovies()));
+						theatersContent.add(new TheaterView(theater, nearResp.getMapMovies(), listener));
 					}
 				}
 			}
@@ -53,6 +58,18 @@ public class MainWindow extends Composite {
 			}
 		});
 	}
+
+	private IMovieOpen listener = new IMovieOpen() {
+
+		@Override
+		public void movieOpen(TheaterBean theater, MovieBean movie) {
+			movie = nearRespTmp.getMapMovies().values().iterator().next();
+			MovieView movieView = new MovieView(theater, movie);
+			appBodyPanel.add(movieView, movie.getMovieName());
+			appBodyPanel.selectTab(movieView);
+		}
+
+	};
 
 	interface MainWindowUiBinder extends UiBinder<Widget, MainWindow> {
 	}

@@ -1,7 +1,7 @@
 package com.binomed.cineshowtime.client.ui.coverflow;
 
+import com.binomed.cineshowtime.client.model.TheaterBean;
 import com.google.gwt.dom.client.ImageElement;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 
 public class Coverflow {
@@ -23,14 +23,21 @@ public class Coverflow {
 	/** index of the centered cover */
 	private static int indexImageCentered;
 
-	public Coverflow(int width, int height) {
+	private IMovieOpen movieOpenListener;
+	private TheaterBean curentTheater;
+
+	public Coverflow(int width, int height, TheaterBean curentTheater, IMovieOpen movieOpenListener) {
 		coverflowCanvas = new GWTCoverflowCanvas(width, height);
 		coverflowCenterX = width / 2;
+		this.movieOpenListener = movieOpenListener;
+		this.curentTheater = curentTheater;
 	}
 
 	/**
 	 * Initialize the coverflow with images URLs
-	 * @param imagesUrls Images URLs
+	 * 
+	 * @param imagesUrls
+	 *            Images URLs
 	 */
 	public void init(String[] imagesUrls) {
 		// Add coverflow move listener
@@ -46,8 +53,9 @@ public class Coverflow {
 						centerCover(indexSelectedImg);
 					}
 				} else {
+					movieOpenListener.movieOpen(curentTheater, null);
 					// Show the movie details
-					Window.alert("Show movie");
+					// Window.alert("Show movie");
 				}
 			}
 
@@ -80,8 +88,11 @@ public class Coverflow {
 	/**
 	 * Animate the coverflow moves <br/>
 	 * http://www.html5canvastutorials.com/advanced/html5-canvas-linear-motion-animation/
-	 * @param direction Direction of the coverflow
-	 * @param distance Distance to animate
+	 * 
+	 * @param direction
+	 *            Direction of the coverflow
+	 * @param distance
+	 *            Distance to animate
 	 */
 	private void animateCoverflow(final int direction, final int distance) {
 		final int firstLeftX = covers[0].getLeftX();
