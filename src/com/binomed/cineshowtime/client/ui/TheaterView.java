@@ -1,14 +1,24 @@
 package com.binomed.cineshowtime.client.ui;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.binomed.cineshowtime.client.cst.GoogleKeys;
+import com.binomed.cineshowtime.client.cst.HttpParamsCst;
 import com.binomed.cineshowtime.client.model.MovieBean;
+import com.binomed.cineshowtime.client.model.ProjectionBean;
 import com.binomed.cineshowtime.client.model.TheaterBean;
+import com.binomed.cineshowtime.client.resources.CstResource;
+import com.binomed.cineshowtime.client.service.ws.CineShowTimeWS;
+import com.binomed.cineshowtime.client.service.ws.callback.ImdbRequestCallback;
 import com.binomed.cineshowtime.client.ui.coverflow.Coverflow;
 import com.binomed.cineshowtime.client.ui.coverflow.IMovieOpen;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JsArray;
+import com.google.gwt.event.logical.shared.OpenEvent;
+import com.google.gwt.event.logical.shared.OpenHandler;
+import com.google.gwt.http.client.URL;
 import com.google.gwt.maps.client.MapWidget;
 import com.google.gwt.maps.client.Maps;
 import com.google.gwt.maps.client.control.SmallMapControl;
@@ -43,22 +53,83 @@ public class TheaterView extends Composite {
 	@UiField
 	VerticalPanel theaterCoverflow;
 
-	public TheaterView(final TheaterBean theater, Map<String, MovieBean> movies, IMovieOpen movieOpenListener) {
+	private boolean firstOpen = true;
+
+	public TheaterView(final TheaterBean theater, final Map<String, MovieBean> movies, final IMovieOpen movieOpenListener) {
 		// Initialization
 		initWidget(uiBinder.createAndBindUi(this));
 		// Disclosure panel
 		HTML headerHtml = new HTML("<font color=\"#FFFFFF\">" + theater.getTheaterName() + "</font>");
 		theaterPanel.setHeader(headerHtml);
 		theaterPanel.setAnimationEnabled(true);
+		theaterPanel.addOpenHandler(new OpenHandler<DisclosurePanel>() {
 
-		// Images url to load in the coverflow
-		final String[] imagesUrls = new String[] { "http://www.google.fr/movies/image?tbn=5fb488cff09bee9a&size=100x150", //
-				"http://www.google.fr/movies/image?tbn=6f9e9a2fd2f45c86&size=100x150", //
-				"http://www.google.fr/movies/image?tbn=272babc86fbdee70&size=100x150", //
-				"http://www.google.fr/movies/image?tbn=a6526f9c6231998c&size=100x150", //
-				"http://www.google.fr/movies/image?tbn=78ff8d3e5f3c2f93&size=100x150", //
-				"http://www.google.fr/movies/image?tbn=4456a070bd91e0f3&size=100x150", //
-				"http://www.google.fr/movies/image?tbn=afa72d7f8fb104f8&size=100x150" };
+			@Override
+			public void onOpen(OpenEvent<DisclosurePanel> event) {
+				if (firstOpen) {
+					CineShowTimeWS service = CineShowTimeWS.getInstance();
+					// Add the coverflow
+					final Coverflow coverflow = new Coverflow(800, 300, theater, movieOpenListener);
+
+					// Images url to load in the coverflow
+					// final String[] imagesUrls = new String[] { "http://www.google.fr/movies/image?tbn=5fb488cff09bee9a&size=100x150", //
+					// "http://www.google.fr/movies/image?tbn=6f9e9a2fd2f45c86&size=100x150", //
+					// "http://www.google.fr/movies/image?tbn=272babc86fbdee70&size=100x150", //
+					// "http://www.google.fr/movies/image?tbn=a6526f9c6231998c&size=100x150", //
+					// "http://www.google.fr/movies/image?tbn=78ff8d3e5f3c2f93&size=100x150", //
+					// "http://www.google.fr/movies/image?tbn=4456a070bd91e0f3&size=100x150", //
+					// "http://www.google.fr/movies/image?tbn=afa72d7f8fb104f8&size=100x150" };
+					final String[] imagesUrls = new String[theater.getMovieMap().size()];
+					MovieBean movieTmp = null;
+					int i = 0;
+					Map<String, String> params = new HashMap<String, String>();
+					final Map<String, Integer> mapMovieIndex = new HashMap<String, Integer>();
+					// final String ip = InetAddress.getLocalHost().getHostAddress();
+					final String ip = "193.253.198.44"; // TODO à débouchonner
+					for (java.util.Map.Entry<String, List<ProjectionBean>> entryMovie : theater.getMovieMap().entrySet()) {
+						movieTmp = service.getMovie(entryMovie.getKey());
+						mapMovieIndex.put(entryMovie.getKey(), i);
+						if (movieTmp == null) {
+							movieTmp = movies.get(entryMovie.getKey());
+							params.clear();
+							params.put(HttpParamsCst.PARAM_IP, ip);
+							params.put(HttpParamsCst.PARAM_MOVIE_CUR_LANG_NAME, URL.encode(movieTmp.getMovieName()));
+							params.put(HttpParamsCst.PARAM_MOVIE_NAME, URL.encode(movieTmp.getEnglishMovieName()));
+							params.put(HttpParamsCst.PARAM_LANG, "FR"); // TODO à débouchonner
+							params.put(HttpParamsCst.PARAM_PLACE, URL.encode("Nantes"));// TODO à débouchonner
+							imagesUrls[i] = CstResource.instance.no_poster().getURL();
+
+							service.requestImdbInfo(params, movieTmp, new ImdbRequestCallback() {
+
+								@Override
+								public void onResponse(String response) {
+									// TODO Auto-generated method stub
+
+								}
+
+								@Override
+								public void onError(Throwable exception) {
+									// TODO Auto-generated method stub
+
+								}
+
+								@Override
+								public void onMovieResp(MovieBean movieBean) {
+									coverflow.refresh(mapMovieIndex.get(movieBean.getId()), movieBean.getUrlImg());
+
+								}
+							});
+						} else {
+							imagesUrls[i] = movieTmp.getUrlImg();
+						}
+						i++;
+					}
+					coverflow.init(imagesUrls);
+					theaterCoverflow.add(coverflow.getCanvas());
+
+				}
+			}
+		});
 
 		// Update theater informations
 		theaterName.setText(theater.getTheaterName());
@@ -74,10 +145,6 @@ public class TheaterView extends Composite {
 				}
 			});
 
-			// Add the coverflow
-			Coverflow coverflow = new Coverflow(800, 300, theater, movieOpenListener);
-			coverflow.init(imagesUrls);
-			theaterCoverflow.add(coverflow.getCanvas());
 		}
 	}
 

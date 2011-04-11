@@ -2,6 +2,7 @@ package com.binomed.cineshowtime.client.ui.coverflow;
 
 import com.binomed.cineshowtime.client.model.TheaterBean;
 import com.google.gwt.dom.client.ImageElement;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 
 public class Coverflow {
@@ -24,13 +25,13 @@ public class Coverflow {
 	private static int indexImageCentered;
 
 	private IMovieOpen movieOpenListener;
-	private TheaterBean curentTheater;
+	private TheaterBean currentTheater;
 
 	public Coverflow(int width, int height, TheaterBean curentTheater, IMovieOpen movieOpenListener) {
 		coverflowCanvas = new GWTCoverflowCanvas(width, height);
 		coverflowCenterX = width / 2;
 		this.movieOpenListener = movieOpenListener;
-		this.curentTheater = curentTheater;
+		this.currentTheater = curentTheater;
 	}
 
 	/**
@@ -53,7 +54,7 @@ public class Coverflow {
 						centerCover(indexSelectedImg);
 					}
 				} else {
-					movieOpenListener.movieOpen(curentTheater, null);
+					movieOpenListener.movieOpen(currentTheater, null);
 					// Show the movie details
 					// Window.alert("Show movie");
 				}
@@ -67,7 +68,7 @@ public class Coverflow {
 		});
 
 		// Load images for the first time
-		ImageLoader.loadImages(imagesUrls, new ImageLoader.CallBack() {
+		ImageLoader.loadImages(currentTheater.getId(), imagesUrls, new ImageLoader.CallBack() {
 			@Override
 			public void onImagesLoaded(ImageElement[] imageElements) {
 				covers = new CoverElement[imageElements.length];
@@ -76,6 +77,28 @@ public class Coverflow {
 					// Initialize the cover
 					covers[i] = new CoverElement(imageElements[i], offsetX, TOP_PADDING, 0);
 					// Drax the cover
+					covers[i].draw(coverflowCanvas.getCanvas());
+					// Compute next cover offset X
+					offsetX = offsetX + covers[i].getWidth() + SPACE_BETWEEN_IMAGES;
+				}
+				coverflowCanvas.setFrontGradient();
+			}
+		});
+	}
+
+	public void refresh(final int index, String imageUrl) {
+		ImageLoader.loadImages(currentTheater.getId(), index, imageUrl, new ImageLoader.CallBack() {
+			@Override
+			public void onImagesLoaded(ImageElement[] imageElements) {
+				int offsetX = 0;
+				coverflowCanvas.clearCanvas();
+				Window.alert(imageElements[0].getInnerHTML());
+				for (int i = 0; i < covers.length; i++) {
+					if (i == index) {
+						// Initialize the cover
+						covers[i] = new CoverElement(imageElements[0], offsetX, TOP_PADDING, 0);
+						// Drax the cover
+					}
 					covers[i].draw(coverflowCanvas.getCanvas());
 					// Compute next cover offset X
 					offsetX = offsetX + covers[i].getWidth() + SPACE_BETWEEN_IMAGES;

@@ -1,6 +1,7 @@
 package com.binomed.cineshowtime.client.ui.coverflow;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.google.gwt.dom.client.ImageElement;
 
@@ -10,8 +11,7 @@ import com.google.gwt.dom.client.ImageElement;
 public class ImageLoader {
 
 	/**
-	 * Interface to allow anonymous instantiation of a CallBack Object with method that gets invoked when all the images
-	 * are loaded.
+	 * Interface to allow anonymous instantiation of a CallBack Object with method that gets invoked when all the images are loaded.
 	 */
 	public interface CallBack {
 		void onImagesLoaded(ImageElement[] imageElements);
@@ -20,29 +20,39 @@ public class ImageLoader {
 	/**
 	 * Static internal collection of ImageLoader instances. ImageLoader is not instantiable externally.
 	 */
-	private static ArrayList<ImageLoader> imageLoaders = new ArrayList<ImageLoader>();
+	private static HashMap<String, ImageLoader> imageLoaders = new HashMap<String, ImageLoader>();
 
 	/**
-	 * Takes in an array of url Strings corresponding to the images needed to be loaded. The onImagesLoaded() method in
-	 * the specified CallBack object is invoked with an array of ImageElements corresponding to the original input array
-	 * of url Strings once all the images report an onload event.
+	 * Takes in an array of url Strings corresponding to the images needed to be loaded. The onImagesLoaded() method in the specified CallBack object is invoked with an array of ImageElements corresponding to the original input array of url Strings once all the images report an onload event.
 	 * 
 	 * @param urls
 	 *            Array of urls for the images that need to be loaded
 	 * @param cb
 	 *            CallBack object
 	 */
-	public static void loadImages(String[] urls, CallBack cb) {
+	public static void loadImages(String idTheater, String[] urls, CallBack cb) {
 		ImageLoader il = new ImageLoader();
 		for (int i = 0; i < urls.length; i++) {
 			il.addHandle(il.prepareImage(urls[i]));
 		}
 		il.finalize(cb);
-		ImageLoader.imageLoaders.add(il);
+		ImageLoader.imageLoaders.put(idTheater, il);
 		// Go ahead and fetch the images now
 		for (int i = 0; i < urls.length; i++) {
 			il.images.get(i).setSrc(urls[i]);
 		}
+	}
+
+	public static void loadImages(String idTheater, int index, String url, CallBack cb) {
+		// ImageLoader il = new ImageLoader();
+		// ImageLoader.imageLoaders.put(idTheater, il);
+		ImageLoader il = ImageLoader.imageLoaders.get(idTheater);
+		// il.loadedImages--;
+		// il.prepareImage(url);
+		// il.finalize(cb);
+		il.images.get(index).setSrc(url);
+		// cb.onImagesLoaded(new ImageElement[] { il.images.get(index) });
+		// Go ahead and fetch the images now
 	}
 
 	private CallBack callBack = null;
@@ -54,8 +64,7 @@ public class ImageLoader {
 	}
 
 	/**
-	 * Stores the ImageElement reference so that when all the images report an onload, we can return the array of all
-	 * the ImageElements.
+	 * Stores the ImageElement reference so that when all the images report an onload, we can return the array of all the ImageElements.
 	 * 
 	 * @param img
 	 */
@@ -65,20 +74,18 @@ public class ImageLoader {
 	}
 
 	/**
-	 * Invokes the onImagesLoaded method in the CallBack if all the images are loaded AND we have a CallBack specified.
-	 * Called from the JSNI onload event handler.
+	 * Invokes the onImagesLoaded method in the CallBack if all the images are loaded AND we have a CallBack specified. Called from the JSNI onload event handler.
 	 */
 	private void dispatchIfComplete() {
 		if (callBack != null && isAllLoaded()) {
 			callBack.onImagesLoaded(images.toArray(new ImageElement[0]));
 			// remove the image loader
-			ImageLoader.imageLoaders.remove(this);
+			// ImageLoader.imageLoaders.remove(this);
 		}
 	}
 
 	/**
-	 * Sets the callback object for the ImageLoader. Once this is set, we may invoke the callback once all images that
-	 * need to be loaded report in from their onload event handlers.
+	 * Sets the callback object for the ImageLoader. Once this is set, we may invoke the callback once all images that need to be loaded report in from their onload event handlers.
 	 * 
 	 * @param cb
 	 */

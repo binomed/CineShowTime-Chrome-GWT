@@ -24,6 +24,15 @@ public class AbstractParser implements XmlGramarNearResult {
 		return result;
 	}
 
+	protected static float getFloat(Node node, String attr) {
+		float result = -1;
+		String value = getString(node, attr);
+		if (value != null) {
+			result = Float.valueOf(value);
+		}
+		return result;
+	}
+
 	protected static long getLong(Node node, String attr) {
 		long result = -1;
 		String value = getString(node, attr);

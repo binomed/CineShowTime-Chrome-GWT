@@ -3,6 +3,8 @@ package com.binomed.cineshowtime.client.service.ws;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.binomed.cineshowtime.client.model.MovieBean;
+import com.binomed.cineshowtime.client.parsing.ParserMovieResultDomXml;
 import com.binomed.cineshowtime.client.parsing.ParserNearResultDomXml;
 import com.binomed.cineshowtime.client.service.ws.callback.ImdbRequestCallback;
 import com.binomed.cineshowtime.client.service.ws.callback.MovieRequestCallback;
@@ -23,6 +25,8 @@ import com.google.gwt.http.client.Response;
 public class CineShowTimeWS extends AbstractCineShowTimeWS {
 
 	private static CineShowTimeWS instance;
+
+	private Map<String, MovieBean> movieMap;
 
 	public static synchronized CineShowTimeWS getInstance() {
 		if (CineShowTimeWS.instance == null) {
@@ -72,6 +76,7 @@ public class CineShowTimeWS extends AbstractCineShowTimeWS {
 			public void onResponseReceived(Request request, Response response) {
 				// TODO Parsing
 				callback.onResponse(response.getText());
+
 			}
 
 			@Override
@@ -89,12 +94,17 @@ public class CineShowTimeWS extends AbstractCineShowTimeWS {
 	 * @param callback
 	 *            Specific Callback
 	 */
-	public void requestImdbInfo(Map<String, String> params, final ImdbRequestCallback callback) {
+	public void requestImdbInfo(Map<String, String> params, final MovieBean movie, final ImdbRequestCallback callback) {
+
 		doGet(URL_CONTEXT_IMDB, params, new RequestCallback() {
 			@Override
 			public void onResponseReceived(Request request, Response response) {
 				// TODO Parsing
-				callback.onResponse(response.getText());
+				// callback.onResponse(response.getText());
+
+				ParserMovieResultDomXml.parseResult(response.getText(), movie);
+				movieMap.put(movie.getId(), movie);
+				callback.onMovieResp(movie);
 			}
 
 			@Override
@@ -102,5 +112,12 @@ public class CineShowTimeWS extends AbstractCineShowTimeWS {
 				callback.onError(exception);
 			}
 		});
+	}
+
+	public MovieBean getMovie(String movieId) {
+		if (movieMap == null) {
+			movieMap = new HashMap<String, MovieBean>();
+		}
+		return movieMap.get(movieId);
 	}
 }
