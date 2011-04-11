@@ -1,7 +1,14 @@
 package com.binomed.cineshowtime.client.ui.coverflow;
 
+import java.util.Map;
+import java.util.Map.Entry;
+
+import com.binomed.cineshowtime.client.model.MovieBean;
+import com.binomed.cineshowtime.client.model.TheaterBean;
+import com.binomed.cineshowtime.client.service.ws.CineShowTimeWS;
+import com.binomed.cineshowtime.client.util.StringUtils;
 import com.google.gwt.dom.client.ImageElement;
-import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
 public class Coverflow {
@@ -23,16 +30,24 @@ public class Coverflow {
 	/** index of the centered cover */
 	private int indexImageCentered;
 
-	public Coverflow(int width, int height) {
+	private final TheaterBean currentTheater;
+	private ClickCoverListener clickCoverListener;
+
+	public Coverflow(int width, int height, TheaterBean curentTheater) {
 		coverflowCanvas = new GWTCoverflowCanvas(width, height);
 		coverflowCenterX = width / 2;
+		this.currentTheater = curentTheater;
+	}
+
+	public void addClickCoverListener(ClickCoverListener clickCoverListener) {
+		this.clickCoverListener = clickCoverListener;
 	}
 
 	/**
 	 * Initialize the coverflow with images URLs
 	 * @param imagesUrls Images URLs
 	 */
-	public void init(String[] imagesUrls) {
+	public void init(Map<String, String> imagesUrls) {
 		// Add coverflow move listener
 		coverflowCanvas.setMouseMoveEvent(new CoverflowMouseEvent() {
 			@Override
@@ -46,8 +61,8 @@ public class Coverflow {
 						centerCover(indexSelectedImg);
 					}
 				} else {
-					// Show the movie details
-					Window.alert("Show movie");
+					MovieBean movie = CineShowTimeWS.getInstance().getMovie(covers[indexSelectedImg].getIdCover());
+					clickCoverListener.onClickCover(currentTheater, movie);
 				}
 			}
 
@@ -59,22 +74,36 @@ public class Coverflow {
 		});
 
 		// Load images for the first time
-		ImageLoader.loadImages(imagesUrls, new ImageLoader.CallBack() {
+		ImagesLoader.loadImages(imagesUrls, new ImagesLoader.LoadImagesCallBack() {
 			@Override
-			public void onImagesLoaded(ImageElement[] imageElements) {
-				covers = new CoverElement[imageElements.length];
+			public void onImagesLoaded(Map<String, ImageElement> imageElements) {
+				covers = new CoverElement[imageElements.size()];
 				int offsetX = 0;
-				for (int i = 0; i < imageElements.length; i++) {
+				int index = 0;
+				for (Entry<String, ImageElement> entry : imageElements.entrySet()) {
 					// Initialize the cover
-					covers[i] = new CoverElement(imageElements[i], offsetX, TOP_PADDING, 0);
+					covers[index] = new CoverElement(entry.getKey(), entry.getValue(), offsetX, TOP_PADDING, 0);
 					// Drax the cover
-					covers[i].draw(coverflowCanvas.getCanvas());
+					covers[index].draw(coverflowCanvas.getCanvas());
 					// Compute next cover offset X
-					offsetX = offsetX + covers[i].getWidth() + SPACE_BETWEEN_IMAGES;
+					offsetX = offsetX + covers[index].getWidth() + SPACE_BETWEEN_IMAGES;
+					index++;
 				}
 				coverflowCanvas.setFrontGradient();
+				center();
 			}
 		});
+
+	}
+
+	public void loadCover(final int index, String imageUrl) {
+		if (StringUtils.isNotEmpty(imageUrl)) {
+			final Image logoImg = new Image(imageUrl);
+			if (covers[index] != null) {
+				covers[index].setImage((ImageElement) logoImg.getElement().cast());
+				covers[index].draw(coverflowCanvas.getCanvas());
+			}
+		}
 	}
 
 	/**
@@ -84,47 +113,57 @@ public class Coverflow {
 	 * @param distance Distance to animate
 	 */
 	private void animateCoverflow(final int direction, final int distance) {
-		final int firstLeftX = covers[0].getLeftX();
+		if (covers[0] != null) {
+			final int firstLeftX = covers[0].getLeftX();
 
-		Animation myAnimation = new Animation(coverflowCanvas.getCanvas(), 100) {
-			final int linearSpeed = 100; // pixels / second
-			final int linearDistEachFrame = linearSpeed * getTimeInterval() / 1000;
-			int totalTranslateX = 0;
+			Animation myAnimation = new Animation(coverflowCanvas.getCanvas(), 100) {
+				final int linearSpeed = 100; // pixels / second
+				final int linearDistEachFrame = linearSpeed * getTimeInterval() / 1000;
+				int totalTranslateX = 0;
 
-			@Override
-			public void updateStage() {
-				if (direction == MOVE_RIGHT) {
-					totalTranslateX += linearDistEachFrame;
-				} else if (direction == MOVE_LEFT) {
-					totalTranslateX -= linearDistEachFrame;
-				}
+				@Override
+				public void updateStage() {
+					if (direction == MOVE_RIGHT) {
+						totalTranslateX += linearDistEachFrame;
+					} else if (direction == MOVE_LEFT) {
+						totalTranslateX -= linearDistEachFrame;
+					}
 
-				if (Math.abs(firstLeftX - covers[0].getLeftX()) >= Math.abs(distance)) {
-					stop();
-					if (!coverCentered) {
-						// Finish the move and center to an image
-						centerCover(CoverflowUtil.getIndexOfCoverFromX(covers, coverflowCenterX));
+					if (Math.abs(firstLeftX - covers[0].getLeftX()) >= Math.abs(distance)) {
+						stop();
+						if (!coverCentered) {
+							// Finish the move and center to an image
+							centerCover(CoverflowUtil.getIndexOfCoverFromX(covers, coverflowCenterX));
+						}
+					}
+
+					// Compute next covers X coordonates
+					for (CoverElement cover : covers) {
+						cover.setLeftX(cover.getLeftX() + totalTranslateX);
 					}
 				}
 
-				// Compute next covers X coordonates
-				for (CoverElement cover : covers) {
-					cover.setLeftX(cover.getLeftX() + totalTranslateX);
+				@Override
+				public void drawStage() {
+					coverflowCanvas.setBackgroundColor();
+					for (CoverElement cover : covers) {
+						cover.draw(coverflowCanvas.getCanvas());
+					}
+					coverflowCanvas.setFrontGradient();
 				}
-			}
+			};
 
-			@Override
-			public void drawStage() {
-				coverflowCanvas.setBackgroundColor();
-				for (CoverElement cover : covers) {
-					cover.draw(coverflowCanvas.getCanvas());
-				}
-				coverflowCanvas.setFrontGradient();
-			}
-		};
+			// start animation
+			myAnimation.start();
+		}
+	}
 
-		// start animation
-		myAnimation.start();
+	public void center() {
+		int middleIndex = 0;
+		if (covers != null && covers.length > 0) {
+			middleIndex = covers.length / 2;
+		}
+		centerCover(middleIndex);
 	}
 
 	private void centerCover(int indexImage) {

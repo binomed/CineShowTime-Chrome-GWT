@@ -1,9 +1,11 @@
 package com.binomed.cineshowtime.client.ui;
 
+import com.binomed.cineshowtime.client.model.MovieBean;
 import com.binomed.cineshowtime.client.model.NearResp;
 import com.binomed.cineshowtime.client.model.TheaterBean;
 import com.binomed.cineshowtime.client.service.ws.CineShowTimeWS;
 import com.binomed.cineshowtime.client.service.ws.callback.NearTheatersRequestCallback;
+import com.binomed.cineshowtime.client.ui.coverflow.ClickCoverListener;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -42,7 +44,7 @@ public class MainWindow extends Composite {
 			public void onNearResp(NearResp nearResp) {
 				if (nearResp != null) {
 					for (TheaterBean theater : nearResp.getTheaterList()) {
-						theatersContent.add(new TheaterView(theater, nearResp.getMapMovies()));
+						theatersContent.add(new TheaterView(theater, nearResp.getMapMovies(), listener));
 					}
 				}
 			}
@@ -53,6 +55,22 @@ public class MainWindow extends Composite {
 			}
 		});
 	}
+
+	private final ClickCoverListener listener = new ClickCoverListener() {
+
+		@Override
+		public void onClickCover(TheaterBean theater, MovieBean movie) {
+			// movie = nearRespTmp.getMapMovies().values().iterator().next();
+			if (movie != null) {
+				MovieView movieView = new MovieView(theater, movie);
+				appBodyPanel.add(movieView, movie.getMovieName());
+				appBodyPanel.selectTab(movieView);
+			} else {
+				Window.alert("Movie bean not found !");
+			}
+		}
+
+	};
 
 	interface MainWindowUiBinder extends UiBinder<Widget, MainWindow> {
 	}

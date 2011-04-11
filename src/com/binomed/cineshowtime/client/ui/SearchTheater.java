@@ -29,6 +29,7 @@ public class SearchTheater extends Composite {
 		// Disclosure panel
 		searchPanel.setHeader(new HTML("<font color=\"#FFFFFF\"><b>Rechercher</b></font>"));
 		searchPanel.setAnimationEnabled(true);
+		searchPanel.setOpen(true);
 	}
 
 	@UiHandler("searchButton")

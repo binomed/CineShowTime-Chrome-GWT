@@ -20,6 +20,30 @@ public interface CstResource extends ClientBundle {
 	@Source("com/binomed/cineshowtime/client/resources/images/maps.png")
 	ImageResource maps();
 
+	@Source("com/binomed/cineshowtime/client/resources/images/btn_star_big_off.png")
+	ImageResource btn_stat_big_off();
+
+	@Source("com/binomed/cineshowtime/client/resources/images/btn_star_big_on.png")
+	ImageResource btn_stat_big_on();
+
+	@Source("com/binomed/cineshowtime/client/resources/images/Icone_512x512.png")
+	ImageResource Icone_512_512();
+
+	@Source("com/binomed/cineshowtime/client/resources/images/logo.jpg")
+	ImageResource logo();
+
+	@Source("com/binomed/cineshowtime/client/resources/images/rate_star_small_half.png")
+	ImageResource rate_star_small_half();
+
+	@Source("com/binomed/cineshowtime/client/resources/images/rate_star_small_off.png")
+	ImageResource rate_star_small_off();
+
+	@Source("com/binomed/cineshowtime/client/resources/images/rate_star_small_on.png")
+	ImageResource rate_star_small_on();
+
+	@Source("com/binomed/cineshowtime/client/resources/images/no_poster.png")
+	ImageResource no_poster();
+
 	// CSS
 	@Source("com/binomed/cineshowtime/client/resources/css/CstStyle.css")
 	public StyleCss styleCss();

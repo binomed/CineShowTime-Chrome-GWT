@@ -9,6 +9,7 @@ public class CoverElement {
 	private final static int DEFAULT_IMG_HEIGHT = 150;
 	private final static int DEFAULT_IMG_WIDTH = 100;
 
+	private String idCover;
 	private ImageElement image;
 	private int leftX;
 	private int topY;
@@ -18,7 +19,8 @@ public class CoverElement {
 		this.image = image;
 	}
 
-	public CoverElement(ImageElement image, int leftX, int topY, int zIndex) {
+	public CoverElement(String idCover, ImageElement image, int leftX, int topY, int zIndex) {
+		this.idCover = idCover;
 		this.image = image;
 		this.leftX = leftX;
 		this.topY = topY;
@@ -92,6 +94,10 @@ public class CoverElement {
 
 	public int getWidth() {
 		return DEFAULT_IMG_WIDTH;
+	}
+
+	public String getIdCover() {
+		return idCover;
 	}
 
 }
