@@ -1,12 +1,21 @@
 package com.binomed.cineshowtime.client.ui;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.binomed.cineshowtime.client.cst.HttpParamsCst;
+import com.binomed.cineshowtime.client.events.IMovieResponse;
 import com.binomed.cineshowtime.client.model.MovieBean;
 import com.binomed.cineshowtime.client.model.NearResp;
 import com.binomed.cineshowtime.client.model.TheaterBean;
 import com.binomed.cineshowtime.client.service.ws.CineShowTimeWS;
+import com.binomed.cineshowtime.client.service.ws.callback.ImdbRequestCallback;
 import com.binomed.cineshowtime.client.service.ws.callback.NearTheatersRequestCallback;
 import com.binomed.cineshowtime.client.ui.coverflow.ClickCoverListener;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.http.client.URL;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
@@ -60,14 +69,50 @@ public class MainWindow extends Composite {
 
 		@Override
 		public void onClickCover(TheaterBean theater, MovieBean movie) {
-			// movie = nearRespTmp.getMapMovies().values().iterator().next();
-			if (movie != null) {
-				MovieView movieView = new MovieView(theater, movie);
-				appBodyPanel.add(movieView, movie.getMovieName());
-				appBodyPanel.selectTab(movieView);
-			} else {
-				Window.alert("Movie bean not found !");
+			CineShowTimeWS service = CineShowTimeWS.getInstance();
+			movie = service.getMovie(movie.getId());
+			ImdbRequestCallback callBack;
+			final List<IMovieResponse> movieListener = new ArrayList<IMovieResponse>();
+			if (movie == null) {
+
+				callBack = new ImdbRequestCallback() {
+
+					@Override
+					public void onResponse(String response) {
+						// TODO Auto-generated method stub
+
+					}
+
+					@Override
+					public void onMovieResp(MovieBean movieBean) {
+						for (IMovieResponse listener : movieListener) {
+							listener.movieResponse(movieBean);
+						}
+						// TODO Auto-generated method stub
+
+					}
+
+					@Override
+					public void onError(Throwable exception) {
+						// TODO Auto-generated method stub
+
+					}
+				};
+				Map<String, String> params = new HashMap<String, String>();
+				params.clear();
+				// final String ip = InetAddress.getLocalHost().getHostAddress();
+				final String ip = "193.253.198.44"; // TODO à débouchonner
+				params.put(HttpParamsCst.PARAM_IP, ip);
+				params.put(HttpParamsCst.PARAM_MOVIE_CUR_LANG_NAME, URL.encode(movie.getMovieName()));
+				params.put(HttpParamsCst.PARAM_MOVIE_NAME, URL.encode(movie.getEnglishMovieName()));
+				params.put(HttpParamsCst.PARAM_LANG, "FR"); // TODO à débouchonner
+				params.put(HttpParamsCst.PARAM_PLACE, URL.encode("Nantes"));// TODO à débouchonner
+				service.requestImdbInfo(params, movie, callBack);
 			}
+			MovieView movieView = new MovieView(theater, movie, movieListener);
+			appBodyPanel.add(movieView, movie.getMovieName());
+			appBodyPanel.selectTab(movieView);
+
 		}
 
 	};

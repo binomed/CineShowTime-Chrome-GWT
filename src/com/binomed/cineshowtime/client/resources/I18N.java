@@ -43,4 +43,6 @@ public interface I18N extends Constants {
 
 	String groupCritiques();
 
+	String endProjection();
+
 }

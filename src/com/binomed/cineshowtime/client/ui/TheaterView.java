@@ -84,7 +84,6 @@ public class TheaterView extends Composite {
 					@Override
 					public void onResponse(String response) {
 						// TODO Auto-generated method stub
-
 					}
 
 					@Override
@@ -123,6 +122,7 @@ public class TheaterView extends Composite {
 			// TODO A gérer autrement
 			Window.alert("No maps!");
 		}
+
 	}
 
 	interface TheaterViewUiBinder extends UiBinder<Widget, TheaterView> {

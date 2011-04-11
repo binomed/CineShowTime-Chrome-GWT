@@ -1,9 +1,13 @@
 package com.binomed.cineshowtime.client.ui;
 
 import java.util.Date;
+import java.util.List;
 
+import com.binomed.cineshowtime.client.events.IMovieResponse;
 import com.binomed.cineshowtime.client.model.MovieBean;
+import com.binomed.cineshowtime.client.model.ProjectionBean;
 import com.binomed.cineshowtime.client.model.TheaterBean;
+import com.binomed.cineshowtime.client.resources.CstResource;
 import com.binomed.cineshowtime.client.resources.I18N;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -37,7 +41,15 @@ public class MovieView extends Composite {
 	@UiField
 	VerticalPanel movieSeanceList, movieTrailerCoverflow, movieReview;
 
-	public MovieView(final TheaterBean theater, MovieBean movie) {
+	public MovieView(final TheaterBean theater, MovieBean movie, List<IMovieResponse> movieListener) {
+
+		movieListener.add(new IMovieResponse() {
+
+			@Override
+			public void movieResponse(MovieBean movie) {
+				fillMovie(movie);
+			}
+		});
 		// Initialization
 		initWidget(uiBinder.createAndBindUi(this));
 
@@ -51,10 +63,22 @@ public class MovieView extends Composite {
 		Date time = new Date(movie.getMovieTime());
 		movieTime.setText(time.getHours() + "h" + time.getMinutes() + "m");
 
-		moviePlot.setText(movie.getTrDescription());
-		movieStyle.setText(movie.getStyle());
-		imgPoster.setUrl(movie.getUrlImg());
+		for (ProjectionBean projection : theater.getMovieMap().get(movie.getId())) {
+			movieSeanceList.add(new ProjectionView(projection, movie.getMovieTime()));
+		}
 
+		if (movie.getUrlImg() != null) {
+			fillMovie(movie);
+		} else {
+			imgPoster.setUrl(CstResource.instance.no_poster().getURL());
+		}
+
+	}
+
+	private void fillMovie(MovieBean movie) {
+		imgPoster.setUrl(movie.getUrlImg());
+		movieLinkImdb.setText(movie.getUrlImdb());
+		moviePlot.setText(movie.getDescription());
 	}
 
 	interface MovieViewUiBinder extends UiBinder<Widget, MovieView> {
