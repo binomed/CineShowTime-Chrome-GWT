@@ -17,6 +17,9 @@ public interface CstResource extends ClientBundle {
 	@Source("com/binomed/cineshowtime/client/resources/images/gps.png")
 	ImageResource gps();
 
+	@Source("com/binomed/cineshowtime/client/resources/images/maps.png")
+	ImageResource maps();
+
 	// CSS
 	@Source("com/binomed/cineshowtime/client/resources/css/CstStyle.css")
 	public StyleCss styleCss();

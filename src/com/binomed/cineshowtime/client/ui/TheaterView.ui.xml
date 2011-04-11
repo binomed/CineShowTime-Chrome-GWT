@@ -5,34 +5,34 @@
 	<ui:with field="res" type="com.binomed.cineshowtime.client.resources.CstResource" />
 	<ui:with field="i18n" type="com.binomed.cineshowtime.client.resources.I18N" />
 	
-	<!-- 
-	<g:DisclosurePanel ui:field="theaterPanel" styleName="{style.panel}">
-	-->
 	<g:DisclosurePanel ui:field="theaterPanel">
-		<g:VerticalPanel>
-			<g:HorizontalPanel>
-				<g:VerticalPanel>
-					<g:Label ui:field="theaterName" />
-					<g:Label ui:field="theaterPlace" />
-					<g:Label ui:field="theaterPhone" />
-					<g:HorizontalPanel>
-						<g:Image resource='{res.star}' />
-						<g:Hyperlink ui:field="nearSearch" text="{i18n.addFavorites}" />
-					</g:HorizontalPanel>
-				</g:VerticalPanel>
-				<g:VerticalPanel ui:field="theaterMap" />
-			</g:HorizontalPanel>
-			<g:VerticalPanel ui:field="theaterCoverflow" />
-		</g:VerticalPanel>
+		<g:HTMLPanel>
+			<table width="100%">
+				<tr>
+					<td width="70%"><g:Label ui:field="theaterPlace" /></td>
+					<td width="30%" align="right">
+						<g:HorizontalPanel>
+							<g:Image resource='{res.star}' />
+							<g:Hyperlink ui:field="nearSearch" text="{i18n.addFavorites}" />
+						</g:HorizontalPanel>					
+					</td>
+				</tr>
+				<tr>
+					<td><g:Label ui:field="theaterPhone" /></td>
+					<td align="right">
+						<g:HorizontalPanel>
+							<g:Image resource='{res.maps}' />
+							<g:Hyperlink ui:field="showTheaterMap" text="{i18n.showTheaterMap}" />
+						</g:HorizontalPanel>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2" align="center">
+						<g:VerticalPanel ui:field="theaterCoverflow" />				
+					</td> 
+				</tr>
+			</table>
+		</g:HTMLPanel>
 	</g:DisclosurePanel>
-	
-	<ui:style>
-		.header.panel {
-		    color: #FFFFFF;
-		}
-		
-		
-		
-	</ui:style>
-	
+
 </ui:UiBinder> 

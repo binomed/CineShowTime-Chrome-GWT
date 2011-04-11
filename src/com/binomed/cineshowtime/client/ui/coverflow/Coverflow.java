@@ -6,22 +6,22 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class Coverflow {
 
-	public final static int MOVE_LEFT = -1;
-	public final static int MOVE_RIGHT = 1;
-	public final static String BACKGROUND_COLOR = "#000000";
-	private final static int TOP_PADDING = 20;
-	private final static int SPACE_BETWEEN_IMAGES = 20;
+	public static final int MOVE_LEFT = -1;
+	public static final int MOVE_RIGHT = 1;
+	public static final String BACKGROUND_COLOR = "#000000";
+	private final int TOP_PADDING = 20;
+	private final int SPACE_BETWEEN_IMAGES = 20;
 
 	/** HTML5 canvas object */
 	private final GWTCoverflowCanvas coverflowCanvas;
 	/** Coverflow center X */
-	private static int coverflowCenterX;
+	private final int coverflowCenterX;
 	/** Loaded images in the coverflow */
-	private static CoverElement[] covers;
+	private CoverElement[] covers;
 	/** Indicate if the cover is centered */
-	private static boolean coverCentered;
+	private boolean coverCentered;
 	/** index of the centered cover */
-	private static int indexImageCentered;
+	private int indexImageCentered;
 
 	public Coverflow(int width, int height) {
 		coverflowCanvas = new GWTCoverflowCanvas(width, height);

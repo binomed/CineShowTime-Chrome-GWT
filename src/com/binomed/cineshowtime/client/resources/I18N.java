@@ -18,6 +18,8 @@ public interface I18N extends Constants {
 	// Theater view
 	String addFavorites();
 
+	String showTheaterMap();
+
 	// Search panel
 	String locationLabel();
 
