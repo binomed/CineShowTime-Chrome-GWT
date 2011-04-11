@@ -1,5 +1,6 @@
 package com.binomed.cineshowtime.client.ui.coverflow;
 
+import com.binomed.cineshowtime.client.events.IMovieOpen;
 import com.binomed.cineshowtime.client.model.TheaterBean;
 import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.user.client.Window;

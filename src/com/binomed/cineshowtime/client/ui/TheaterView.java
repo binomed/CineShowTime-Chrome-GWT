@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.binomed.cineshowtime.client.cst.GoogleKeys;
 import com.binomed.cineshowtime.client.cst.HttpParamsCst;
+import com.binomed.cineshowtime.client.events.IMovieOpen;
 import com.binomed.cineshowtime.client.model.MovieBean;
 import com.binomed.cineshowtime.client.model.ProjectionBean;
 import com.binomed.cineshowtime.client.model.TheaterBean;
@@ -13,7 +14,6 @@ import com.binomed.cineshowtime.client.resources.CstResource;
 import com.binomed.cineshowtime.client.service.ws.CineShowTimeWS;
 import com.binomed.cineshowtime.client.service.ws.callback.ImdbRequestCallback;
 import com.binomed.cineshowtime.client.ui.coverflow.Coverflow;
-import com.binomed.cineshowtime.client.ui.coverflow.IMovieOpen;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.event.logical.shared.OpenEvent;
@@ -115,7 +115,7 @@ public class TheaterView extends Composite {
 
 								@Override
 								public void onMovieResp(MovieBean movieBean) {
-									coverflow.refresh(mapMovieIndex.get(movieBean.getId()), movieBean.getUrlImg());
+									// coverflow.refresh(mapMovieIndex.get(movieBean.getId()), movieBean.getUrlImg());
 
 								}
 							});
@@ -153,7 +153,7 @@ public class TheaterView extends Composite {
 		geocoder.getLocations(address, new LocationCallback() {
 			@Override
 			public void onSuccess(JsArray<Placemark> locations) {
-				if (locations != null && locations.length() > 0) {
+				if ((locations != null) && (locations.length() > 0)) {
 					// Open a map centered on Theater
 					final LatLng theaterLocalisation = locations.get(0).getPoint();
 					final MapWidget map = new MapWidget(theaterLocalisation, 2);
