@@ -1,5 +1,7 @@
 package com.binomed.cineshowtime.client.ui.coverflow;
 
+import com.binomed.cineshowtime.client.model.MovieBean;
+import com.binomed.cineshowtime.client.service.ws.CineShowTimeWS;
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.CanvasGradient;
 import com.google.gwt.dom.client.ImageElement;
@@ -10,6 +12,7 @@ public class CoverElement {
 	private final static int DEFAULT_IMG_WIDTH = 100;
 
 	private String idCover;
+	private String nameCover;
 	private ImageElement image;
 	private int leftX;
 	private int topY;
@@ -25,6 +28,12 @@ public class CoverElement {
 		this.leftX = leftX;
 		this.topY = topY;
 		this.zIndex = zIndex;
+
+		// TODO enlever
+		MovieBean movie = CineShowTimeWS.getInstance().getMovie(idCover);
+		if (movie != null) {
+			this.nameCover = movie.getMovieName();
+		}
 	}
 
 	public void draw(Canvas canvas) {
@@ -53,6 +62,15 @@ public class CoverElement {
 		gradient.addColorStop(1, Coverflow.BACKGROUND_COLOR);
 		canvas.getContext2d().setFillStyle(gradient);
 		canvas.getContext2d().fillRect(leftX, topY + DEFAULT_IMG_HEIGHT, DEFAULT_IMG_WIDTH, DEFAULT_IMG_HEIGHT);
+		canvas.getContext2d().restore();
+
+		// Draw movie title
+		canvas.getContext2d().save();
+		canvas.getContext2d().translate(0, 0);
+		canvas.getContext2d().setFillStyle("#00f");
+		canvas.getContext2d().setTextBaseline("top");
+		canvas.getContext2d().setFont("bold 20px sans-serif");
+		canvas.getContext2d().fillText(this.nameCover, leftX, topY + DEFAULT_IMG_HEIGHT);
 		canvas.getContext2d().restore();
 	}
 

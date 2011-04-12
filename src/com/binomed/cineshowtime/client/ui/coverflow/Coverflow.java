@@ -28,7 +28,7 @@ public class Coverflow {
 	/** Indicate if the cover is centered */
 	private boolean coverCentered;
 	/** index of the centered cover */
-	private int indexImageCentered;
+	private int indexCoverCentered;
 
 	private final TheaterBean currentTheater;
 	private ClickCoverListener clickCoverListener;
@@ -45,7 +45,9 @@ public class Coverflow {
 
 	/**
 	 * Initialize the coverflow with images URLs
-	 * @param imagesUrls Images URLs
+	 * 
+	 * @param imagesUrls
+	 *            Images URLs
 	 */
 	public void init(Map<String, String> imagesUrls) {
 		// Add coverflow move listener
@@ -55,10 +57,10 @@ public class Coverflow {
 				// Determine the distance between the center and the click x coordonate
 				int indexSelectedImg = CoverflowUtil.getIndexOfCoverFromX(covers, clickX);
 				// Center or open movie details ?
-				if (indexSelectedImg != indexImageCentered) {
+				if (indexSelectedImg != indexCoverCentered) {
 					// Center the coverflow on the selected image
 					if (indexSelectedImg != -1) {
-						centerCover(indexSelectedImg);
+						moveToCover(indexSelectedImg);
 					}
 				} else {
 					MovieBean movie = CineShowTimeWS.getInstance().getMovie(covers[indexSelectedImg].getIdCover());
@@ -96,6 +98,14 @@ public class Coverflow {
 
 	}
 
+	/**
+	 * Change the image of the specified cover (by the index)
+	 * 
+	 * @param index
+	 *            Index of the cover
+	 * @param imageUrl
+	 *            Image URL of the cover
+	 */
 	public void loadCover(final int index, String imageUrl) {
 		if (StringUtils.isNotEmpty(imageUrl)) {
 			final Image logoImg = new Image(imageUrl);
@@ -103,14 +113,18 @@ public class Coverflow {
 				covers[index].setImage((ImageElement) logoImg.getElement().cast());
 				covers[index].draw(coverflowCanvas.getCanvas());
 			}
+			drawCoverflow();
 		}
 	}
 
 	/**
 	 * Animate the coverflow moves <br/>
 	 * http://www.html5canvastutorials.com/advanced/html5-canvas-linear-motion-animation/
-	 * @param direction Direction of the coverflow
-	 * @param distance Distance to animate
+	 * 
+	 * @param direction
+	 *            Direction of the coverflow
+	 * @param distance
+	 *            Distance to animate
 	 */
 	private void animateCoverflow(final int direction, final int distance) {
 		if (covers[0] != null) {
@@ -133,7 +147,7 @@ public class Coverflow {
 						stop();
 						if (!coverCentered) {
 							// Finish the move and center to an image
-							centerCover(CoverflowUtil.getIndexOfCoverFromX(covers, coverflowCenterX));
+							moveToCover(CoverflowUtil.getIndexOfCoverFromX(covers, coverflowCenterX));
 						}
 					}
 
@@ -145,11 +159,7 @@ public class Coverflow {
 
 				@Override
 				public void drawStage() {
-					coverflowCanvas.setBackgroundColor();
-					for (CoverElement cover : covers) {
-						cover.draw(coverflowCanvas.getCanvas());
-					}
-					coverflowCanvas.setFrontGradient();
+					drawCoverflow();
 				}
 			};
 
@@ -158,20 +168,40 @@ public class Coverflow {
 		}
 	}
 
-	public void center() {
+	/**
+	 * Draw the entire coverflow
+	 */
+	public void drawCoverflow() {
+		coverflowCanvas.setBackgroundColor();
+		for (CoverElement cover : covers) {
+			cover.draw(coverflowCanvas.getCanvas());
+		}
+		coverflowCanvas.setFrontGradient();
+	}
+
+	/**
+	 * Center and move the coverflow to the cental cover
+	 */
+	private void center() {
 		int middleIndex = 0;
 		if (covers != null && covers.length > 0) {
 			middleIndex = covers.length / 2;
 		}
-		centerCover(middleIndex);
+		moveToCover(middleIndex);
 	}
 
-	private void centerCover(int indexImage) {
+	/**
+	 * Move the specified cover index to the center of the coverflow
+	 * 
+	 * @param coverIndex
+	 *            Index of the cover
+	 */
+	private void moveToCover(int coverIndex) {
 		// Compute image center & move distance
-		if (indexImage >= 0 && indexImage < covers.length) {
-			int coverCenterX = covers[indexImage].getLeftX() + (covers[indexImage].getWidth() / 2);
+		if (coverIndex >= 0 && coverIndex < covers.length) {
+			int coverCenterX = covers[coverIndex].getLeftX() + (covers[coverIndex].getWidth() / 2);
 			coverCentered = true;
-			indexImageCentered = indexImage;
+			indexCoverCentered = coverIndex;
 			int distance = coverflowCenterX - coverCenterX;
 			// render image
 			if (distance <= 0) { // Go left
