@@ -10,13 +10,18 @@ import com.binomed.cineshowtime.client.events.IMovieResponse;
 import com.binomed.cineshowtime.client.model.MovieBean;
 import com.binomed.cineshowtime.client.model.NearResp;
 import com.binomed.cineshowtime.client.model.TheaterBean;
+import com.binomed.cineshowtime.client.service.geolocation.UserGeolocation;
+import com.binomed.cineshowtime.client.service.geolocation.UserGeolocationCallback;
 import com.binomed.cineshowtime.client.service.ws.CineShowTimeWS;
 import com.binomed.cineshowtime.client.service.ws.callback.ImdbRequestCallback;
 import com.binomed.cineshowtime.client.service.ws.callback.NearTheatersRequestCallback;
 import com.binomed.cineshowtime.client.ui.coverflow.ClickCoverListener;
 import com.binomed.cineshowtime.client.ui.widget.MovieTabHeaderWidget;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.JsArray;
 import com.google.gwt.http.client.URL;
+import com.google.gwt.maps.client.geocode.Placemark;
+import com.google.gwt.maps.client.geom.LatLng;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
@@ -44,12 +49,38 @@ public class MainWindow extends Composite {
 		theatersContent.setSpacing(5);
 
 		// Load intial content
-		loadTheaters();
+		loadTheatersOfUserLocation();
 	}
 
-	private void loadTheaters() {
+	private void loadTheatersOfUserLocation() {
+		UserGeolocation.getInstance().getUserGeolocation(new UserGeolocationCallback() {
+
+			@Override
+			public void onLocationResponse(JsArray<Placemark> locations) {
+				StringBuilder sb = new StringBuilder();
+				for (int i = 0; i < locations.length(); i++) {
+					sb.append(locations.get(i).getAddress()).append("\n");
+				}
+				Window.alert("locations : \n" + sb.toString());
+			}
+
+			@Override
+			public void onLatitudeLongitudeResponse(LatLng latLng) {
+				System.out.println("latitude=" + latLng.getLatitude() + ", longitude=" + latLng.getLongitude());
+				loadTheaters(latLng.getLatitude(), latLng.getLongitude());
+			}
+
+			@Override
+			public void onError() {
+				Window.alert("Error during geolocation !");
+			}
+		});
+	}
+
+	private void loadTheaters(double lat, double lng) {
 		CineShowTimeWS service = CineShowTimeWS.getInstance();
-		service.requestNearTheatersFromLatLng(47.216842, -1.556744, new NearTheatersRequestCallback() {
+		service.requestNearTheatersFromLatLng(lat, lng, new NearTheatersRequestCallback() {
+			// service.requestNearTheatersFromLatLng(47.216842, -1.556744, new NearTheatersRequestCallback() {
 			@Override
 			public void onNearResp(NearResp nearResp) {
 				if (nearResp != null) {
