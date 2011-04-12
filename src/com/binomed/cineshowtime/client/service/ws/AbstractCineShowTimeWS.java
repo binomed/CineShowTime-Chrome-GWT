@@ -49,7 +49,7 @@ class AbstractCineShowTimeWS implements CineShowTimeWSParams {
 		int i = 0;
 		if (params != null && !params.isEmpty()) {
 			for (final String param : params.keySet()) {
-				ret.append(param).append("=").append(params.get(param));
+				ret.append(param).append("=").append(URL.encode(params.get(param)));
 				if (params.size() > ++i) {
 					ret.append("&");
 				}
@@ -57,6 +57,6 @@ class AbstractCineShowTimeWS implements CineShowTimeWSParams {
 		} else {
 			return "";
 		}
-		return URL.encode(ret.toString());
+		return ret.toString();
 	}
 }
