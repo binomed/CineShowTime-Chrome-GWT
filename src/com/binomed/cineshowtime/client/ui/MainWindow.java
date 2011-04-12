@@ -14,6 +14,7 @@ import com.binomed.cineshowtime.client.service.ws.CineShowTimeWS;
 import com.binomed.cineshowtime.client.service.ws.callback.ImdbRequestCallback;
 import com.binomed.cineshowtime.client.service.ws.callback.NearTheatersRequestCallback;
 import com.binomed.cineshowtime.client.ui.coverflow.ClickCoverListener;
+import com.binomed.cineshowtime.client.ui.widget.MovieTabHeaderWidget;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -110,7 +111,7 @@ public class MainWindow extends Composite {
 				service.requestImdbInfo(params, movie, callBack);
 			}
 			MovieView movieView = new MovieView(theater, movie, movieListener);
-			appBodyPanel.add(movieView, movie.getMovieName());
+			appBodyPanel.add(movieView, new MovieTabHeaderWidget(movie.getMovieName(), movieView, appBodyPanel));
 			appBodyPanel.selectTab(movieView);
 
 		}
