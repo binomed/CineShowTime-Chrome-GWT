@@ -107,6 +107,8 @@ public class MainWindow extends Composite {
 				params.put(HttpParamsCst.PARAM_MOVIE_NAME, URL.encode(movie.getEnglishMovieName()));
 				params.put(HttpParamsCst.PARAM_LANG, "FR"); // TODO à débouchonner
 				params.put(HttpParamsCst.PARAM_PLACE, URL.encode("Nantes"));// TODO à débouchonner
+				params.put(HttpParamsCst.PARAM_ZIP, "true");
+				params.put(HttpParamsCst.PARAM_MOVIE_ID, movie.getId());
 				service.requestImdbInfo(params, movie, callBack);
 			}
 			MovieView movieView = new MovieView(theater, movie, movieListener);
