@@ -2,7 +2,9 @@ package com.binomed.cineshowtime.client.model;
 
 import java.util.List;
 
-public class MovieBean {
+import com.binomed.cineshowtime.client.ui.coverflow.CoverData;
+
+public class MovieBean implements CoverData {
 
 	private String id;
 
@@ -216,6 +218,31 @@ public class MovieBean {
 
 	public void setTheaterList(List<String> theaterList) {
 		this.theaterList = theaterList;
+	}
+
+	@Override
+	public String getLabel() {
+		return getMovieName();
+	}
+
+	@Override
+	public String getCoverUrl() {
+		return getUrlImg();
+	}
+
+	@Override
+	public void setCoverURL(String coverURL) {
+		setUrlImg(coverURL);
+	}
+
+	@Override
+	public boolean isVideo() {
+		return false;
+	}
+
+	@Override
+	public String getVideoUrl() {
+		return null;
 	}
 
 }

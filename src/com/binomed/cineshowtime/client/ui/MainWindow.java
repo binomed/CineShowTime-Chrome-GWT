@@ -57,11 +57,6 @@ public class MainWindow extends Composite {
 
 			@Override
 			public void onLocationResponse(JsArray<Placemark> locations) {
-				StringBuilder sb = new StringBuilder();
-				for (int i = 0; i < locations.length(); i++) {
-					sb.append(locations.get(i).getAddress()).append("\n");
-				}
-				Window.alert("locations : \n" + sb.toString());
 			}
 
 			@Override

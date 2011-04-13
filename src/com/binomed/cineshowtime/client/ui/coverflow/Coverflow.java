@@ -1,10 +1,13 @@
 package com.binomed.cineshowtime.client.ui.coverflow;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import com.binomed.cineshowtime.client.model.MovieBean;
 import com.binomed.cineshowtime.client.model.TheaterBean;
+import com.binomed.cineshowtime.client.resources.CstResource;
 import com.binomed.cineshowtime.client.service.ws.CineShowTimeWS;
 import com.binomed.cineshowtime.client.util.StringUtils;
 import com.google.gwt.dom.client.ImageElement;
@@ -24,11 +27,13 @@ public class Coverflow {
 	/** Coverflow center X */
 	private final int coverflowCenterX;
 	/** Loaded images in the coverflow */
-	private CoverElement[] covers;
+	private final Map<String, CoverElement> covers;
 	/** Indicate if the cover is centered */
 	private boolean coverCentered;
-	/** index of the centered cover */
-	private int indexCoverCentered;
+	/** Revelant index covers of the coverflow */
+	private String idCoverCentered;
+	private String idFirstCover;
+	private String idMiddleCover;
 
 	private final TheaterBean currentTheater;
 	private ClickCoverListener clickCoverListener;
@@ -37,6 +42,7 @@ public class Coverflow {
 		coverflowCanvas = new GWTCoverflowCanvas(width, height);
 		coverflowCenterX = width / 2;
 		this.currentTheater = curentTheater;
+		this.covers = new HashMap<String, CoverElement>();
 	}
 
 	public void addClickCoverListener(ClickCoverListener clickCoverListener) {
@@ -44,26 +50,35 @@ public class Coverflow {
 	}
 
 	/**
-	 * Initialize the coverflow with images URLs
+	 * Initialize the coverflow with covers
 	 * 
-	 * @param imagesUrls
-	 *            Images URLs
+	 * @param covers
+	 *            All Covers elements with an unique String ID as key Images URLs
 	 */
-	public void init(Map<String, String> imagesUrls) {
+	public void init(final List<CoverData> coversData) {
+		// Initialize Coverflow data
+		this.idFirstCover = coversData.get(0).getId();
+		this.idMiddleCover = coversData.get(coversData.size() / 2).getId();
+		for (CoverData coverData : coversData) {
+			if (StringUtils.isEmpty(coverData.getCoverUrl())) {
+				coverData.setCoverURL(CstResource.instance.no_poster().getURL());
+			}
+			covers.put(coverData.getId(), new CoverElement(coverData));
+		}
+
 		// Add coverflow move listener
 		coverflowCanvas.setMouseMoveEvent(new CoverflowMouseEvent() {
 			@Override
 			public void onClickCover(int clickX) {
 				// Determine the distance between the center and the click x coordonate
-				int indexSelectedImg = CoverflowUtil.getIndexOfCoverFromX(covers, clickX);
+				String idSelectedCover = CoverflowUtil.getIdOfCoverFromX(covers, clickX);
 				// Center or open movie details ?
-				if (indexSelectedImg != indexCoverCentered) {
-					// Center the coverflow on the selected image
-					if (indexSelectedImg != -1) {
-						moveToCover(indexSelectedImg);
+				if (!StringUtils.equalsIC(idSelectedCover, idCoverCentered)) {
+					if (idSelectedCover != null) {
+						moveToCover(idSelectedCover);
 					}
 				} else {
-					MovieBean movie = CineShowTimeWS.getInstance().getMovie(covers[indexSelectedImg].getIdCover());
+					MovieBean movie = CineShowTimeWS.getInstance().getMovie(idSelectedCover);
 					clickCoverListener.onClickCover(currentTheater, movie);
 				}
 			}
@@ -76,23 +91,25 @@ public class Coverflow {
 		});
 
 		// Load images for the first time
-		ImagesLoader.loadImages(imagesUrls, new ImagesLoader.LoadImagesCallBack() {
+		CoversLoader.loadImages(covers, new CoversLoader.LoadImagesCallBack() {
 			@Override
 			public void onImagesLoaded(Map<String, ImageElement> imageElements) {
-				covers = new CoverElement[imageElements.size()];
 				int offsetX = 0;
-				int index = 0;
+				CoverElement initCover = null;
 				for (Entry<String, ImageElement> entry : imageElements.entrySet()) {
+					// Get the initialized cover
+					initCover = covers.get(entry.getKey());
 					// Initialize the cover
-					covers[index] = new CoverElement(entry.getKey(), entry.getValue(), offsetX, TOP_PADDING, 0);
+					initCover.setImage(entry.getValue());
+					initCover.setLeftX(offsetX);
+					initCover.setTopY(TOP_PADDING);
 					// Drax the cover
-					covers[index].draw(coverflowCanvas.getCanvas());
+					initCover.draw(coverflowCanvas.getCanvas());
 					// Compute next cover offset X
-					offsetX = offsetX + covers[index].getWidth() + SPACE_BETWEEN_IMAGES;
-					index++;
+					offsetX = offsetX + initCover.getWidth() + SPACE_BETWEEN_IMAGES;
 				}
 				coverflowCanvas.setFrontGradient();
-				center();
+				moveToCover(idMiddleCover);
 			}
 		});
 
@@ -106,12 +123,13 @@ public class Coverflow {
 	 * @param imageUrl
 	 *            Image URL of the cover
 	 */
-	public void loadCover(final int index, String imageUrl) {
+	public void loadCover(String idCover, String imageUrl) {
 		if (StringUtils.isNotEmpty(imageUrl)) {
+			CoverElement loadedCover = covers.get(idCover);
 			final Image logoImg = new Image(imageUrl);
-			if (covers[index] != null) {
-				covers[index].setImage((ImageElement) logoImg.getElement().cast());
-				covers[index].draw(coverflowCanvas.getCanvas());
+			if (loadedCover != null) {
+				loadedCover.setImage((ImageElement) logoImg.getElement().cast());
+				loadedCover.draw(coverflowCanvas.getCanvas());
 			}
 			drawCoverflow();
 		}
@@ -127,8 +145,9 @@ public class Coverflow {
 	 *            Distance to animate
 	 */
 	private void animateCoverflow(final int direction, final int distance) {
-		if (covers[0] != null) {
-			final int firstLeftX = covers[0].getLeftX();
+		if (covers.containsKey(idFirstCover)) {
+			final CoverElement firstCover = covers.get(idFirstCover);
+			final int firstLeftX = firstCover.getLeftX();
 
 			Animation myAnimation = new Animation(coverflowCanvas.getCanvas(), 100) {
 				final int linearSpeed = 100; // pixels / second
@@ -143,16 +162,16 @@ public class Coverflow {
 						totalTranslateX -= linearDistEachFrame;
 					}
 
-					if (Math.abs(firstLeftX - covers[0].getLeftX()) >= Math.abs(distance)) {
+					if (Math.abs(firstLeftX - firstCover.getLeftX()) >= Math.abs(distance)) {
 						stop();
 						if (!coverCentered) {
 							// Finish the move and center to an image
-							moveToCover(CoverflowUtil.getIndexOfCoverFromX(covers, coverflowCenterX));
+							moveToCover(CoverflowUtil.getIdOfCoverFromX(covers, coverflowCenterX));
 						}
 					}
 
 					// Compute next covers X coordonates
-					for (CoverElement cover : covers) {
+					for (CoverElement cover : covers.values()) {
 						cover.setLeftX(cover.getLeftX() + totalTranslateX);
 					}
 				}
@@ -173,21 +192,10 @@ public class Coverflow {
 	 */
 	public void drawCoverflow() {
 		coverflowCanvas.setBackgroundColor();
-		for (CoverElement cover : covers) {
+		for (CoverElement cover : covers.values()) {
 			cover.draw(coverflowCanvas.getCanvas());
 		}
 		coverflowCanvas.setFrontGradient();
-	}
-
-	/**
-	 * Center and move the coverflow to the cental cover
-	 */
-	private void center() {
-		int middleIndex = 0;
-		if (covers != null && covers.length > 0) {
-			middleIndex = covers.length / 2;
-		}
-		moveToCover(middleIndex);
 	}
 
 	/**
@@ -196,12 +204,13 @@ public class Coverflow {
 	 * @param coverIndex
 	 *            Index of the cover
 	 */
-	private void moveToCover(int coverIndex) {
+	private void moveToCover(String idCover) {
 		// Compute image center & move distance
-		if (coverIndex >= 0 && coverIndex < covers.length) {
-			int coverCenterX = covers[coverIndex].getLeftX() + (covers[coverIndex].getWidth() / 2);
+		if (idCover != null && covers.containsKey(idCover)) {
+			CoverElement goToCover = covers.get(idCover);
+			int coverCenterX = goToCover.getLeftX() + (goToCover.getWidth() / 2);
 			coverCentered = true;
-			indexCoverCentered = coverIndex;
+			idCoverCentered = idCover;
 			int distance = coverflowCenterX - coverCenterX;
 			// render image
 			if (distance <= 0) { // Go left

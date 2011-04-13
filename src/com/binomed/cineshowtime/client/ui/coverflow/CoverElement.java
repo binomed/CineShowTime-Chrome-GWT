@@ -1,7 +1,5 @@
 package com.binomed.cineshowtime.client.ui.coverflow;
 
-import com.binomed.cineshowtime.client.model.MovieBean;
-import com.binomed.cineshowtime.client.service.ws.CineShowTimeWS;
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.CanvasGradient;
 import com.google.gwt.dom.client.ImageElement;
@@ -11,29 +9,14 @@ public class CoverElement {
 	private final static int DEFAULT_IMG_HEIGHT = 150;
 	private final static int DEFAULT_IMG_WIDTH = 100;
 
-	private String idCover;
-	private String nameCover;
+	private CoverData data;
 	private ImageElement image;
 	private int leftX;
 	private int topY;
 	private int zIndex;
 
-	public CoverElement(ImageElement image) {
-		this.image = image;
-	}
-
-	public CoverElement(String idCover, ImageElement image, int leftX, int topY, int zIndex) {
-		this.idCover = idCover;
-		this.image = image;
-		this.leftX = leftX;
-		this.topY = topY;
-		this.zIndex = zIndex;
-
-		// TODO enlever
-		MovieBean movie = CineShowTimeWS.getInstance().getMovie(idCover);
-		if (movie != null) {
-			this.nameCover = movie.getMovieName();
-		}
+	public CoverElement(CoverData data) {
+		this.data = data;
 	}
 
 	public void draw(Canvas canvas) {
@@ -65,13 +48,13 @@ public class CoverElement {
 		canvas.getContext2d().restore();
 
 		// Draw movie title
-		canvas.getContext2d().save();
-		canvas.getContext2d().translate(0, 0);
-		canvas.getContext2d().setFillStyle("#00f");
-		canvas.getContext2d().setTextBaseline("top");
-		canvas.getContext2d().setFont("bold 20px sans-serif");
-		canvas.getContext2d().fillText(this.nameCover, leftX, topY + DEFAULT_IMG_HEIGHT);
-		canvas.getContext2d().restore();
+		// canvas.getContext2d().save();
+		// canvas.getContext2d().translate(0, 0);
+		// canvas.getContext2d().setFillStyle("#00f");
+		// canvas.getContext2d().setTextBaseline("top");
+		// canvas.getContext2d().setFont("bold 20px sans-serif");
+		// canvas.getContext2d().fillText(this.labelCover, leftX, topY + DEFAULT_IMG_HEIGHT);
+		// canvas.getContext2d().restore();
 	}
 
 	public ImageElement getImage() {
@@ -114,8 +97,12 @@ public class CoverElement {
 		return DEFAULT_IMG_WIDTH;
 	}
 
-	public String getIdCover() {
-		return idCover;
+	public String getCoverURL() {
+		return data.getCoverUrl();
+	}
+
+	public void setCoverURL(String coverURL) {
+		data.setCoverURL(coverURL);
 	}
 
 }

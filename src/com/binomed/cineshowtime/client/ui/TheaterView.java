@@ -1,5 +1,6 @@
 package com.binomed.cineshowtime.client.ui;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,10 +9,10 @@ import com.binomed.cineshowtime.client.cst.HttpParamsCst;
 import com.binomed.cineshowtime.client.model.MovieBean;
 import com.binomed.cineshowtime.client.model.ProjectionBean;
 import com.binomed.cineshowtime.client.model.TheaterBean;
-import com.binomed.cineshowtime.client.resources.CstResource;
 import com.binomed.cineshowtime.client.service.ws.CineShowTimeWS;
 import com.binomed.cineshowtime.client.service.ws.callback.ImdbRequestCallback;
 import com.binomed.cineshowtime.client.ui.coverflow.ClickCoverListener;
+import com.binomed.cineshowtime.client.ui.coverflow.CoverData;
 import com.binomed.cineshowtime.client.ui.coverflow.Coverflow;
 import com.binomed.cineshowtime.client.ui.dialog.MapDialog;
 import com.google.gwt.core.client.GWT;
@@ -59,13 +60,13 @@ public class TheaterView extends Composite {
 		CineShowTimeWS service = CineShowTimeWS.getInstance();
 
 		// Images url to load in the coverflow
-		final Map<String, String> imagesUrls = new HashMap<String, String>(theater.getMovieMap().size());
+		final List<CoverData> coversData = new ArrayList<CoverData>();
 		MovieBean movieTmp = null;
 		int i = 0;
 		Map<String, String> params = new HashMap<String, String>();
 		final Map<String, Integer> mapMovieIndex = new HashMap<String, Integer>();
 		// final String ip = InetAddress.getLocalHost().getHostAddress();
-		final String ip = "193.253.198.44"; // TODO à débouchonner
+		final String ip = "193.253.198.44"; // TODO Ã  dÃ©bouchonner
 		for (java.util.Map.Entry<String, List<ProjectionBean>> entryMovie : theater.getMovieMap().entrySet()) {
 			movieTmp = service.getMovie(entryMovie.getKey());
 			mapMovieIndex.put(entryMovie.getKey(), i);
@@ -75,12 +76,10 @@ public class TheaterView extends Composite {
 				params.put(HttpParamsCst.PARAM_IP, ip);
 				params.put(HttpParamsCst.PARAM_MOVIE_CUR_LANG_NAME, URL.encode(movieTmp.getMovieName()));
 				params.put(HttpParamsCst.PARAM_MOVIE_NAME, URL.encode(movieTmp.getEnglishMovieName()));
-				params.put(HttpParamsCst.PARAM_LANG, "FR"); // TODO à débouchonner
-				params.put(HttpParamsCst.PARAM_PLACE, URL.encode("Nantes"));// TODO à débouchonner
+				params.put(HttpParamsCst.PARAM_LANG, "FR"); // TODO Ã  dÃ©bouchonner
+				params.put(HttpParamsCst.PARAM_PLACE, URL.encode("Nantes"));// TODO Ã  dÃ©bouchonner
 				params.put(HttpParamsCst.PARAM_ZIP, "true");
 				params.put(HttpParamsCst.PARAM_MOVIE_ID, movieTmp.getId());
-				imagesUrls.put(movieTmp.getId(), CstResource.instance.no_poster().getURL());
-
 				service.requestImdbInfo(params, movieTmp, new ImdbRequestCallback() {
 
 					@Override
@@ -96,17 +95,16 @@ public class TheaterView extends Composite {
 
 					@Override
 					public void onMovieResp(MovieBean movieBean) {
-						coverflow.loadCover(mapMovieIndex.get(movieBean.getId()), movieBean.getUrlImg());
+						coverflow.loadCover(movieBean.getId(), movieBean.getUrlImg());
 
 					}
 				});
-			} else {
-				imagesUrls.put(movieTmp.getId(), movieTmp.getUrlImg());
 			}
+			coversData.add(movieTmp);
 			i++;
 		}
-		coverflow.init(imagesUrls);
-		theaterCoverflow.add(new Label("Programmation (" + theater.getMovieMap().size() + " films)"));
+		coverflow.init(coversData);
+		theaterCoverflow.add(new Label("Programmation (" + coversData.size() + " films)"));
 		theaterCoverflow.add(coverflow.getCanvas());
 
 		// Update theater informations
@@ -121,7 +119,7 @@ public class TheaterView extends Composite {
 		if (theater.getPlace() != null) {
 			new MapDialog(theater.getTheaterName(), theater.getPlace().getSearchQuery()).center();
 		} else {
-			// TODO A gérer autrement
+			// TODO A gÃ©rer autrement
 			Window.alert("No maps!");
 		}
 

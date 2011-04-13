@@ -1,17 +1,20 @@
 package com.binomed.cineshowtime.client.ui.coverflow;
 
+import java.util.Map;
+import java.util.Map.Entry;
+
 public class CoverflowUtil {
 
 	private CoverflowUtil() {
 	}
 
-	public static int getIndexOfCoverFromX(CoverElement[] covers, int x) {
-		for (int i = 0; i < covers.length; i++) {
-			if (x >= covers[i].getLeftX() && x <= covers[i].getRightX()) {
-				return i;
+	public static String getIdOfCoverFromX(Map<String, CoverElement> covers, int x) {
+		for (Entry<String, CoverElement> coverEntry : covers.entrySet()) {
+			if (x >= coverEntry.getValue().getLeftX() && x <= coverEntry.getValue().getRightX()) {
+				return coverEntry.getKey();
 			}
 		}
-		return -1;
+		return null;
 	}
 
 }
