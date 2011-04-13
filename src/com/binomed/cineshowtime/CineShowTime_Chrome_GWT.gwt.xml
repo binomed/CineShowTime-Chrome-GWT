@@ -20,6 +20,10 @@
   <!-- Compile project only for Chrome -->
   <set-property name="user.agent" value="safari" /> 
 
+  <replace-with class="com.binomed.cineshowtime.client.ClientFactory">
+	 <when-type-is class="fr.dcns.refcol.client.IClientFactory" />
+  </replace-with>
+
   <!-- Specify the app entry point class.                         -->
   <entry-point class='com.binomed.cineshowtime.client.CineShowTime_Chrome_GWT'/>
 

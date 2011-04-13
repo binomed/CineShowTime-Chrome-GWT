@@ -39,6 +39,7 @@ public class ParserNearResultDomXml extends AbstractParser {
 		for (int i = 0; i < movieList.getLength(); i++) {
 			nodeMovie = movieList.item(i);
 			movieBean = new MovieBean();
+			movieBean.setState(MovieBean.STATE_NONE);
 			movieBean.setId(getString(nodeMovie, ATTR_ID));
 			movieBean.setMovieName(getString(nodeMovie, ATTR_MOVIE_NAME));
 			movieBean.setEnglishMovieName(getString(nodeMovie, ATTR_ENGLISH_MOVIE_NAME));

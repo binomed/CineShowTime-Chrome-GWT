@@ -48,13 +48,13 @@ public class CoverElement {
 		canvas.getContext2d().restore();
 
 		// Draw movie title
-		// canvas.getContext2d().save();
-		// canvas.getContext2d().translate(0, 0);
-		// canvas.getContext2d().setFillStyle("#00f");
-		// canvas.getContext2d().setTextBaseline("top");
-		// canvas.getContext2d().setFont("bold 20px sans-serif");
-		// canvas.getContext2d().fillText(this.labelCover, leftX, topY + DEFAULT_IMG_HEIGHT);
-		// canvas.getContext2d().restore();
+		canvas.getContext2d().save();
+		canvas.getContext2d().translate(0, 0);
+		canvas.getContext2d().setFillStyle("#00f");
+		canvas.getContext2d().setTextBaseline("top");
+		canvas.getContext2d().setFont("bold 15px sans-serif");
+		canvas.getContext2d().fillText(data.getLabel(), leftX, topY + DEFAULT_IMG_HEIGHT);
+		canvas.getContext2d().restore();
 	}
 
 	public ImageElement getImage() {

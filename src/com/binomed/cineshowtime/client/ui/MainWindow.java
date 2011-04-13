@@ -1,25 +1,15 @@
 package com.binomed.cineshowtime.client.ui;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.binomed.cineshowtime.client.cst.HttpParamsCst;
-import com.binomed.cineshowtime.client.events.IMovieResponse;
-import com.binomed.cineshowtime.client.model.MovieBean;
+import com.binomed.cineshowtime.client.IClientFactory;
 import com.binomed.cineshowtime.client.model.NearResp;
 import com.binomed.cineshowtime.client.model.TheaterBean;
 import com.binomed.cineshowtime.client.service.geolocation.UserGeolocation;
 import com.binomed.cineshowtime.client.service.geolocation.UserGeolocationCallback;
 import com.binomed.cineshowtime.client.service.ws.CineShowTimeWS;
-import com.binomed.cineshowtime.client.service.ws.callback.ImdbRequestCallback;
 import com.binomed.cineshowtime.client.service.ws.callback.NearTheatersRequestCallback;
-import com.binomed.cineshowtime.client.ui.coverflow.ClickCoverListener;
 import com.binomed.cineshowtime.client.ui.widget.MovieTabHeaderWidget;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JsArray;
-import com.google.gwt.http.client.URL;
 import com.google.gwt.maps.client.geocode.Placemark;
 import com.google.gwt.maps.client.geom.LatLng;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -34,6 +24,8 @@ public class MainWindow extends Composite {
 
 	private static MainWindowUiBinder uiBinder = GWT.create(MainWindowUiBinder.class);
 
+	private IClientFactory clientFactory;
+
 	@UiField
 	TabLayoutPanel appBodyPanel;
 	@UiField
@@ -41,7 +33,9 @@ public class MainWindow extends Composite {
 	@UiField
 	VerticalPanel theatersContent;
 
-	public MainWindow() {
+	public MainWindow(IClientFactory clientFactory) {
+		this.clientFactory = clientFactory;
+
 		// Initialization
 		initWidget(uiBinder.createAndBindUi(this));
 
@@ -50,6 +44,12 @@ public class MainWindow extends Composite {
 
 		// Load intial content
 		loadTheatersOfUserLocation();
+	}
+
+	public void addMovieTab(TheaterBean theater, String idMovie) {
+		MovieView movieView = new MovieView(theater, idMovie);
+		appBodyPanel.add(movieView, new MovieTabHeaderWidget(movieView.getMovie().getMovieName(), movieView, appBodyPanel));
+		appBodyPanel.selectTab(movieView);
 	}
 
 	private void loadTheatersOfUserLocation() {
@@ -80,7 +80,7 @@ public class MainWindow extends Composite {
 			public void onNearResp(NearResp nearResp) {
 				if (nearResp != null) {
 					for (TheaterBean theater : nearResp.getTheaterList()) {
-						theatersContent.add(new TheaterView(theater, nearResp.getMapMovies(), listener));
+						theatersContent.add(new TheaterView(clientFactory, theater));
 					}
 				}
 			}
@@ -91,60 +91,6 @@ public class MainWindow extends Composite {
 			}
 		});
 	}
-
-	private final ClickCoverListener listener = new ClickCoverListener() {
-
-		@Override
-		public void onClickCover(TheaterBean theater, MovieBean movie) {
-			CineShowTimeWS service = CineShowTimeWS.getInstance();
-			movie = service.getMovie(movie.getId());
-			ImdbRequestCallback callBack;
-			final List<IMovieResponse> movieListener = new ArrayList<IMovieResponse>();
-			if (movie == null) {
-
-				callBack = new ImdbRequestCallback() {
-
-					@Override
-					public void onResponse(String response) {
-						// TODO Auto-generated method stub
-
-					}
-
-					@Override
-					public void onMovieResp(MovieBean movieBean) {
-						for (IMovieResponse listener : movieListener) {
-							listener.movieResponse(movieBean);
-						}
-						// TODO Auto-generated method stub
-
-					}
-
-					@Override
-					public void onError(Throwable exception) {
-						// TODO Auto-generated method stub
-
-					}
-				};
-				Map<String, String> params = new HashMap<String, String>();
-				params.clear();
-				// final String ip = InetAddress.getLocalHost().getHostAddress();
-				final String ip = "193.253.198.44"; // TODO à débouchonner
-				params.put(HttpParamsCst.PARAM_IP, ip);
-				params.put(HttpParamsCst.PARAM_MOVIE_CUR_LANG_NAME, URL.encode(movie.getMovieName()));
-				params.put(HttpParamsCst.PARAM_MOVIE_NAME, URL.encode(movie.getEnglishMovieName()));
-				params.put(HttpParamsCst.PARAM_LANG, "FR"); // TODO à débouchonner
-				params.put(HttpParamsCst.PARAM_PLACE, URL.encode("Nantes"));// TODO à débouchonner
-				params.put(HttpParamsCst.PARAM_ZIP, "true");
-				params.put(HttpParamsCst.PARAM_MOVIE_ID, movie.getId());
-				service.requestImdbInfo(params, movie, callBack);
-			}
-			MovieView movieView = new MovieView(theater, movie, movieListener);
-			appBodyPanel.add(movieView, new MovieTabHeaderWidget(movie.getMovieName(), movieView, appBodyPanel));
-			appBodyPanel.selectTab(movieView);
-
-		}
-
-	};
 
 	interface MainWindowUiBinder extends UiBinder<Widget, MainWindow> {
 	}

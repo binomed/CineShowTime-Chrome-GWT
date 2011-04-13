@@ -6,6 +6,12 @@ import com.binomed.cineshowtime.client.ui.coverflow.CoverData;
 
 public class MovieBean implements CoverData {
 
+	public static final int STATE_NONE = 0;
+	public static final int STATE_LOADED = 1;
+	public static final int STATE_IN_PROGRESS = 2;
+
+	private int state;
+
 	private String id;
 
 	private String cid;
@@ -243,6 +249,14 @@ public class MovieBean implements CoverData {
 	@Override
 	public String getVideoUrl() {
 		return null;
+	}
+
+	public int getState() {
+		return state;
+	}
+
+	public void setState(int state) {
+		this.state = state;
 	}
 
 }

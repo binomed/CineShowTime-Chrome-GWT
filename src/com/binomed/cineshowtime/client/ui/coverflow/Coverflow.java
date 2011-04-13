@@ -5,10 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.binomed.cineshowtime.client.model.MovieBean;
-import com.binomed.cineshowtime.client.model.TheaterBean;
 import com.binomed.cineshowtime.client.resources.CstResource;
-import com.binomed.cineshowtime.client.service.ws.CineShowTimeWS;
 import com.binomed.cineshowtime.client.util.StringUtils;
 import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.user.client.ui.Image;
@@ -35,13 +32,11 @@ public class Coverflow {
 	private String idFirstCover;
 	private String idMiddleCover;
 
-	private final TheaterBean currentTheater;
 	private ClickCoverListener clickCoverListener;
 
-	public Coverflow(int width, int height, TheaterBean curentTheater) {
+	public Coverflow(int width, int height) {
 		coverflowCanvas = new GWTCoverflowCanvas(width, height);
 		coverflowCenterX = width / 2;
-		this.currentTheater = curentTheater;
 		this.covers = new HashMap<String, CoverElement>();
 	}
 
@@ -78,8 +73,7 @@ public class Coverflow {
 						moveToCover(idSelectedCover);
 					}
 				} else {
-					MovieBean movie = CineShowTimeWS.getInstance().getMovie(idSelectedCover);
-					clickCoverListener.onClickCover(currentTheater, movie);
+					clickCoverListener.onClickCover(idSelectedCover);
 				}
 			}
 
@@ -123,7 +117,7 @@ public class Coverflow {
 	 * @param imageUrl
 	 *            Image URL of the cover
 	 */
-	public void loadCover(String idCover, String imageUrl) {
+	public void updateCover(String idCover, String imageUrl) {
 		if (StringUtils.isNotEmpty(imageUrl)) {
 			CoverElement loadedCover = covers.get(idCover);
 			final Image logoImg = new Image(imageUrl);
