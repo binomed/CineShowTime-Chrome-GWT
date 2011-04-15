@@ -7,11 +7,12 @@ import java.util.Map;
 
 import com.binomed.cineshowtime.client.IClientFactory;
 import com.binomed.cineshowtime.client.cst.HttpParamsCst;
+import com.binomed.cineshowtime.client.event.EventTypeEnum;
+import com.binomed.cineshowtime.client.handler.ImdbRespHandler;
 import com.binomed.cineshowtime.client.model.MovieBean;
 import com.binomed.cineshowtime.client.model.ProjectionBean;
 import com.binomed.cineshowtime.client.model.TheaterBean;
 import com.binomed.cineshowtime.client.service.ws.CineShowTimeWS;
-import com.binomed.cineshowtime.client.service.ws.callback.ImdbRequestCallback;
 import com.binomed.cineshowtime.client.ui.coverflow.ClickCoverListener;
 import com.binomed.cineshowtime.client.ui.coverflow.CoverData;
 import com.binomed.cineshowtime.client.ui.coverflow.Coverflow;
@@ -32,7 +33,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class TheaterView extends Composite implements ImdbRequestCallback {
+public class TheaterView extends Composite {
 
 	private static TheaterViewUiBinder uiBinder = GWT.create(TheaterViewUiBinder.class);
 
@@ -81,7 +82,7 @@ public class TheaterView extends Composite implements ImdbRequestCallback {
 					coverflow = new Coverflow(800, 300);
 					coverflow.addClickCoverListener(movieOpenListener);
 
-					CineShowTimeWS service = CineShowTimeWS.getInstance();
+					CineShowTimeWS service = clientFactory.getCineShowTimeService();
 					// Images url to load in the coverflow
 					final List<CoverData> coversData = new ArrayList<CoverData>();
 					MovieBean movieTmp = null;
@@ -102,10 +103,13 @@ public class TheaterView extends Composite implements ImdbRequestCallback {
 							params.put(HttpParamsCst.PARAM_PLACE, URL.encode("Nantes"));// TODO Ã  dÃ©bouchonner
 							params.put(HttpParamsCst.PARAM_ZIP, "true");
 							params.put(HttpParamsCst.PARAM_MOVIE_ID, movieTmp.getId());
-							service.register(entryMovie.getKey(), TheaterView.this);
-							service.requestImdbInfo(params, movieTmp);
+							// Register to event
+							clientFactory.getEventBusHandler().put(EventTypeEnum.MOVIE_LOAD, eventHandler);
+							// call the service
+							service.requestImdbInfo(params, movieTmp, theater.getId());
 						} else if (movieTmp.getState() == MovieBean.STATE_IN_PROGRESS) {
-							service.register(entryMovie.getKey(), TheaterView.this);
+							// Register the service
+							clientFactory.getEventBusHandler().put(EventTypeEnum.MOVIE_LOAD, eventHandler);
 						}
 						coversData.add(movieTmp);
 						i++;
@@ -137,16 +141,22 @@ public class TheaterView extends Composite implements ImdbRequestCallback {
 
 	};
 
-	@Override
-	public void onMovieLoadedError(Throwable exception) {
-		// TODO Auto-generated method stub
+	private ImdbRespHandler eventHandler = new ImdbRespHandler() {
 
-	}
+		@Override
+		public void handleError(Throwable error) {
+			// TODO Auto-generated method stub
 
-	@Override
-	public void onMovieLoaded(MovieBean movieBean) {
-		coverflow.updateCover(movieBean.getId(), movieBean.getUrlImg());
-	}
+		}
+
+		@Override
+		public void onMovieLoad(MovieBean movieBean, String source) {
+			if (theater.getId().equals(source)) {
+				coverflow.updateCover(movieBean.getId(), movieBean.getUrlImg());
+			}
+
+		}
+	};
 
 	interface TheaterViewUiBinder extends UiBinder<Widget, TheaterView> {
 	}

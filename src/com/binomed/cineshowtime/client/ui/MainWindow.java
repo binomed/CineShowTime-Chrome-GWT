@@ -1,12 +1,13 @@
 package com.binomed.cineshowtime.client.ui;
 
 import com.binomed.cineshowtime.client.IClientFactory;
+import com.binomed.cineshowtime.client.event.EventTypeEnum;
+import com.binomed.cineshowtime.client.handler.NearRespHandler;
 import com.binomed.cineshowtime.client.model.NearResp;
 import com.binomed.cineshowtime.client.model.TheaterBean;
 import com.binomed.cineshowtime.client.service.geolocation.UserGeolocation;
 import com.binomed.cineshowtime.client.service.geolocation.UserGeolocationCallback;
 import com.binomed.cineshowtime.client.service.ws.CineShowTimeWS;
-import com.binomed.cineshowtime.client.service.ws.callback.NearTheatersRequestCallback;
 import com.binomed.cineshowtime.client.ui.widget.MovieTabHeaderWidget;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JsArray;
@@ -47,7 +48,7 @@ public class MainWindow extends Composite {
 	}
 
 	public void addMovieTab(TheaterBean theater, String idMovie) {
-		MovieView movieView = new MovieView(theater, idMovie);
+		MovieView movieView = new MovieView(theater, idMovie, clientFactory);
 		appBodyPanel.add(movieView, new MovieTabHeaderWidget(movieView.getMovie().getMovieName(), movieView, appBodyPanel));
 		appBodyPanel.selectTab(movieView);
 	}
@@ -73,9 +74,16 @@ public class MainWindow extends Composite {
 	}
 
 	private void loadTheaters(double lat, double lng) {
-		CineShowTimeWS service = CineShowTimeWS.getInstance();
-		service.requestNearTheatersFromLatLng(lat, lng, new NearTheatersRequestCallback() {
-			// service.requestNearTheatersFromLatLng(47.216842, -1.556744, new NearTheatersRequestCallback() {
+		CineShowTimeWS service = clientFactory.getCineShowTimeService();
+		// Define register to event
+		clientFactory.getEventBusHandler().put(EventTypeEnum.NEAR_RESP_NEAR, new NearRespHandler() {
+
+			@Override
+			public void handleError(Throwable error) {
+				Window.alert("Error=" + error.getMessage());
+
+			}
+
 			@Override
 			public void onNearResp(NearResp nearResp) {
 				if (nearResp != null) {
@@ -83,13 +91,11 @@ public class MainWindow extends Composite {
 						theatersContent.add(new TheaterView(clientFactory, theater));
 					}
 				}
-			}
 
-			@Override
-			public void onError(Throwable exception) {
-				Window.alert("Error=" + exception.getMessage());
 			}
 		});
+		// Call the service
+		service.requestNearTheatersFromLatLng(lat, lng);
 	}
 
 	interface MainWindowUiBinder extends UiBinder<Widget, MainWindow> {
