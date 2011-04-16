@@ -1,6 +1,9 @@
 package com.binomed.cineshowtime.client.event;
 
-public abstract class BeanEvent<Bean> implements HandledEvent {
+import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.event.shared.GwtEvent;
+
+public abstract class BeanEvent<Bean, BeanHandler extends EventHandler> extends GwtEvent<BeanHandler> {
 
 	private Bean bean;
 

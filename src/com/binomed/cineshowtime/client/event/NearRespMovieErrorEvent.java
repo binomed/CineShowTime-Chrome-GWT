@@ -1,16 +1,15 @@
 package com.binomed.cineshowtime.client.event;
 
 import com.binomed.cineshowtime.client.handler.NearRespHandler;
-import com.binomed.cineshowtime.client.model.NearResp;
 import com.google.gwt.event.shared.GwtEvent;
 
-public class NearRespMovieEvent extends NearRespEvent {
+public class NearRespMovieErrorEvent extends ErrorEvent<NearRespHandler> {
+
+	public NearRespMovieErrorEvent(Throwable exception) {
+		super(exception);
+	}
 
 	public static GwtEvent.Type<NearRespHandler> TYPE = new Type<NearRespHandler>();
-
-	public NearRespMovieEvent(NearResp nearResp) {
-		super(nearResp);
-	}
 
 	@Override
 	public com.google.gwt.event.shared.GwtEvent.Type<NearRespHandler> getAssociatedType() {

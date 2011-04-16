@@ -4,9 +4,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.binomed.cineshowtime.client.IClientFactory;
-import com.binomed.cineshowtime.client.event.EventTypeEnum;
+import com.binomed.cineshowtime.client.event.MovieLoadErrorEvent;
 import com.binomed.cineshowtime.client.event.MovieLoadedEvent;
+import com.binomed.cineshowtime.client.event.NearRespMovieErrorEvent;
 import com.binomed.cineshowtime.client.event.NearRespMovieEvent;
+import com.binomed.cineshowtime.client.event.NearRespNearErrorEvent;
 import com.binomed.cineshowtime.client.event.NearRespNearEvent;
 import com.binomed.cineshowtime.client.model.MovieBean;
 import com.binomed.cineshowtime.client.model.NearResp;
@@ -58,7 +60,7 @@ public class CineShowTimeWS extends AbstractCineShowTimeWS {
 
 			@Override
 			public void onError(Request request, Throwable exception) {
-				clientFactory.getEventBusHandler().fireEventError(EventTypeEnum.NEAR_RESP_NEAR, exception);
+				clientFactory.getEventBusHandler().fireEvent(new MovieLoadErrorEvent(exception));
 			}
 		});
 	}
@@ -83,7 +85,7 @@ public class CineShowTimeWS extends AbstractCineShowTimeWS {
 
 			@Override
 			public void onError(Request request, Throwable exception) {
-				clientFactory.getEventBusHandler().fireEventError(EventTypeEnum.NEAR_RESP_MOVIE, exception);
+				clientFactory.getEventBusHandler().fireEvent(new NearRespMovieErrorEvent(exception));
 			}
 		});
 	}
@@ -111,7 +113,7 @@ public class CineShowTimeWS extends AbstractCineShowTimeWS {
 
 			@Override
 			public void onError(Request request, Throwable exception) {
-				clientFactory.getEventBusHandler().fireEventError(EventTypeEnum.MOVIE_LOAD, exception);
+				clientFactory.getEventBusHandler().fireEvent(new NearRespNearErrorEvent(exception));
 			}
 		});
 	}

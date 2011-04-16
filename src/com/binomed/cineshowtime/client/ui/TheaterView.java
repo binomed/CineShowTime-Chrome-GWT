@@ -7,7 +7,8 @@ import java.util.Map;
 
 import com.binomed.cineshowtime.client.IClientFactory;
 import com.binomed.cineshowtime.client.cst.HttpParamsCst;
-import com.binomed.cineshowtime.client.event.EventTypeEnum;
+import com.binomed.cineshowtime.client.event.MovieLoadErrorEvent;
+import com.binomed.cineshowtime.client.event.MovieLoadedEvent;
 import com.binomed.cineshowtime.client.handler.ImdbRespHandler;
 import com.binomed.cineshowtime.client.model.MovieBean;
 import com.binomed.cineshowtime.client.model.ProjectionBean;
@@ -41,6 +42,7 @@ public class TheaterView extends Composite {
 	private final TheaterBean theater;
 
 	private boolean isCoverflowLoaded = false;
+	private boolean hasRegister = false;
 
 	@UiField
 	DisclosurePanel theaterPanel;
@@ -104,12 +106,20 @@ public class TheaterView extends Composite {
 							params.put(HttpParamsCst.PARAM_ZIP, "true");
 							params.put(HttpParamsCst.PARAM_MOVIE_ID, movieTmp.getId());
 							// Register to event
-							clientFactory.getEventBusHandler().put(EventTypeEnum.MOVIE_LOAD, eventHandler);
+							if (!hasRegister) {
+								hasRegister = true;
+								clientFactory.getEventBusHandler().addHandler(MovieLoadedEvent.TYPE, eventHandler);
+								clientFactory.getEventBusHandler().addHandler(MovieLoadErrorEvent.TYPE, eventHandler);
+							}
 							// call the service
 							service.requestImdbInfo(params, movieTmp, theater.getId());
 						} else if (movieTmp.getState() == MovieBean.STATE_IN_PROGRESS) {
 							// Register the service
-							clientFactory.getEventBusHandler().put(EventTypeEnum.MOVIE_LOAD, eventHandler);
+							if (!hasRegister) {
+								hasRegister = true;
+								clientFactory.getEventBusHandler().addHandler(MovieLoadedEvent.TYPE, eventHandler);
+								clientFactory.getEventBusHandler().addHandler(MovieLoadErrorEvent.TYPE, eventHandler);
+							}
 						}
 						coversData.add(movieTmp);
 						i++;
@@ -144,7 +154,7 @@ public class TheaterView extends Composite {
 	private ImdbRespHandler eventHandler = new ImdbRespHandler() {
 
 		@Override
-		public void handleError(Throwable error) {
+		public void onError(Throwable error) {
 			// TODO Auto-generated method stub
 
 		}

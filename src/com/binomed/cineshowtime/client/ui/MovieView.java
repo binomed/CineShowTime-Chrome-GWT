@@ -3,7 +3,8 @@ package com.binomed.cineshowtime.client.ui;
 import java.util.Date;
 
 import com.binomed.cineshowtime.client.IClientFactory;
-import com.binomed.cineshowtime.client.event.EventTypeEnum;
+import com.binomed.cineshowtime.client.event.MovieLoadErrorEvent;
+import com.binomed.cineshowtime.client.event.MovieLoadedEvent;
 import com.binomed.cineshowtime.client.handler.ImdbRespHandler;
 import com.binomed.cineshowtime.client.model.MovieBean;
 import com.binomed.cineshowtime.client.model.ProjectionBean;
@@ -56,8 +57,9 @@ public class MovieView extends Composite {
 
 		CineShowTimeWS service = clientFactory.getCineShowTimeService();
 		this.movie = service.getMovie(idMovie);
-		if (movie.getState() == MovieBean.STATE_NONE || movie.getState() == MovieBean.STATE_IN_PROGRESS) {
-			clientFactory.getEventBusHandler().put(EventTypeEnum.MOVIE_LOAD, eventHandler);
+		if ((movie.getState() == MovieBean.STATE_NONE) || (movie.getState() == MovieBean.STATE_IN_PROGRESS)) {
+			clientFactory.getEventBusHandler().addHandler(MovieLoadedEvent.TYPE, eventHandler);
+			clientFactory.getEventBusHandler().addHandler(MovieLoadErrorEvent.TYPE, eventHandler);
 		} else {
 			fillMovieView();
 		}
@@ -99,17 +101,18 @@ public class MovieView extends Composite {
 	private ImdbRespHandler eventHandler = new ImdbRespHandler() {
 
 		@Override
-		public void handleError(Throwable error) {
+		public void onError(Throwable error) {
 			Window.alert("Unable to load movie ! " + error.getMessage());
 
 		}
 
 		@Override
 		public void onMovieLoad(MovieBean movieBean, String source) {
-			if (movieBean != null && movie.getId().equals(movieBean.getId())) {
+			if ((movieBean != null) && movie.getId().equals(movieBean.getId())) {
 				movie = movieBean;
 				updateMovieView();
-				clientFactory.getEventBusHandler().remove(EventTypeEnum.MOVIE_LOAD, eventHandler);
+				clientFactory.getEventBusHandler().removeHandler(MovieLoadedEvent.TYPE, eventHandler);
+				clientFactory.getEventBusHandler().removeHandler(MovieLoadErrorEvent.TYPE, eventHandler);
 			}
 
 		}

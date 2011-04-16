@@ -1,7 +1,8 @@
 package com.binomed.cineshowtime.client.ui;
 
 import com.binomed.cineshowtime.client.IClientFactory;
-import com.binomed.cineshowtime.client.event.EventTypeEnum;
+import com.binomed.cineshowtime.client.event.NearRespNearErrorEvent;
+import com.binomed.cineshowtime.client.event.NearRespNearEvent;
 import com.binomed.cineshowtime.client.handler.NearRespHandler;
 import com.binomed.cineshowtime.client.model.NearResp;
 import com.binomed.cineshowtime.client.model.TheaterBean;
@@ -76,27 +77,30 @@ public class MainWindow extends Composite {
 	private void loadTheaters(double lat, double lng) {
 		CineShowTimeWS service = clientFactory.getCineShowTimeService();
 		// Define register to event
-		clientFactory.getEventBusHandler().put(EventTypeEnum.NEAR_RESP_NEAR, new NearRespHandler() {
-
-			@Override
-			public void handleError(Throwable error) {
-				Window.alert("Error=" + error.getMessage());
-
-			}
-
-			@Override
-			public void onNearResp(NearResp nearResp) {
-				if (nearResp != null) {
-					for (TheaterBean theater : nearResp.getTheaterList()) {
-						theatersContent.add(new TheaterView(clientFactory, theater));
-					}
-				}
-
-			}
-		});
+		clientFactory.getEventBusHandler().addHandler(NearRespNearEvent.TYPE, nearRespHandler);
+		clientFactory.getEventBusHandler().addHandler(NearRespNearErrorEvent.TYPE, nearRespHandler);
 		// Call the service
 		service.requestNearTheatersFromLatLng(lat, lng);
 	}
+
+	private NearRespHandler nearRespHandler = new NearRespHandler() {
+
+		@Override
+		public void onError(Throwable error) {
+			Window.alert("Error=" + error.getMessage());
+
+		}
+
+		@Override
+		public void onNearResp(NearResp nearResp) {
+			if (nearResp != null) {
+				for (TheaterBean theater : nearResp.getTheaterList()) {
+					theatersContent.add(new TheaterView(clientFactory, theater));
+				}
+			}
+
+		}
+	};
 
 	interface MainWindowUiBinder extends UiBinder<Widget, MainWindow> {
 	}

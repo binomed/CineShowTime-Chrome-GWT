@@ -1,15 +1,13 @@
 package com.binomed.cineshowtime.client.handler;
 
-import com.binomed.cineshowtime.client.event.MovieLoadedEvent;
 import com.binomed.cineshowtime.client.model.MovieBean;
+import com.google.gwt.event.shared.EventHandler;
 
-public abstract class ImdbRespHandler extends ServiceEventHandler<MovieBean, MovieLoadedEvent> {
+public interface ImdbRespHandler extends EventHandler, ErrorHandler {
+
+	void onMovieLoad(MovieBean movieBean, String source);
 
 	@Override
-	public final void handleBeanEvent(MovieLoadedEvent beanEvent) {
-		onMovieLoad(beanEvent.getMovie(), beanEvent.getSource());
-	}
-
-	public abstract void onMovieLoad(MovieBean movieBean, String source);
+	void onError(Throwable exception);
 
 }
