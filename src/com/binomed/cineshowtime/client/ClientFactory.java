@@ -29,7 +29,7 @@ public class ClientFactory implements IClientFactory {
 
 	@Override
 	public String getLanguage() {
-		return "FR";
+		return "fr";
 	}
 
 }

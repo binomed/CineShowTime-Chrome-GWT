@@ -18,6 +18,7 @@ public class CineShowTime_Chrome_GWT implements EntryPoint {
 		IClientFactory clientFactory = GWT.create(ClientFactory.class);
 		// Load and initialize the window
 		RootLayoutPanel.get().add(clientFactory.getMainWindow());
+
 	}
 
 }

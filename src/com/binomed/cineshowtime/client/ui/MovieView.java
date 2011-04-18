@@ -54,6 +54,8 @@ public class MovieView extends Composite {
 	CaptionPanel movieSeanceGroup;
 	@UiField
 	VerticalPanel movieSeanceList, movieTrailerCoverflow, movieReview;
+	// @UiField
+	// HorizontalPanel movieHeader;
 	private Coverflow coverflow;
 
 	public MovieView(final TheaterBean theater, final String idMovie, IClientFactory clientFactory) {
@@ -62,6 +64,8 @@ public class MovieView extends Composite {
 
 		// Initialization
 		initWidget(uiBinder.createAndBindUi(this));
+
+		// movieHeader.setSpacing(10);
 
 		CineShowTimeWS service = clientFactory.getCineShowTimeService();
 		this.movie = service.getMovie(idMovie);
@@ -90,7 +94,7 @@ public class MovieView extends Composite {
 			movieSeanceList.add(new ProjectionView(projection, movie.getMovieTime()));
 		}
 
-		if (movie.getUrlImg() != null) {
+		if (movie.getState() == MovieBean.STATE_LOADED) {
 			updateMovieView();
 		} else {
 			imgPoster.setUrl(CstResource.instance.no_poster().getURL());
@@ -150,7 +154,36 @@ public class MovieView extends Composite {
 	private final ClickCoverListener movieOpenListener = new ClickCoverListener() {
 		@Override
 		public void onClickCover(String idMovie) {
-			// TODO
+
+			// YoutubeBean videoBean = null;
+			// for (YoutubeBean videoTmp : movie.getYoutubeVideos()) {
+			// if (videoTmp.getId().equals(idMovie)) {
+			// videoBean = videoTmp;
+			// }
+			// }
+			//
+			// int left = coverflow.getCanvas().getAbsoluteLeft() + 10;
+			// int top = coverflow.getCanvas().getAbsoluteTop() + 10;
+			//
+			// DecoratedPopupPanel simplePopup = new DecoratedPopupPanel(true);
+			// simplePopup.ensureDebugId("cwBasicPopup-simplePopup");
+			// simplePopup.setWidth("150px");
+			// simplePopup.show();
+			// simplePopup.setPopupPosition(left, top);
+			//
+			// Video video = new Video(videoBean.getVideoUrl());
+			//
+			// final PopupPanel imagePopup = new PopupPanel(true);
+			// imagePopup.setAnimationEnabled(true);
+			// imagePopup.ensureDebugId("cwBasicPopup-imagePopup");
+			// imagePopup.setWidget(video);
+			// video.addClickHandler(new ClickHandler() {
+			// @Override
+			// public void onClick(ClickEvent event) {
+			// imagePopup.hide();
+			// }
+			// });
+
 		}
 
 	};
