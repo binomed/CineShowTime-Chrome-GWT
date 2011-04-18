@@ -74,4 +74,12 @@ public final class GWTCoverflowCanvas {
 		return canvas;
 	}
 
+	public int getHeight() {
+		return canvas.getCoordinateSpaceHeight();
+	}
+
+	public int getWidth() {
+		return canvas.getCoordinateSpaceWidth();
+	}
+
 }
