@@ -1,4 +1,4 @@
-package com.binomed.cineshowtime.client.ui.coverflow;
+package com.binomed.cineshowtime.client.ui.coverflow.event;
 
 
 public interface ClickCoverListener {

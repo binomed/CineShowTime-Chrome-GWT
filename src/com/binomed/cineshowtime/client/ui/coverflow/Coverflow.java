@@ -3,12 +3,12 @@ package com.binomed.cineshowtime.client.ui.coverflow;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import com.binomed.cineshowtime.client.resources.CstResource;
+import com.binomed.cineshowtime.client.ui.coverflow.event.ClickCoverListener;
+import com.binomed.cineshowtime.client.ui.coverflow.event.CoverflowMouseEvent;
 import com.binomed.cineshowtime.client.util.StringUtils;
 import com.google.gwt.dom.client.ImageElement;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
 public class Coverflow {
@@ -54,11 +54,20 @@ public class Coverflow {
 		// Initialize Coverflow data
 		this.idFirstCover = coversData.get(0).getId();
 		this.idMiddleCover = coversData.get(coversData.size() / 2).getId();
+
+		CoverElement cover;
+		int offsetX = 0;
 		for (CoverData coverData : coversData) {
 			if (StringUtils.isEmpty(coverData.getCoverUrl())) {
 				coverData.setCoverURL(CstResource.instance.no_poster().getURL());
 			}
-			covers.put(coverData.getId(), new CoverElement(coverData));
+			// Initialize Cover element
+			cover = new CoverElement(coverData);
+			// Compute next cover offset X
+			cover.setLeftX(offsetX);
+			cover.setTopY(TOP_PADDING);
+			offsetX = offsetX + cover.getWidth() + SPACE_BETWEEN_IMAGES;
+			covers.put(coverData.getId(), cover);
 		}
 
 		// Add coverflow move listener
@@ -84,28 +93,37 @@ public class Coverflow {
 			}
 		});
 
-		// Load images for the first time
-		CoversLoader.loadImages(covers, new CoversLoader.LoadImagesCallBack() {
+		ImageLoader.loadImages(covers, new ImageLoader.LoadImageCallBack() {
 			@Override
-			public void onImagesLoaded(Map<String, ImageElement> imageElements) {
-				int offsetX = 0;
-				CoverElement initCover = null;
-				for (Entry<String, ImageElement> entry : imageElements.entrySet()) {
-					// Get the initialized cover
-					initCover = covers.get(entry.getKey());
-					// Initialize the cover
-					initCover.setImage(entry.getValue());
-					initCover.setLeftX(offsetX);
-					initCover.setTopY(TOP_PADDING);
-					// Drax the cover
-					initCover.draw(coverflowCanvas.getCanvas());
-					// Compute next cover offset X
-					offsetX = offsetX + initCover.getWidth() + SPACE_BETWEEN_IMAGES;
+			public void onImageLoaded(String coverId, ImageElement imageElement) {
+				final CoverElement loadedCover = covers.get(coverId);
+				if (loadedCover != null) {
+					loadedCover.setImage(imageElement);
+					loadedCover.draw(coverflowCanvas.getCanvas());
+					drawCoverflow();
 				}
-				coverflowCanvas.setFrontGradient();
-				moveToCover(idMiddleCover);
 			}
 		});
+		coverflowCanvas.setFrontGradient();
+		moveToCover(idMiddleCover);
+		//
+		// // Load images for the first time
+		// CoversLoader.loadImages(covers, new CoversLoader.LoadImagesCallBack() {
+		// @Override
+		// public void onImagesLoaded(Map<String, ImageElement> imageElements) {
+		// int offsetX = 0;
+		// CoverElement initCover = null;
+		// for (Entry<String, ImageElement> entry : imageElements.entrySet()) {
+		// // Get the initialized cover
+		// initCover = covers.get(entry.getKey());
+		// // Initialize the cover
+		// initCover.setImage(entry.getValue());
+		// // Drax the cover
+		// initCover.draw(coverflowCanvas.getCanvas());
+		// }
+		//
+		// }
+		// });
 
 	}
 
@@ -119,13 +137,17 @@ public class Coverflow {
 	 */
 	public void updateCover(String idCover, String imageUrl) {
 		if (StringUtils.isNotEmpty(imageUrl)) {
-			CoverElement loadedCover = covers.get(idCover);
-			final Image logoImg = new Image(imageUrl);
-			if (loadedCover != null) {
-				loadedCover.setImage((ImageElement) logoImg.getElement().cast());
-				loadedCover.draw(coverflowCanvas.getCanvas());
-			}
-			drawCoverflow();
+			ImageLoader.load(idCover, imageUrl, new ImageLoader.LoadImageCallBack() {
+				@Override
+				public void onImageLoaded(String coverId, ImageElement imageElement) {
+					final CoverElement loadedCover = covers.get(coverId);
+					if (loadedCover != null) {
+						loadedCover.setImage(imageElement);
+						loadedCover.draw(coverflowCanvas.getCanvas());
+						drawCoverflow();
+					}
+				}
+			});
 		}
 	}
 

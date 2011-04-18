@@ -1,5 +1,6 @@
 package com.binomed.cineshowtime.client.ui.coverflow;
 
+import com.binomed.cineshowtime.client.ui.coverflow.event.CoverflowMouseEvent;
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.CanvasGradient;
 import com.google.gwt.event.dom.client.MouseDownEvent;
