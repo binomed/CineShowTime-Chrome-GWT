@@ -1,0 +1,18 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+			 xmlns:g="urn:import:com.google.gwt.user.client.ui"
+			 xmlns:cst="urn:import:com.binomed.cineshowtime.client.ui">
+	
+	<ui:with field="res" type="com.binomed.cineshowtime.client.resources.CstResource" />
+	<ui:with field="i18n" type="com.binomed.cineshowtime.client.resources.I18N" />
+	
+	<g:VerticalPanel width="100%">
+		<g:HorizontalPanel width="100%">
+			<g:VerticalPanel ui:field="rate"/>
+			<g:Hyperlink ui:field="reviewSourceLink" />
+		</g:HorizontalPanel>
+		<g:Label ui:field="reviewContent"/>
+		<g:Hyperlink ui:field="reviewLink" />
+	</g:VerticalPanel>
+	
+</ui:UiBinder> 

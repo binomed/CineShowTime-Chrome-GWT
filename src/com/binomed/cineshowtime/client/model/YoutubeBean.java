@@ -1,7 +1,8 @@
 package com.binomed.cineshowtime.client.model;
 
+import com.binomed.cineshowtime.client.ui.coverflow.CoverData;
 
-public class YoutubeBean {
+public class YoutubeBean implements CoverData {
 
 	private String urlVideo;
 
@@ -35,6 +36,37 @@ public class YoutubeBean {
 
 	public void setVideoName(String videoName) {
 		this.videoName = videoName;
+	}
+
+	@Override
+	public String getId() {
+		return videoName;
+	}
+
+	@Override
+	public String getLabel() {
+		return videoName;
+	}
+
+	@Override
+	public String getCoverUrl() {
+		return urlImg;
+	}
+
+	@Override
+	public void setCoverURL(String coverURL) {
+		setUrlImg(coverURL);
+
+	}
+
+	@Override
+	public boolean isVideo() {
+		return true;
+	}
+
+	@Override
+	public String getVideoUrl() {
+		return urlVideo;
 	}
 
 }

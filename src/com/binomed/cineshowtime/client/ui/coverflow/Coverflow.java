@@ -59,7 +59,7 @@ public class Coverflow {
 		int offsetX = 0;
 		for (CoverData coverData : coversData) {
 			if (StringUtils.isEmpty(coverData.getCoverUrl())) {
-				coverData.setCoverURL(CstResource.instance.no_poster().getURL());
+				coverData.setCoverURL(CstResource.instance.loading_preview_portrait().getURL());
 			}
 			// Initialize Cover element
 			cover = new CoverElement(coverData);
@@ -106,24 +106,6 @@ public class Coverflow {
 		});
 		coverflowCanvas.setFrontGradient();
 		moveToCover(idMiddleCover);
-		//
-		// // Load images for the first time
-		// CoversLoader.loadImages(covers, new CoversLoader.LoadImagesCallBack() {
-		// @Override
-		// public void onImagesLoaded(Map<String, ImageElement> imageElements) {
-		// int offsetX = 0;
-		// CoverElement initCover = null;
-		// for (Entry<String, ImageElement> entry : imageElements.entrySet()) {
-		// // Get the initialized cover
-		// initCover = covers.get(entry.getKey());
-		// // Initialize the cover
-		// initCover.setImage(entry.getValue());
-		// // Drax the cover
-		// initCover.draw(coverflowCanvas.getCanvas());
-		// }
-		//
-		// }
-		// });
 
 	}
 
@@ -136,19 +118,20 @@ public class Coverflow {
 	 *            Image URL of the cover
 	 */
 	public void updateCover(String idCover, String imageUrl) {
-		if (StringUtils.isNotEmpty(imageUrl)) {
-			ImageLoader.load(idCover, imageUrl, new ImageLoader.LoadImageCallBack() {
-				@Override
-				public void onImageLoaded(String coverId, ImageElement imageElement) {
-					final CoverElement loadedCover = covers.get(coverId);
-					if (loadedCover != null) {
-						loadedCover.setImage(imageElement);
-						loadedCover.draw(coverflowCanvas.getCanvas());
-						drawCoverflow();
-					}
-				}
-			});
+		if (StringUtils.isEmpty(imageUrl)) {
+			imageUrl = CstResource.instance.no_poster().getURL();
 		}
+		ImageLoader.load(idCover, imageUrl, new ImageLoader.LoadImageCallBack() {
+			@Override
+			public void onImageLoaded(String coverId, ImageElement imageElement) {
+				final CoverElement loadedCover = covers.get(coverId);
+				if (loadedCover != null) {
+					loadedCover.setImage(imageElement);
+					loadedCover.draw(coverflowCanvas.getCanvas());
+					drawCoverflow();
+				}
+			}
+		});
 	}
 
 	/**

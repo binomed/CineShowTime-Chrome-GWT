@@ -80,7 +80,8 @@ public class MainWindow extends Composite {
 		clientFactory.getEventBusHandler().addHandler(NearRespNearEvent.TYPE, nearRespHandler);
 		clientFactory.getEventBusHandler().addHandler(NearRespNearErrorEvent.TYPE, nearRespHandler);
 		// Call the service
-		service.requestNearTheatersFromLatLng(lat, lng);
+		// TODO debouchonner la langue
+		service.requestNearTheatersFromLatLng(lat, lng, "FR");
 	}
 
 	private NearRespHandler nearRespHandler = new NearRespHandler() {

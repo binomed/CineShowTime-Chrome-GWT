@@ -8,7 +8,6 @@ import com.binomed.cineshowtime.client.event.MovieLoadErrorEvent;
 import com.binomed.cineshowtime.client.event.MovieLoadedEvent;
 import com.binomed.cineshowtime.client.event.NearRespMovieErrorEvent;
 import com.binomed.cineshowtime.client.event.NearRespMovieEvent;
-import com.binomed.cineshowtime.client.event.NearRespNearErrorEvent;
 import com.binomed.cineshowtime.client.event.NearRespNearEvent;
 import com.binomed.cineshowtime.client.model.MovieBean;
 import com.binomed.cineshowtime.client.model.NearResp;
@@ -43,13 +42,15 @@ public class CineShowTimeWS extends AbstractCineShowTimeWS {
 	 *            Latitude parameter
 	 * @param longitude
 	 *            Longitude parameter
+	 * @param lang
 	 * @param callback
 	 *            Specific Callback
 	 */
-	public void requestNearTheatersFromLatLng(double latitude, double longitude) {
+	public void requestNearTheatersFromLatLng(double latitude, double longitude, String lang) {
 		Map<String, String> params = new HashMap<String, String>();
-		params.put(LATITUDE_PARAM, String.valueOf(latitude));
-		params.put(LONGITUDE_PARAM, String.valueOf(longitude));
+		params.put(PARAM_LAT, String.valueOf(latitude));
+		params.put(PARAM_LONG, String.valueOf(longitude));
+		params.put(PARAM_LANG, lang);
 		doGet(URL_CONTEXT_SHOWTIME_NEAR, params, new RequestCallback() {
 			@Override
 			public void onResponseReceived(Request request, Response response) {
@@ -113,7 +114,7 @@ public class CineShowTimeWS extends AbstractCineShowTimeWS {
 
 			@Override
 			public void onError(Request request, Throwable exception) {
-				clientFactory.getEventBusHandler().fireEvent(new NearRespNearErrorEvent(exception));
+				clientFactory.getEventBusHandler().fireEvent(new MovieLoadErrorEvent(exception));
 			}
 		});
 	}

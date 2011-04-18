@@ -1,6 +1,8 @@
 package com.binomed.cineshowtime.client.ui;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import com.binomed.cineshowtime.client.IClientFactory;
 import com.binomed.cineshowtime.client.event.MovieLoadErrorEvent;
@@ -8,10 +10,15 @@ import com.binomed.cineshowtime.client.event.MovieLoadedEvent;
 import com.binomed.cineshowtime.client.handler.ImdbRespHandler;
 import com.binomed.cineshowtime.client.model.MovieBean;
 import com.binomed.cineshowtime.client.model.ProjectionBean;
+import com.binomed.cineshowtime.client.model.ReviewBean;
 import com.binomed.cineshowtime.client.model.TheaterBean;
+import com.binomed.cineshowtime.client.model.YoutubeBean;
 import com.binomed.cineshowtime.client.resources.CstResource;
 import com.binomed.cineshowtime.client.resources.I18N;
 import com.binomed.cineshowtime.client.service.ws.CineShowTimeWS;
+import com.binomed.cineshowtime.client.ui.coverflow.CoverData;
+import com.binomed.cineshowtime.client.ui.coverflow.Coverflow;
+import com.binomed.cineshowtime.client.ui.coverflow.event.ClickCoverListener;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -36,7 +43,7 @@ public class MovieView extends Composite {
 	@UiField
 	Image imgPoster;
 	@UiField
-	Image rate1, rate2, rate3, rate4, rate5, rate6, rate7, rate8, rate9, rate10;
+	VerticalPanel movieRate;
 	@UiField
 	Label movieName, movieTime, movieStyle, sepMovieTimeStyle, moviePlot;
 	@UiField
@@ -47,6 +54,7 @@ public class MovieView extends Composite {
 	CaptionPanel movieSeanceGroup;
 	@UiField
 	VerticalPanel movieSeanceList, movieTrailerCoverflow, movieReview;
+	private Coverflow coverflow;
 
 	public MovieView(final TheaterBean theater, final String idMovie, IClientFactory clientFactory) {
 		this.theater = theater;
@@ -57,6 +65,7 @@ public class MovieView extends Composite {
 
 		CineShowTimeWS service = clientFactory.getCineShowTimeService();
 		this.movie = service.getMovie(idMovie);
+
 		if ((movie.getState() == MovieBean.STATE_NONE) || (movie.getState() == MovieBean.STATE_IN_PROGRESS)) {
 			clientFactory.getEventBusHandler().addHandler(MovieLoadedEvent.TYPE, eventHandler);
 			clientFactory.getEventBusHandler().addHandler(MovieLoadErrorEvent.TYPE, eventHandler);
@@ -92,6 +101,26 @@ public class MovieView extends Composite {
 		imgPoster.setUrl(movie.getUrlImg());
 		movieLinkImdb.setText(movie.getUrlImdb());
 		moviePlot.setText(movie.getDescription());
+
+		movieRate.add(new RateView(true, movie.getRate()));
+
+		// Add the coverflow
+		if (movie.getYoutubeVideos() != null) {
+			coverflow = new Coverflow(800, 300);
+			coverflow.addClickCoverListener(movieOpenListener);
+			final List<CoverData> coversData = new ArrayList<CoverData>();
+			for (YoutubeBean video : movie.getYoutubeVideos()) {
+				coversData.add(video);
+			}
+			coverflow.init(coversData);
+			movieTrailerCoverflow.add(coverflow.getCanvas());
+		}
+
+		if (movie.getReviews() != null) {
+			for (ReviewBean review : movie.getReviews()) {
+				movieReview.add(new ReviewView(review));
+			}
+		}
 	}
 
 	public MovieBean getMovie() {
@@ -116,6 +145,14 @@ public class MovieView extends Composite {
 			}
 
 		}
+	};
+
+	private final ClickCoverListener movieOpenListener = new ClickCoverListener() {
+		@Override
+		public void onClickCover(String idMovie) {
+			// TODO
+		}
+
 	};
 
 	interface MovieViewUiBinder extends UiBinder<Widget, MovieView> {

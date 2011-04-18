@@ -1,0 +1,21 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+			 xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	
+	<ui:with field="res" type="com.binomed.cineshowtime.client.resources.CstResource" />
+	<ui:with field="i18n" type="com.binomed.cineshowtime.client.resources.I18N" />
+	
+	<g:HorizontalPanel>
+			<g:Image resource='{res.rate_star_small_on}' ui:field="rate1" />
+			<g:Image resource='{res.rate_star_small_on}' ui:field="rate2" />
+			<g:Image resource='{res.rate_star_small_on}' ui:field="rate3" />
+			<g:Image resource='{res.rate_star_small_on}' ui:field="rate4" />
+			<g:Image resource='{res.rate_star_small_on}' ui:field="rate5" />
+			<g:Image resource='{res.rate_star_small_on}' ui:field="rate6" />
+			<g:Image resource='{res.rate_star_small_on}' ui:field="rate7" />
+			<g:Image resource='{res.rate_star_small_on}' ui:field="rate8" />
+			<g:Image resource='{res.rate_star_small_on}' ui:field="rate9" />
+			<g:Image resource='{res.rate_star_small_on}' ui:field="rate10" />
+	</g:HorizontalPanel>
+
+</ui:UiBinder> 
