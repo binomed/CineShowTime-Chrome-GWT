@@ -56,7 +56,7 @@ public class Coverflow {
 		this.idMiddleCover = coversData.get(coversData.size() / 2).getId();
 		for (CoverData coverData : coversData) {
 			if (StringUtils.isEmpty(coverData.getCoverUrl())) {
-				coverData.setCoverURL(CstResource.instance.no_poster().getURL());
+				coverData.setCoverURL(CstResource.instance.loading_preview_portrait().getURL());
 			}
 			covers.put(coverData.getId(), new CoverElement(coverData));
 		}
@@ -118,15 +118,16 @@ public class Coverflow {
 	 *            Image URL of the cover
 	 */
 	public void updateCover(String idCover, String imageUrl) {
-		if (StringUtils.isNotEmpty(imageUrl)) {
-			CoverElement loadedCover = covers.get(idCover);
-			final Image logoImg = new Image(imageUrl);
-			if (loadedCover != null) {
-				loadedCover.setImage((ImageElement) logoImg.getElement().cast());
-				loadedCover.draw(coverflowCanvas.getCanvas());
-			}
-			drawCoverflow();
+		if (StringUtils.isEmpty(imageUrl)) {
+			imageUrl = CstResource.instance.no_poster().getURL();
 		}
+		CoverElement loadedCover = covers.get(idCover);
+		final Image logoImg = new Image(imageUrl);
+		if (loadedCover != null) {
+			// loadedCover.setImage((ImageElement) logoImg.getElement().cast());
+			loadedCover.draw(coverflowCanvas.getCanvas());
+		}
+		drawCoverflow();
 	}
 
 	/**

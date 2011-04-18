@@ -103,7 +103,7 @@ public class TheaterView extends Composite {
 							params.put(HttpParamsCst.PARAM_MOVIE_NAME, URL.encode(movieTmp.getEnglishMovieName()));
 							params.put(HttpParamsCst.PARAM_LANG, "FR"); // TODO Ã  dÃ©bouchonner
 							params.put(HttpParamsCst.PARAM_PLACE, URL.encode("Nantes"));// TODO Ã  dÃ©bouchonner
-							params.put(HttpParamsCst.PARAM_ZIP, "true");
+							params.put(HttpParamsCst.PARAM_TRAILER, "true");
 							params.put(HttpParamsCst.PARAM_MOVIE_ID, movieTmp.getId());
 							// Register to event
 							if (!hasRegister) {
