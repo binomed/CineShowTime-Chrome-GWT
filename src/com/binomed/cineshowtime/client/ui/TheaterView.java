@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.binomed.cineshowtime.client.IClientFactory;
-import com.binomed.cineshowtime.client.cst.HttpParamsCst;
 import com.binomed.cineshowtime.client.event.MovieLoadErrorEvent;
 import com.binomed.cineshowtime.client.event.MovieLoadedEvent;
 import com.binomed.cineshowtime.client.handler.ImdbRespHandler;
@@ -22,7 +21,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.OpenEvent;
 import com.google.gwt.event.logical.shared.OpenHandler;
-import com.google.gwt.http.client.URL;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -91,20 +89,12 @@ public class TheaterView extends Composite {
 					int i = 0;
 					Map<String, String> params = new HashMap<String, String>();
 					final Map<String, Integer> mapMovieIndex = new HashMap<String, Integer>();
-					// final String ip = InetAddress.getLocalHost().getHostAddress();
-					final String ip = "193.253.198.44"; // TODO Ã  dÃ©bouchonner
+					final String ip = "193.253.198.44";
 					for (java.util.Map.Entry<String, List<ProjectionBean>> entryMovie : theater.getMovieMap().entrySet()) {
 						movieTmp = service.getMovie(entryMovie.getKey());
 						mapMovieIndex.put(entryMovie.getKey(), i);
 						if (movieTmp.getState() == MovieBean.STATE_NONE) {
 							params.clear();
-							params.put(HttpParamsCst.PARAM_IP, ip);
-							params.put(HttpParamsCst.PARAM_MOVIE_CUR_LANG_NAME, URL.encode(movieTmp.getMovieName()));
-							params.put(HttpParamsCst.PARAM_MOVIE_NAME, URL.encode(movieTmp.getEnglishMovieName()));
-							params.put(HttpParamsCst.PARAM_LANG, "FR"); // TODO Ã  dÃ©bouchonner
-							params.put(HttpParamsCst.PARAM_PLACE, URL.encode("Nantes"));// TODO Ã  dÃ©bouchonner
-							params.put(HttpParamsCst.PARAM_TRAILER, "true");
-							params.put(HttpParamsCst.PARAM_MOVIE_ID, movieTmp.getId());
 							// Register to event
 							if (!hasRegister) {
 								hasRegister = true;
@@ -112,7 +102,7 @@ public class TheaterView extends Composite {
 								clientFactory.getEventBusHandler().addHandler(MovieLoadErrorEvent.TYPE, eventHandler);
 							}
 							// call the service
-							service.requestImdbInfo(params, movieTmp, theater.getId());
+							service.requestImdbInfo(movieTmp, ip, clientFactory.getLanguage(), theater.getPlace().getSearchQuery(), theater.getId());
 						} else if (movieTmp.getState() == MovieBean.STATE_IN_PROGRESS) {
 							// Register the service
 							if (!hasRegister) {

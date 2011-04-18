@@ -6,6 +6,7 @@ import com.binomed.cineshowtime.client.event.NearRespNearEvent;
 import com.binomed.cineshowtime.client.handler.NearRespHandler;
 import com.binomed.cineshowtime.client.model.NearResp;
 import com.binomed.cineshowtime.client.model.TheaterBean;
+import com.binomed.cineshowtime.client.resources.CstResource;
 import com.binomed.cineshowtime.client.service.geolocation.UserGeolocation;
 import com.binomed.cineshowtime.client.service.geolocation.UserGeolocationCallback;
 import com.binomed.cineshowtime.client.service.ws.CineShowTimeWS;
@@ -18,6 +19,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.TabLayoutPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -34,6 +36,7 @@ public class MainWindow extends Composite {
 	VerticalPanel paramsContent;
 	@UiField
 	VerticalPanel theatersContent;
+	Image imageLoading;
 
 	public MainWindow(IClientFactory clientFactory) {
 		this.clientFactory = clientFactory;
@@ -43,6 +46,9 @@ public class MainWindow extends Composite {
 
 		// Manage UI Style
 		theatersContent.setSpacing(5);
+
+		imageLoading = new Image(CstResource.instance.movie_countdown());
+		theatersContent.add(imageLoading);
 
 		// Load intial content
 		loadTheatersOfUserLocation();
@@ -55,15 +61,14 @@ public class MainWindow extends Composite {
 	}
 
 	private void loadTheatersOfUserLocation() {
-		UserGeolocation.getInstance().getUserGeolocation(new UserGeolocationCallback() {
 
+		UserGeolocation.getInstance().getUserGeolocation(new UserGeolocationCallback() {
 			@Override
 			public void onLocationResponse(JsArray<Placemark> locations) {
 			}
 
 			@Override
 			public void onLatitudeLongitudeResponse(LatLng latLng) {
-				System.out.println("latitude=" + latLng.getLatitude() + ", longitude=" + latLng.getLongitude());
 				loadTheaters(latLng.getLatitude(), latLng.getLongitude());
 			}
 
@@ -81,19 +86,21 @@ public class MainWindow extends Composite {
 		clientFactory.getEventBusHandler().addHandler(NearRespNearErrorEvent.TYPE, nearRespHandler);
 		// Call the service
 		// TODO debouchonner la langue
-		service.requestNearTheatersFromLatLng(lat, lng, "FR");
+		service.requestNearTheatersFromLatLng(lat, lng, clientFactory.getLanguage());
 	}
 
 	private NearRespHandler nearRespHandler = new NearRespHandler() {
 
 		@Override
 		public void onError(Throwable error) {
+			theatersContent.remove(imageLoading);
 			Window.alert("Error=" + error.getMessage());
 
 		}
 
 		@Override
 		public void onNearResp(NearResp nearResp) {
+			theatersContent.remove(imageLoading);
 			if (nearResp != null) {
 				for (TheaterBean theater : nearResp.getTheaterList()) {
 					theatersContent.add(new TheaterView(clientFactory, theater));

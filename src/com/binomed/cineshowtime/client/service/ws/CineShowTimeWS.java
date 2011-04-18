@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.binomed.cineshowtime.client.IClientFactory;
+import com.binomed.cineshowtime.client.cst.HttpParamsCst;
 import com.binomed.cineshowtime.client.event.MovieLoadErrorEvent;
 import com.binomed.cineshowtime.client.event.MovieLoadedEvent;
 import com.binomed.cineshowtime.client.event.NearRespMovieErrorEvent;
@@ -16,6 +17,7 @@ import com.binomed.cineshowtime.client.parsing.ParserNearResultDomXml;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.http.client.URL;
 
 /**
  * Access class to the CineShowTime Web Services.<br/>
@@ -99,7 +101,16 @@ public class CineShowTimeWS extends AbstractCineShowTimeWS {
 	 * @param callback
 	 *            Specific Callback
 	 */
-	public void requestImdbInfo(Map<String, String> params, final MovieBean movie, final String source) {
+	public void requestImdbInfo(final MovieBean movie, final String ip, final String language, final String place, final String source) {
+		Map<String, String> params = new HashMap<String, String>();
+		params.put(HttpParamsCst.PARAM_IP, ip);
+		params.put(HttpParamsCst.PARAM_MOVIE_CUR_LANG_NAME, URL.encode(movie.getMovieName()));
+		params.put(HttpParamsCst.PARAM_MOVIE_NAME, URL.encode(movie.getEnglishMovieName()));
+		params.put(HttpParamsCst.PARAM_LANG, language);
+		params.put(HttpParamsCst.PARAM_PLACE, URL.encode(place));
+		params.put(HttpParamsCst.PARAM_TRAILER, "true");
+		params.put(HttpParamsCst.PARAM_MOVIE_ID, movie.getId());
+
 		movie.setState(MovieBean.STATE_IN_PROGRESS);
 		movieMap.put(movie.getId(), movie);
 

@@ -27,4 +27,9 @@ public class ClientFactory implements IClientFactory {
 		return cineShowTimeWS;
 	}
 
+	@Override
+	public String getLanguage() {
+		return "FR";
+	}
+
 }

@@ -13,7 +13,7 @@ public class NearRespMovieEvent extends NearRespEvent {
 	}
 
 	@Override
-	public com.google.gwt.event.shared.GwtEvent.Type<NearRespHandler> getAssociatedType() {
+	public GwtEvent.Type<NearRespHandler> getAssociatedType() {
 		return TYPE;
 	}
 
