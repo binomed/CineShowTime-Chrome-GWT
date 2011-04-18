@@ -18,7 +18,7 @@ public class BetterCoverflowLayout implements CoverflowLayout {
 		final int w = 800;
 		final int cx = w / 2;
 		final int DX = 120;
-		final int DY = 10;
+		final int DY = 30;
 		int position = -(covers.size() / 2);
 		for (CoverElement cover : covers.values()) {
 			// Initialize the cover
@@ -39,7 +39,7 @@ public class BetterCoverflowLayout implements CoverflowLayout {
 	@Override
 	public void onUpdateCovers(String coverId, final Map<String, CoverElement> covers, int totalTranslateX) {
 		this.indexCoverCenter = getIndexOfCoverId(coverId, covers);
-		final int DY = 10;
+		final int DY = 30;
 		int position = -(covers.size() / 2);
 		if (indexCoverCenter <= covers.size()) {
 			position = -indexCoverCenter;

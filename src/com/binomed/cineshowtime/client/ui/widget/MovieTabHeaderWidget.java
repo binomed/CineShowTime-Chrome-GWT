@@ -55,6 +55,7 @@ public class MovieTabHeaderWidget extends Composite {
 				parentTabPanel.remove(movieView);
 			}
 		});
+
 		h.add(closeImage);
 		initWidget(h);
 	}

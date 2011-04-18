@@ -18,6 +18,10 @@ public class ParserMovieResultDomXml extends AbstractParser {
 
 	public static MovieBean parseResult(String response, MovieBean movie) {
 
+		if (response == null) {
+			return movie;
+		}
+
 		Document messageDom = XMLParser.parse(response);
 
 		Node nodeMovie = messageDom.getElementsByTagName(NODE_MOVIE).item(0);

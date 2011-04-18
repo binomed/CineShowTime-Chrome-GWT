@@ -50,6 +50,15 @@ public interface CstResource extends ClientBundle {
 	@Source("com/binomed/cineshowtime/client/resources/images/close_tab_hover.png")
 	ImageResource close_tab_hover();
 
+	@Source("com/binomed/cineshowtime/client/resources/images/loading_preview_portrait.png")
+	ImageResource loading_preview_portrait();
+
+	@Source("com/binomed/cineshowtime/client/resources/images/loading_preview.png")
+	ImageResource loading_preview();
+
+	@Source("com/binomed/cineshowtime/client/resources/images/movie_countdown.gif")
+	ImageResource movie_countdown();
+
 	// CSS
 	@Source("com/binomed/cineshowtime/client/resources/css/CstStyle.css")
 	public StyleCss styleCss();

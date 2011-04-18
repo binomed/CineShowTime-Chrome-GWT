@@ -1,4 +1,6 @@
-package com.binomed.cineshowtime.client.ui.coverflow;
+package com.binomed.cineshowtime.client.ui.coverflow.event;
+
+import com.binomed.cineshowtime.client.ui.coverflow.Coverflow;
 
 /**
  * Represents mouse events on the coverflow

@@ -3,15 +3,15 @@ package com.binomed.cineshowtime.client.ui.coverflow;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import com.binomed.cineshowtime.client.resources.CstResource;
+import com.binomed.cineshowtime.client.ui.coverflow.event.ClickCoverListener;
+import com.binomed.cineshowtime.client.ui.coverflow.event.CoverflowMouseEvent;
 import com.binomed.cineshowtime.client.ui.coverflow.layout.BetterCoverflowLayout;
 import com.binomed.cineshowtime.client.ui.coverflow.layout.CoverflowLayout;
 import com.binomed.cineshowtime.client.ui.coverflow.layout.SimpleCoverflowLayout;
 import com.binomed.cineshowtime.client.util.StringUtils;
 import com.google.gwt.dom.client.ImageElement;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
 public class Coverflow {
@@ -31,7 +31,7 @@ public class Coverflow {
 	private String idFirstCover;
 	private String idMiddleCover;
 
-	private final CoverflowLayout dispo = new SimpleCoverflowLayout();
+	private final CoverflowLayout dispo = new BetterCoverflowLayout();
 
 	private ClickCoverListener clickCoverListener;
 
@@ -52,12 +52,14 @@ public class Coverflow {
 		// Initialize Coverflow data
 		this.idFirstCover = coversData.get(0).getId();
 		this.idMiddleCover = coversData.get(coversData.size() / 2).getId();
+
 		for (CoverData coverData : coversData) {
 			if (StringUtils.isEmpty(coverData.getCoverUrl())) {
-				coverData.setCoverURL(CstResource.instance.no_poster().getURL());
+				coverData.setCoverURL(CstResource.instance.loading_preview_portrait().getURL());
 			}
 			covers.put(coverData.getId(), new CoverElement(coverData));
 		}
+		dispo.onInitCovers(covers);
 
 		// Add coverflow move listener
 		coverflowCanvas.setMouseMoveEvent(new CoverflowMouseEvent() {
@@ -84,25 +86,18 @@ public class Coverflow {
 			}
 		});
 
-		// Load images for the first time
-		CoversLoader.loadImages(covers, new CoversLoader.LoadImagesCallBack() {
+		ImageLoader.loadImages(covers, new ImageLoader.LoadImageCallBack() {
 			@Override
-			public void onImagesLoaded(Map<String, ImageElement> imageElements) {
-				// Load covers images
-				CoverElement initCover = null;
-				for (Entry<String, ImageElement> entry : imageElements.entrySet()) {
-					// Get the initialized cover
-					initCover = covers.get(entry.getKey());
-					// Initialize the cover
-					initCover.setImage(entry.getValue());
+			public void onImageLoaded(String coverId, ImageElement imageElement) {
+				final CoverElement loadedCover = covers.get(coverId);
+				if (loadedCover != null) {
+					loadedCover.setImage(imageElement);
+					loadedCover.draw(coverflowCanvas.getCanvas());
 				}
-				// Initialize coordonate of each cover
-				dispo.onInitCovers(covers);
-				drawCoverflow();
-				// Center the coverflow
-				moveToCover(idMiddleCover);
 			}
 		});
+		coverflowCanvas.setFrontGradient();
+		moveToCover(idMiddleCover);
 
 	}
 
@@ -112,15 +107,19 @@ public class Coverflow {
 	 * @param imageUrl Image URL of the cover
 	 */
 	public void updateCover(String idCover, String imageUrl) {
-		if (StringUtils.isNotEmpty(imageUrl)) {
-			CoverElement loadedCover = covers.get(idCover);
-			final Image logoImg = new Image(imageUrl);
-			if (loadedCover != null) {
-				loadedCover.setImage((ImageElement) logoImg.getElement().cast());
-				loadedCover.draw(coverflowCanvas.getCanvas());
-			}
-			drawCoverflow();
+		if (StringUtils.isEmpty(imageUrl)) {
+			imageUrl = CstResource.instance.no_poster().getURL();
 		}
+		ImageLoader.load(idCover, imageUrl, new ImageLoader.LoadImageCallBack() {
+			@Override
+			public void onImageLoaded(String coverId, ImageElement imageElement) {
+				final CoverElement loadedCover = covers.get(coverId);
+				if (loadedCover != null) {
+					loadedCover.setImage(imageElement);
+					loadedCover.draw(coverflowCanvas.getCanvas());
+				}
+			}
+		});
 	}
 
 	private void moveToCover(int direction, int distance) {
@@ -201,13 +200,6 @@ public class Coverflow {
 			// start animation
 			myAnimation.start();
 		}
-	}
-
-	/**
-	 * Draw the entire coverflow
-	 */
-	public void drawCoverflow() {
-
 	}
 
 	private void drawCoverflowWidget() {

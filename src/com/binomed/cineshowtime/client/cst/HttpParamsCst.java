@@ -1,6 +1,6 @@
 package com.binomed.cineshowtime.client.cst;
 
-public class HttpParamsCst {
+public interface HttpParamsCst {
 
 	public static final String PARAM_LAT = "lat"; //$NON-NLS-1$
 	public static final String PARAM_LONG = "long"; //$NON-NLS-1$
@@ -31,10 +31,15 @@ public class HttpParamsCst {
 	public static final String MOVIE_GET_METHODE = "movie"; //$NON-NLS-1$
 	public static final String IMDB_GET_METHODE = "imdb"; //$NON-NLS-1$
 
-	public static final String BINOMED_APP_PROTOCOL = "http"; //$NON-NLS-1$
-	public static final String BINOMED_APP_URL = "9.latest.binomed-andshowtime-project.appspot.com"; //$NON-NLS-1$
+	public static final String BINOMED_APP_PROTOCOL = "http://"; //$NON-NLS-1$
+	public static final String BINOMED_APP_URL = "9.latest.binomed-cineshowtime-chrome.appspot.com"; //$NON-NLS-1$
 	//	public static final String BINOMED_APP_URL = "10.0.2.2:8080"; //$NON-NLS-1$
 	public static final String BINOMED_APP_PATH = "showtime"; //$NON-NLS-1$
+
+	// Web services URL contexts
+	final static String URL_CONTEXT_SHOWTIME_NEAR = "/" + BINOMED_APP_PATH + "/" + NEAR_GET_METHODE;
+	final static String URL_CONTEXT_SHOWTIME_MOVIE = "/" + BINOMED_APP_PATH + "/" + MOVIE_GET_METHODE;
+	final static String URL_CONTEXT_IMDB = "/" + IMDB_GET_METHODE;
 
 	public static final String VALUE_XML = "xml"; //$NON-NLS-1$
 	public static final String VALUE_JSON = "json"; //$NON-NLS-1$

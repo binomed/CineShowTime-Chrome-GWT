@@ -1,20 +1,23 @@
 package com.binomed.cineshowtime.client.service.ws;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
+import com.binomed.cineshowtime.client.IClientFactory;
+import com.binomed.cineshowtime.client.cst.HttpParamsCst;
+import com.binomed.cineshowtime.client.event.MovieLoadErrorEvent;
+import com.binomed.cineshowtime.client.event.MovieLoadedEvent;
+import com.binomed.cineshowtime.client.event.NearRespMovieErrorEvent;
+import com.binomed.cineshowtime.client.event.NearRespMovieEvent;
+import com.binomed.cineshowtime.client.event.NearRespNearEvent;
 import com.binomed.cineshowtime.client.model.MovieBean;
 import com.binomed.cineshowtime.client.model.NearResp;
 import com.binomed.cineshowtime.client.parsing.ParserMovieResultDomXml;
 import com.binomed.cineshowtime.client.parsing.ParserNearResultDomXml;
-import com.binomed.cineshowtime.client.service.ws.callback.ImdbRequestCallback;
-import com.binomed.cineshowtime.client.service.ws.callback.MovieRequestCallback;
-import com.binomed.cineshowtime.client.service.ws.callback.NearTheatersRequestCallback;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.http.client.URL;
 
 /**
  * Access class to the CineShowTime Web Services.<br/>
@@ -27,33 +30,11 @@ import com.google.gwt.http.client.Response;
  */
 public class CineShowTimeWS extends AbstractCineShowTimeWS {
 
-	private static CineShowTimeWS instance;
+	private Map<String, MovieBean> movieMap;
+	private IClientFactory clientFactory;
 
-	private static Map<String, MovieBean> movieMap;
-
-	private final Map<String, List<ImdbRequestCallback>> listeners = new HashMap<String, List<ImdbRequestCallback>>();
-
-	public void register(String movieId, ImdbRequestCallback listener) {
-		List<ImdbRequestCallback> listenerList = listeners.get(movieId);
-		if (listenerList == null) {
-			listenerList = new ArrayList<ImdbRequestCallback>();
-			listeners.put(movieId, listenerList);
-		}
-		listenerList.add(listener);
-	}
-
-	public void unregister(String movieId, ImdbRequestCallback listener) {
-		List<ImdbRequestCallback> listenerList = listeners.get(movieId);
-		if (listenerList != null) {
-			listenerList.remove(listener);
-		}
-	}
-
-	public static synchronized CineShowTimeWS getInstance() {
-		if (CineShowTimeWS.instance == null) {
-			CineShowTimeWS.instance = new CineShowTimeWS();
-		}
-		return CineShowTimeWS.instance;
+	public CineShowTimeWS(IClientFactory clientFactory) {
+		this.clientFactory = clientFactory;
 	}
 
 	/**
@@ -63,24 +44,26 @@ public class CineShowTimeWS extends AbstractCineShowTimeWS {
 	 *            Latitude parameter
 	 * @param longitude
 	 *            Longitude parameter
+	 * @param lang
 	 * @param callback
 	 *            Specific Callback
 	 */
-	public void requestNearTheatersFromLatLng(double latitude, double longitude, final NearTheatersRequestCallback callback) {
+	public void requestNearTheatersFromLatLng(double latitude, double longitude, String lang) {
 		Map<String, String> params = new HashMap<String, String>();
-		params.put(LATITUDE_PARAM, String.valueOf(latitude));
-		params.put(LONGITUDE_PARAM, String.valueOf(longitude));
+		params.put(PARAM_LAT, String.valueOf(latitude));
+		params.put(PARAM_LONG, String.valueOf(longitude));
+		params.put(PARAM_LANG, lang);
 		doGet(URL_CONTEXT_SHOWTIME_NEAR, params, new RequestCallback() {
 			@Override
 			public void onResponseReceived(Request request, Response response) {
 				NearResp resp = ParserNearResultDomXml.parseResult(response.getText());
 				movieMap = resp.getMapMovies();
-				callback.onNearResp(resp);
+				clientFactory.getEventBusHandler().fireEvent(new NearRespNearEvent(resp));
 			}
 
 			@Override
 			public void onError(Request request, Throwable exception) {
-				callback.onError(exception);
+				clientFactory.getEventBusHandler().fireEvent(new MovieLoadErrorEvent(exception));
 			}
 		});
 	}
@@ -93,18 +76,19 @@ public class CineShowTimeWS extends AbstractCineShowTimeWS {
 	 * @param callback
 	 *            Specific Callback
 	 */
-	public void requestMovie(Map<String, String> params, final MovieRequestCallback callback) {
+	public void requestMovie(Map<String, String> params, final String source) {
 		doGet(URL_CONTEXT_SHOWTIME_MOVIE, params, new RequestCallback() {
 			@Override
 			public void onResponseReceived(Request request, Response response) {
-				// TODO Parsing
-				callback.onResponse(response.getText());
+				NearResp resp = null;// ParserNearResultDomXml.parseResult(response.getText());
+				movieMap = resp.getMapMovies();
+				clientFactory.getEventBusHandler().fireEvent(new NearRespMovieEvent(resp));
 
 			}
 
 			@Override
 			public void onError(Request request, Throwable exception) {
-				callback.onError(exception);
+				clientFactory.getEventBusHandler().fireEvent(new NearRespMovieErrorEvent(exception));
 			}
 		});
 	}
@@ -117,7 +101,16 @@ public class CineShowTimeWS extends AbstractCineShowTimeWS {
 	 * @param callback
 	 *            Specific Callback
 	 */
-	public void requestImdbInfo(Map<String, String> params, final MovieBean movie) {
+	public void requestImdbInfo(final MovieBean movie, final String ip, final String language, final String place, final String source) {
+		Map<String, String> params = new HashMap<String, String>();
+		params.put(HttpParamsCst.PARAM_IP, ip);
+		params.put(HttpParamsCst.PARAM_MOVIE_CUR_LANG_NAME, URL.encode(movie.getMovieName()));
+		params.put(HttpParamsCst.PARAM_MOVIE_NAME, URL.encode(movie.getEnglishMovieName()));
+		params.put(HttpParamsCst.PARAM_LANG, language);
+		params.put(HttpParamsCst.PARAM_PLACE, URL.encode(place));
+		params.put(HttpParamsCst.PARAM_TRAILER, "true");
+		params.put(HttpParamsCst.PARAM_MOVIE_ID, movie.getId());
+
 		movie.setState(MovieBean.STATE_IN_PROGRESS);
 		movieMap.put(movie.getId(), movie);
 
@@ -127,22 +120,12 @@ public class CineShowTimeWS extends AbstractCineShowTimeWS {
 				ParserMovieResultDomXml.parseResult(response.getText(), movie);
 				movie.setState(MovieBean.STATE_LOADED);
 				movieMap.put(movie.getId(), movie);
-				List<ImdbRequestCallback> listenerList = listeners.get(movie.getId());
-				if (listenerList != null) {
-					for (ImdbRequestCallback callback : listenerList) {
-						callback.onMovieLoaded(movie);
-					}
-				}
+				clientFactory.getEventBusHandler().fireEvent(new MovieLoadedEvent(source, movie));
 			}
 
 			@Override
 			public void onError(Request request, Throwable exception) {
-				List<ImdbRequestCallback> listenerList = listeners.get(movie.getId());
-				if (listenerList != null) {
-					for (ImdbRequestCallback callback : listenerList) {
-						callback.onMovieLoadedError(exception);
-					}
-				}
+				clientFactory.getEventBusHandler().fireEvent(new MovieLoadErrorEvent(exception));
 			}
 		});
 	}

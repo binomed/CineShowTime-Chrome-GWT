@@ -2,12 +2,13 @@ package com.binomed.cineshowtime.client.service.ws;
 
 import java.util.Map;
 
+import com.binomed.cineshowtime.client.cst.HttpParamsCst;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.URL;
 
-class AbstractCineShowTimeWS implements CineShowTimeWSParams {
+class AbstractCineShowTimeWS implements HttpParamsCst {
 
 	/**
 	 * Execute a GET request to the CineShowTime server
@@ -21,9 +22,8 @@ class AbstractCineShowTimeWS implements CineShowTimeWSParams {
 	 */
 	protected void doGet(String urlContext, Map<String, String> params, RequestCallback requestCallback) {
 		// Build the full URL
-		StringBuilder fullUrl = new StringBuilder(APP_ENGINE_URL);
+		StringBuilder fullUrl = new StringBuilder(BINOMED_APP_PROTOCOL).append(BINOMED_APP_URL);
 		fullUrl.append(urlContext).append(getFormatedParams(params));
-
 		// Prepare the request
 		RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, fullUrl.toString());
 		requestBuilder.setHeader("Content-type", "application/x-www-form-urlencoded");
