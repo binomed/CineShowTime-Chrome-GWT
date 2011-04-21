@@ -5,34 +5,37 @@
 	<ui:with field="res" type="com.binomed.cineshowtime.client.resources.CstResource" />
 	<ui:with field="i18n" type="com.binomed.cineshowtime.client.resources.I18N" />
 	
-	<g:DisclosurePanel ui:field="theaterPanel">
-		<g:HTMLPanel>
-			<table width="100%">
-				<tr>
-					<td width="70%"><g:Label ui:field="theaterPlace" /></td>
-					<td width="30%" align="right">
-						<g:HorizontalPanel>
-							<g:Image resource='{res.star}' />
-							<g:Hyperlink ui:field="nearSearch" text="{i18n.addFavorites}" />
-						</g:HorizontalPanel>					
-					</td>
-				</tr>
-				<tr>
-					<td><g:Label ui:field="theaterPhone" /></td>
-					<td align="right">
-						<g:HorizontalPanel>
-							<g:Image resource='{res.maps}' />
-							<g:Hyperlink ui:field="showTheaterMap" text="{i18n.showTheaterMap}" />
-						</g:HorizontalPanel>
-					</td>
-				</tr>
-				<tr>
-					<td colspan="2" align="center">
-						<g:VerticalPanel ui:field="theaterCoverflow" />				
-					</td> 
-				</tr>
-			</table>
-		</g:HTMLPanel>
-	</g:DisclosurePanel>
+	<g:VerticalPanel>
+		<g:VerticalPanel ui:field="theaterHeader"/>
+		<g:DisclosurePanel ui:field="theaterPanel">
+			<g:HTMLPanel>
+				<table width="100%">
+					<tr>
+						<td width="70%"><g:Label ui:field="theaterPlace" /></td>
+						<td width="30%" align="right">
+							<g:HorizontalPanel>
+								<g:Image resource='{res.star}' />
+								<g:Hyperlink ui:field="nearSearch" text="{i18n.addFavorites}" />
+							</g:HorizontalPanel>					
+						</td>
+					</tr>
+					<tr>
+						<td><g:Label ui:field="theaterPhone" /></td>
+						<td align="right">
+							<g:HorizontalPanel>
+								<g:Image resource='{res.maps}' />
+								<g:Hyperlink ui:field="showTheaterMap" text="{i18n.showTheaterMap}" />
+							</g:HorizontalPanel>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2" align="center">
+							<g:VerticalPanel ui:field="theaterCoverflow" />				
+						</td> 
+					</tr>
+				</table>
+			</g:HTMLPanel>
+		</g:DisclosurePanel>
+	</g:VerticalPanel>
 
 </ui:UiBinder> 

@@ -8,7 +8,9 @@ import java.util.Map;
 import com.binomed.cineshowtime.client.IClientFactory;
 import com.binomed.cineshowtime.client.event.MovieLoadErrorEvent;
 import com.binomed.cineshowtime.client.event.MovieLoadedEvent;
+import com.binomed.cineshowtime.client.event.TheaterOpenEvent;
 import com.binomed.cineshowtime.client.handler.ImdbRespHandler;
+import com.binomed.cineshowtime.client.handler.TheaterOpenHandler;
 import com.binomed.cineshowtime.client.model.MovieBean;
 import com.binomed.cineshowtime.client.model.ProjectionBean;
 import com.binomed.cineshowtime.client.model.TheaterBean;
@@ -27,7 +29,6 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DisclosurePanel;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -49,7 +50,7 @@ public class TheaterView extends Composite {
 	@UiField
 	Label theaterPhone;
 	@UiField
-	VerticalPanel theaterCoverflow;
+	VerticalPanel theaterCoverflow, theaterHeader;
 	private Coverflow coverflow;
 
 	public TheaterView(final IClientFactory clientFactory, final TheaterBean theater) {
@@ -60,8 +61,11 @@ public class TheaterView extends Composite {
 		initWidget(uiBinder.createAndBindUi(this));
 
 		// Disclosure panel
-		HTML headerHtml = new HTML("<font color=\"#FFFFFF\">" + theater.getTheaterName() + "</font>");
-		theaterPanel.setHeader(headerHtml);
+		// HTML headerHtml = new HTML("<font color=\"#FFFFFF\">" + theater.getTheaterName() + "</font>");
+		theaterHeader.add(new TheaterViewHeader(clientFactory, theater));
+
+		clientFactory.getEventBusHandler().addHandler(TheaterOpenEvent.TYPE, eventHandler);
+		// theaterPanel.setHeader(new TheaterViewHeader(clientFactory, theater));
 		theaterPanel.setAnimationEnabled(true);
 
 		// Update theater informations
@@ -141,12 +145,21 @@ public class TheaterView extends Composite {
 
 	};
 
-	private ImdbRespHandler eventHandler = new ImdbRespHandler() {
+	class TheaterHandler implements ImdbRespHandler, TheaterOpenHandler {
 
 		@Override
-		public void onError(Throwable error) {
-			// TODO Auto-generated method stub
+		public void onTheaterOpen(String source) {
+			if (theater.getId().equals(source)) {
+				theaterPanel.setOpen(true);
+			}
+		}
 
+		@Override
+		public void onTheaterClose(String source) {
+
+			if (theater.getId().equals(source)) {
+				theaterPanel.setOpen(false);
+			}
 		}
 
 		@Override
@@ -154,9 +167,17 @@ public class TheaterView extends Composite {
 			if (theater.getId().equals(source)) {
 				coverflow.updateCover(movieBean.getId(), movieBean.getUrlImg());
 			}
+		}
+
+		@Override
+		public void onError(Throwable exception) {
+			// TODO Auto-generated method stub
 
 		}
-	};
+
+	}
+
+	private TheaterHandler eventHandler = new TheaterHandler();
 
 	interface TheaterViewUiBinder extends UiBinder<Widget, TheaterView> {
 	}

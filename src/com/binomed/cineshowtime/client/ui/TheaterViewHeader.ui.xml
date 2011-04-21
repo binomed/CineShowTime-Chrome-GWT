@@ -1,0 +1,13 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+			 xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	
+	<ui:with field="res" type="com.binomed.cineshowtime.client.resources.CstResource" />
+	<ui:with field="i18n" type="com.binomed.cineshowtime.client.resources.I18N" />
+	
+	<g:HorizontalPanel>
+		<g:Label ui:field="theaterName" />
+		<g:Image ui:field="theaterFav" resource='{res.btn_stat_big_off}'/>
+	</g:HorizontalPanel>
+
+</ui:UiBinder> 
