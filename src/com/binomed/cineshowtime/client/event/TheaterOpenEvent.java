@@ -13,6 +13,7 @@ public class TheaterOpenEvent extends GwtEvent<TheaterOpenHandler> {
 	public TheaterOpenEvent(boolean open, String source) {
 		super();
 		this.open = open;
+		this.source = source;
 	}
 
 	@Override
