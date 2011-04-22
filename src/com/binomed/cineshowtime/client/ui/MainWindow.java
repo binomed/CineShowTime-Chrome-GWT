@@ -1,7 +1,6 @@
 package com.binomed.cineshowtime.client.ui;
 
 import com.binomed.cineshowtime.client.IClientFactory;
-import com.binomed.cineshowtime.client.event.NearRespNearErrorEvent;
 import com.binomed.cineshowtime.client.event.NearRespNearEvent;
 import com.binomed.cineshowtime.client.handler.NearRespHandler;
 import com.binomed.cineshowtime.client.model.NearResp;
@@ -83,7 +82,6 @@ public class MainWindow extends Composite {
 		CineShowTimeWS service = clientFactory.getCineShowTimeService();
 		// Define register to event
 		clientFactory.getEventBusHandler().addHandler(NearRespNearEvent.TYPE, nearRespHandler);
-		clientFactory.getEventBusHandler().addHandler(NearRespNearErrorEvent.TYPE, nearRespHandler);
 		// Call the service
 		// TODO debouchonner la langue
 		service.requestNearTheatersFromLatLng(lat, lng, clientFactory.getLanguage());

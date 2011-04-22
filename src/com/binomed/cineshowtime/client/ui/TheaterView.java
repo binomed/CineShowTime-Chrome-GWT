@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.binomed.cineshowtime.client.IClientFactory;
-import com.binomed.cineshowtime.client.event.MovieLoadErrorEvent;
 import com.binomed.cineshowtime.client.event.MovieLoadedEvent;
 import com.binomed.cineshowtime.client.event.TheaterOpenEvent;
 import com.binomed.cineshowtime.client.handler.ImdbRespHandler;
@@ -18,15 +17,11 @@ import com.binomed.cineshowtime.client.service.ws.CineShowTimeWS;
 import com.binomed.cineshowtime.client.ui.coverflow.CoverData;
 import com.binomed.cineshowtime.client.ui.coverflow.Coverflow;
 import com.binomed.cineshowtime.client.ui.coverflow.event.ClickCoverListener;
-import com.binomed.cineshowtime.client.ui.dialog.MapDialog;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.OpenEvent;
 import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DisclosurePanel;
 import com.google.gwt.user.client.ui.Label;
@@ -45,8 +40,6 @@ public class TheaterView extends Composite {
 
 	@UiField
 	DisclosurePanel theaterPanel;
-	@UiField
-	Label theaterPlace;
 	@UiField
 	Label theaterPhone;
 	@UiField
@@ -70,9 +63,6 @@ public class TheaterView extends Composite {
 
 		// Update theater informations
 		theaterPhone.setText(theater.getPhoneNumber());
-		if (theater.getPlace() != null) {
-			theaterPlace.setText(theater.getPlace().getSearchQuery());
-		}
 		theaterCoverflow.add(new Label("Programmation (" + theater.getMovieMap().size() + " films)"));
 
 		theaterPanel.addOpenHandler(new OpenHandler<DisclosurePanel>() {
@@ -103,7 +93,6 @@ public class TheaterView extends Composite {
 							if (!hasRegister) {
 								hasRegister = true;
 								clientFactory.getEventBusHandler().addHandler(MovieLoadedEvent.TYPE, eventHandler);
-								clientFactory.getEventBusHandler().addHandler(MovieLoadErrorEvent.TYPE, eventHandler);
 							}
 							// call the service
 							service.requestImdbInfo(movieTmp, ip, clientFactory.getLanguage(), theater.getPlace().getSearchQuery(), theater.getId());
@@ -112,7 +101,6 @@ public class TheaterView extends Composite {
 							if (!hasRegister) {
 								hasRegister = true;
 								clientFactory.getEventBusHandler().addHandler(MovieLoadedEvent.TYPE, eventHandler);
-								clientFactory.getEventBusHandler().addHandler(MovieLoadErrorEvent.TYPE, eventHandler);
 							}
 						}
 						coversData.add(movieTmp);
@@ -123,17 +111,6 @@ public class TheaterView extends Composite {
 				}
 			}
 		});
-
-	}
-
-	@UiHandler("showTheaterMap")
-	public void onShowMapClick(ClickEvent event) {
-		if (theater.getPlace() != null) {
-			new MapDialog(theater.getTheaterName(), theater.getPlace().getSearchQuery()).center();
-		} else {
-			// TODO A gerer autrement
-			Window.alert("No maps!");
-		}
 
 	}
 
@@ -170,7 +147,7 @@ public class TheaterView extends Composite {
 		}
 
 		@Override
-		public void onError(Throwable exception) {
+		public void onError(Throwable exception, String source) {
 			// TODO Auto-generated method stub
 
 		}

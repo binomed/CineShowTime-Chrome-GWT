@@ -9,13 +9,21 @@ abstract class NearRespEvent extends BeanEvent<NearResp, NearRespHandler> {
 		super(nearResp);
 	}
 
+	public NearRespEvent(Throwable exception) {
+		super(exception);
+	}
+
 	public NearResp getNearResp() {
 		return getBean();
 	}
 
 	@Override
 	protected void dispatch(NearRespHandler handler) {
-		handler.onNearResp(getNearResp());
+		if (getException() != null) {
+			handler.onError(getException());
+		} else {
+			handler.onNearResp(getNearResp());
+		}
 	}
 
 }

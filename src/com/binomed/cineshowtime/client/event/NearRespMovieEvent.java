@@ -12,6 +12,10 @@ public class NearRespMovieEvent extends NearRespEvent {
 		super(nearResp);
 	}
 
+	public NearRespMovieEvent(Throwable exception) {
+		super(exception);
+	}
+
 	@Override
 	public GwtEvent.Type<NearRespHandler> getAssociatedType() {
 		return TYPE;

@@ -10,8 +10,18 @@ public class YoutubeBean implements CoverData {
 
 	private String videoName;
 
+	private String videoId;
+
 	public YoutubeBean() {
 		super();
+	}
+
+	public String getVideoId() {
+		return videoId;
+	}
+
+	public void setVideoId(String videoId) {
+		this.videoId = videoId;
 	}
 
 	public String getUrlVideo() {

@@ -14,7 +14,7 @@ import com.google.gwt.xml.client.NodeList;
 import com.google.gwt.xml.client.Text;
 import com.google.gwt.xml.client.XMLParser;
 
-public class ParserMovieResultDomXml extends AbstractParser {
+public class ParserImdbResultDomXml extends AbstractParser {
 
 	public static MovieBean parseResult(String response, MovieBean movie) {
 
@@ -68,6 +68,7 @@ public class ParserMovieResultDomXml extends AbstractParser {
 			video.setUrlImg(getString(videoNode, ATTR_URL_IMG));
 			video.setUrlVideo(getString(videoNode, ATTR_URL_VIDEO));
 			video.setVideoName(getString(videoNode, ATTR_VIDEO_NAME));
+			video.setVideoId(getString(videoNode, ATTR_ID));
 		}
 
 		return movie;

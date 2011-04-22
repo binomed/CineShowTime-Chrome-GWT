@@ -4,10 +4,38 @@
 	
 	<ui:with field="res" type="com.binomed.cineshowtime.client.resources.CstResource" />
 	<ui:with field="i18n" type="com.binomed.cineshowtime.client.resources.I18N" />
-	
-	<g:HorizontalPanel>
-		<g:Label ui:field="theaterName" />
-		<g:Image ui:field="theaterFav" resource='{res.btn_stat_big_off}'/>
-	</g:HorizontalPanel>
+		<g:HorizontalPanel width="100%">
+			<g:HorizontalPanel styleName="{style.leftHeader}">
+				<g:Image ui:field="theaterOpen" />
+				<g:VerticalPanel width="100%">
+					<g:Label ui:field="theaterName" styleName="{style.cursorname}"/>
+					<g:Label ui:field="theaterPlace" />
+				</g:VerticalPanel>
+			</g:HorizontalPanel>
+			<g:HorizontalPanel styleName="{style.rightHeader}">
+				<g:Image ui:field="theaterMap" resource='{res.maps}' />
+				<g:Image ui:field="theaterFav" resource='{res.btn_stat_big_off}'/>
+			</g:HorizontalPanel>
+		</g:HorizontalPanel>
+
+	<ui:style>
+		img#theaterOpen {
+		    cursor:pointer;
+		}
+		.cursorname {
+		    cursor:pointer;
+		    font-weight:bold;
+		}
+		.leftHeader {
+		    top:0;
+		    left:0;
+		}
+		
+		.rightHeader {
+		    top:0;
+		    right:0;
+		}
+		
+	</ui:style>
 
 </ui:UiBinder> 

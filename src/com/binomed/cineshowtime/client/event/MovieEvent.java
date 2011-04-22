@@ -9,6 +9,10 @@ abstract class MovieEvent<MovieHandler extends EventHandler> extends BeanEvent<M
 		super(movie);
 	}
 
+	public MovieEvent(Throwable exception) {
+		super(exception);
+	}
+
 	public MovieBean getMovie() {
 		return getBean();
 	}

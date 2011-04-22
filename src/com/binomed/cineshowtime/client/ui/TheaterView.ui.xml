@@ -20,13 +20,7 @@
 						</td>
 					</tr>
 					<tr>
-						<td><g:Label ui:field="theaterPhone" /></td>
-						<td align="right">
-							<g:HorizontalPanel>
-								<g:Image resource='{res.maps}' />
-								<g:Hyperlink ui:field="showTheaterMap" text="{i18n.showTheaterMap}" />
-							</g:HorizontalPanel>
-						</td>
+						<td  colspan="2" ><g:Label ui:field="theaterPhone" /></td>
 					</tr>
 					<tr>
 						<td colspan="2" align="center">

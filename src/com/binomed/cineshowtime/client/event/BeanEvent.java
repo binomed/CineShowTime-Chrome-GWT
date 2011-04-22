@@ -7,12 +7,22 @@ public abstract class BeanEvent<Bean, BeanHandler extends EventHandler> extends 
 
 	private Bean bean;
 
+	private Throwable exception;
+
 	public BeanEvent(Bean bean) {
 		this.bean = bean;
 	}
 
+	public BeanEvent(Throwable exception) {
+		this.exception = exception;
+	}
+
 	protected Bean getBean() {
 		return bean;
+	}
+
+	protected Throwable getException() {
+		return exception;
 	}
 
 }

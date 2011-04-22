@@ -6,7 +6,7 @@
 	<ui:with field="res" type="com.binomed.cineshowtime.client.resources.CstResource" />
 	<ui:with field="i18n" type="com.binomed.cineshowtime.client.resources.I18N" />
 	
-	<g:DockLayoutPanel unit="EM" styleName="{style.mainPanel}" >
+	<g:DockLayoutPanel unit="EM" styleName="{style.mainPanel}" width="100%"  >
 		<!-- Header -->
 		<g:north size='5'>
 			<g:HTMLPanel>
@@ -24,7 +24,7 @@
 					<g:ScrollPanel>
 						<g:VerticalPanel>
 							<cst:SearchTheater />
-							<g:VerticalPanel ui:field="theatersContent" />
+							<g:VerticalPanel ui:field="theatersContent" width="100%" />
 						</g:VerticalPanel>
 					</g:ScrollPanel>
 				</g:tab>

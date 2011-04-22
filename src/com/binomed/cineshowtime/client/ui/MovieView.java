@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.List;
 
 import com.binomed.cineshowtime.client.IClientFactory;
-import com.binomed.cineshowtime.client.event.MovieLoadErrorEvent;
 import com.binomed.cineshowtime.client.event.MovieLoadedEvent;
 import com.binomed.cineshowtime.client.handler.ImdbRespHandler;
 import com.binomed.cineshowtime.client.model.MovieBean;
@@ -73,7 +72,6 @@ public class MovieView extends Composite {
 
 		if ((movie.getState() == MovieBean.STATE_NONE) || (movie.getState() == MovieBean.STATE_IN_PROGRESS)) {
 			clientFactory.getEventBusHandler().addHandler(MovieLoadedEvent.TYPE, eventHandler);
-			clientFactory.getEventBusHandler().addHandler(MovieLoadErrorEvent.TYPE, eventHandler);
 		} else {
 			fillMovieView();
 		}
@@ -100,12 +98,16 @@ public class MovieView extends Composite {
 		} else {
 			imgPoster.setUrl(CstResource.instance.no_poster().getURL());
 		}
+
+		imgPoster.setWidth("185px");
+		imgPoster.setHeight("245px");
 	}
 
 	private void updateMovieView() {
 		imgPoster.setUrl(movie.getUrlImg());
 		movieLinkImdb.setText(movie.getUrlImdb());
 		moviePlot.setText(movie.getDescription());
+		groupMoviePlot.setOpen(true);
 
 		movieRate.add(new RateView(true, movie.getRate()));
 
@@ -135,9 +137,10 @@ public class MovieView extends Composite {
 	private ImdbRespHandler eventHandler = new ImdbRespHandler() {
 
 		@Override
-		public void onError(Throwable error) {
-			Window.alert("Unable to load movie ! " + error.getMessage());
-
+		public void onError(Throwable error, String source) {
+			if ((source != null) && movie.getId().equals(source)) {
+				Window.alert("Unable to load movie ! " + error.getMessage());
+			}
 		}
 
 		@Override
@@ -146,7 +149,6 @@ public class MovieView extends Composite {
 				movie = movieBean;
 				updateMovieView();
 				clientFactory.getEventBusHandler().removeHandler(MovieLoadedEvent.TYPE, eventHandler);
-				clientFactory.getEventBusHandler().removeHandler(MovieLoadErrorEvent.TYPE, eventHandler);
 			}
 
 		}
@@ -163,7 +165,7 @@ public class MovieView extends Composite {
 				}
 			}
 
-			new VideoDialog(videoBean.getVideoName(), videoBean.getVideoUrl()).center();
+			new VideoDialog(videoBean.getVideoName(), videoBean.getVideoId()).center();
 
 			//
 			// int left = coverflow.getCanvas().getAbsoluteLeft() + 10;

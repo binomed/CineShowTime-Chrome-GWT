@@ -15,6 +15,11 @@ public class MovieLoadedEvent extends MovieEvent<ImdbRespHandler> {
 		this.source = source;
 	}
 
+	public MovieLoadedEvent(String source, Throwable exception) {
+		super(exception);
+		this.source = source;
+	}
+
 	@Override
 	public String getSource() {
 		return source;
@@ -27,7 +32,11 @@ public class MovieLoadedEvent extends MovieEvent<ImdbRespHandler> {
 
 	@Override
 	protected void dispatch(ImdbRespHandler handler) {
-		handler.onMovieLoad(getMovie(), source);
+		if (getException() != null) {
+			handler.onError(getException(), source);
+		} else {
+			handler.onMovieLoad(getMovie(), source);
+		}
 	}
 
 }

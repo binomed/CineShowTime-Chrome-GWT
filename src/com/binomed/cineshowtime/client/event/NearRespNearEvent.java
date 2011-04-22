@@ -12,6 +12,10 @@ public class NearRespNearEvent extends NearRespEvent {
 		super(nearResp);
 	}
 
+	public NearRespNearEvent(Throwable exception) {
+		super(exception);
+	}
+
 	@Override
 	public com.google.gwt.event.shared.GwtEvent.Type<NearRespHandler> getAssociatedType() {
 		return TYPE;

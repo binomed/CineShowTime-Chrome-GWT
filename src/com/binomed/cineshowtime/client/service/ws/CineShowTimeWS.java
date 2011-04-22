@@ -5,14 +5,12 @@ import java.util.Map;
 
 import com.binomed.cineshowtime.client.IClientFactory;
 import com.binomed.cineshowtime.client.cst.HttpParamsCst;
-import com.binomed.cineshowtime.client.event.MovieLoadErrorEvent;
 import com.binomed.cineshowtime.client.event.MovieLoadedEvent;
-import com.binomed.cineshowtime.client.event.NearRespMovieErrorEvent;
 import com.binomed.cineshowtime.client.event.NearRespMovieEvent;
 import com.binomed.cineshowtime.client.event.NearRespNearEvent;
 import com.binomed.cineshowtime.client.model.MovieBean;
 import com.binomed.cineshowtime.client.model.NearResp;
-import com.binomed.cineshowtime.client.parsing.ParserMovieResultDomXml;
+import com.binomed.cineshowtime.client.parsing.ParserImdbResultDomXml;
 import com.binomed.cineshowtime.client.parsing.ParserNearResultDomXml;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestCallback;
@@ -63,7 +61,7 @@ public class CineShowTimeWS extends AbstractCineShowTimeWS {
 
 			@Override
 			public void onError(Request request, Throwable exception) {
-				clientFactory.getEventBusHandler().fireEvent(new MovieLoadErrorEvent(exception));
+				clientFactory.getEventBusHandler().fireEvent(new NearRespNearEvent(exception));
 			}
 		});
 	}
@@ -88,7 +86,7 @@ public class CineShowTimeWS extends AbstractCineShowTimeWS {
 
 			@Override
 			public void onError(Request request, Throwable exception) {
-				clientFactory.getEventBusHandler().fireEvent(new NearRespMovieErrorEvent(exception));
+				clientFactory.getEventBusHandler().fireEvent(new NearRespMovieEvent(exception));
 			}
 		});
 	}
@@ -117,7 +115,7 @@ public class CineShowTimeWS extends AbstractCineShowTimeWS {
 		doGet(URL_CONTEXT_IMDB, params, new RequestCallback() {
 			@Override
 			public void onResponseReceived(Request request, Response response) {
-				ParserMovieResultDomXml.parseResult(response.getText(), movie);
+				ParserImdbResultDomXml.parseResult(response.getText(), movie);
 				movie.setState(MovieBean.STATE_LOADED);
 				movieMap.put(movie.getId(), movie);
 				clientFactory.getEventBusHandler().fireEvent(new MovieLoadedEvent(source, movie));
@@ -125,7 +123,7 @@ public class CineShowTimeWS extends AbstractCineShowTimeWS {
 
 			@Override
 			public void onError(Request request, Throwable exception) {
-				clientFactory.getEventBusHandler().fireEvent(new MovieLoadErrorEvent(exception));
+				clientFactory.getEventBusHandler().fireEvent(new MovieLoadedEvent(source, exception));
 			}
 		});
 	}
