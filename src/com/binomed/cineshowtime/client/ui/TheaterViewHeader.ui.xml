@@ -2,40 +2,25 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 			 xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	
+	<ui:style src="../resources/css/CstStyle.css" />
 	<ui:with field="res" type="com.binomed.cineshowtime.client.resources.CstResource" />
 	<ui:with field="i18n" type="com.binomed.cineshowtime.client.resources.I18N" />
-		<g:HorizontalPanel width="100%">
-			<g:HorizontalPanel styleName="{style.leftHeader}">
+	
+	<g:HTMLPanel styleName="{style.theaterPanelHeader}">
+		<div style="float:left;">
+			<div style="float:left;">
 				<g:Image ui:field="theaterOpen" />
-				<g:VerticalPanel width="100%">
-					<g:Label ui:field="theaterName" styleName="{style.cursorname}"/>
-					<g:Label ui:field="theaterPlace" />
-				</g:VerticalPanel>
-			</g:HorizontalPanel>
-			<g:HorizontalPanel styleName="{style.rightHeader}">
-				<g:Image ui:field="theaterMap" resource='{res.maps}' />
-				<g:Image ui:field="theaterFav" resource='{res.btn_stat_big_off}'/>
-			</g:HorizontalPanel>
-		</g:HorizontalPanel>
-
-	<ui:style>
-		img#theaterOpen {
-		    cursor:pointer;
-		}
-		.cursorname {
-		    cursor:pointer;
-		    font-weight:bold;
-		}
-		.leftHeader {
-		    top:0;
-		    left:0;
-		}
-		
-		.rightHeader {
-		    top:0;
-		    right:0;
-		}
-		
-	</ui:style>
+			</div>
+			<div style="float:right;">
+				<g:Label ui:field="theaterName" styleName="{style.theaterNameHeader}"/>
+				<g:Label ui:field="theaterPlace" styleName="{style.theaterInfoHeader}"/>
+				<g:Label ui:field="theaterPhone" styleName="{style.theaterInfoHeader}" />
+			</div>
+		</div>
+		<div style="text-align:right;">
+			<g:Image ui:field="theaterMap" resource='{res.maps}' />
+			<g:Image ui:field="theaterFav" resource='{res.btn_stat_big_off}'/>
+		</div>
+	</g:HTMLPanel>
 
 </ui:UiBinder> 

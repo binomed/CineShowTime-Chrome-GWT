@@ -4,6 +4,7 @@ import com.binomed.cineshowtime.client.IClientFactory;
 import com.binomed.cineshowtime.client.event.TheaterOpenEvent;
 import com.binomed.cineshowtime.client.model.TheaterBean;
 import com.binomed.cineshowtime.client.resources.CstResource;
+import com.binomed.cineshowtime.client.resources.I18N;
 import com.binomed.cineshowtime.client.ui.dialog.MapDialog;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -25,7 +26,7 @@ public class TheaterViewHeader extends Composite {
 	private boolean open;
 
 	@UiField
-	Label theaterName, theaterPlace;
+	Label theaterName, theaterPlace, theaterPhone;
 	@UiField
 	Image theaterFav, theaterOpen;
 
@@ -36,12 +37,12 @@ public class TheaterViewHeader extends Composite {
 
 		// Initialization
 		initWidget(uiBinder.createAndBindUi(this));
-		// HTML headerHtml = new HTML("<font color=\"#FFFFFF\">" + theater.getTheaterName() + "</font>");
-		// theaterName.add(headerHtml);
-		theaterName.setText(theater.getTheaterName());
+
+		theaterName.setText(I18N.instance.theaterName(theater.getTheaterName(), theater.getMovieMap().size()));
 		if (theater.getPlace() != null) {
 			theaterPlace.setText(theater.getPlace().getSearchQuery());
 		}
+		theaterPhone.setText(theater.getPhoneNumber());
 		theaterOpen.setResource(CstResource.instance.collapse());
 
 		showTheaterFav();

@@ -8,13 +8,11 @@ import com.binomed.cineshowtime.client.IClientFactory;
 import com.binomed.cineshowtime.client.event.MovieLoadedEvent;
 import com.binomed.cineshowtime.client.handler.ImdbRespHandler;
 import com.binomed.cineshowtime.client.model.MovieBean;
-import com.binomed.cineshowtime.client.model.ProjectionBean;
 import com.binomed.cineshowtime.client.model.ReviewBean;
 import com.binomed.cineshowtime.client.model.TheaterBean;
 import com.binomed.cineshowtime.client.model.YoutubeBean;
 import com.binomed.cineshowtime.client.resources.CstResource;
 import com.binomed.cineshowtime.client.resources.I18N;
-import com.binomed.cineshowtime.client.service.ws.CineShowTimeWS;
 import com.binomed.cineshowtime.client.ui.coverflow.CoverData;
 import com.binomed.cineshowtime.client.ui.coverflow.Coverflow;
 import com.binomed.cineshowtime.client.ui.coverflow.event.ClickCoverListener;
@@ -23,7 +21,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.CaptionPanel;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DisclosurePanel;
 import com.google.gwt.user.client.ui.HTML;
@@ -43,19 +40,18 @@ public class MovieView extends Composite {
 	@UiField
 	Image imgPoster;
 	@UiField
-	VerticalPanel movieRate;
+	RateView movieRate;
 	@UiField
-	Label movieName, movieTime, movieStyle, sepMovieTimeStyle, moviePlot;
+	Label movieName, movieYear, movieTime, movieStyle, sepMovieTimeStyle, moviePlot;
 	@UiField
 	Hyperlink movieLinkImdb;
 	@UiField
 	DisclosurePanel groupMoviePlot, groupMovieBA, groupMovieCritique;
 	@UiField
-	CaptionPanel movieSeanceGroup;
+	ProjectionView movieProjections;
 	@UiField
-	VerticalPanel movieSeanceList, movieTrailerCoverflow, movieReview;
-	// @UiField
-	// HorizontalPanel movieHeader;
+	VerticalPanel movieTrailerCoverflow, movieReview;
+
 	private Coverflow coverflow;
 
 	public MovieView(final TheaterBean theater, final String idMovie, IClientFactory clientFactory) {
@@ -65,10 +61,7 @@ public class MovieView extends Composite {
 		// Initialization
 		initWidget(uiBinder.createAndBindUi(this));
 
-		// movieHeader.setSpacing(10);
-
-		CineShowTimeWS service = clientFactory.getCineShowTimeService();
-		this.movie = service.getMovie(idMovie);
+		this.movie = clientFactory.getCineShowTimeService().getMovie(idMovie);
 
 		if ((movie.getState() == MovieBean.STATE_NONE) || (movie.getState() == MovieBean.STATE_IN_PROGRESS)) {
 			clientFactory.getEventBusHandler().addHandler(MovieLoadedEvent.TYPE, eventHandler);
@@ -83,15 +76,12 @@ public class MovieView extends Composite {
 		groupMovieBA.setHeader(new HTML("<font color=#FFFFFF>" + I18N.instance.groupBA() + "</font>"));
 		groupMovieCritique.setHeader(new HTML("<font color=#FFFFFF>" + I18N.instance.groupCritiques() + "</font>"));
 
-		movieSeanceGroup.setCaptionText(theater.getTheaterName());
-
 		movieName.setText(movie.getMovieName());
+		movieYear.setText(String.valueOf(movie.getYear()));
 		Date time = new Date(movie.getMovieTime());
 		movieTime.setText(time.getHours() + "h" + time.getMinutes() + "m");
 
-		for (ProjectionBean projection : theater.getMovieMap().get(movie.getId())) {
-			movieSeanceList.add(new ProjectionView(projection, movie.getMovieTime()));
-		}
+		movieProjections.updateProjections(theater.getTheaterName(), movie.getMovieTime(), theater.getMovieMap().get(movie.getId()));
 
 		if (movie.getState() == MovieBean.STATE_LOADED) {
 			updateMovieView();
@@ -109,7 +99,7 @@ public class MovieView extends Composite {
 		moviePlot.setText(movie.getDescription());
 		groupMoviePlot.setOpen(true);
 
-		movieRate.add(new RateView(true, movie.getRate()));
+		movieRate.updateRate(true, movie.getRate());
 
 		// Add the coverflow
 		if (movie.getYoutubeVideos() != null) {
@@ -134,7 +124,7 @@ public class MovieView extends Composite {
 		return movie;
 	}
 
-	private ImdbRespHandler eventHandler = new ImdbRespHandler() {
+	private final ImdbRespHandler eventHandler = new ImdbRespHandler() {
 
 		@Override
 		public void onError(Throwable error, String source) {
@@ -148,6 +138,7 @@ public class MovieView extends Composite {
 			if ((movieBean != null) && movie.getId().equals(movieBean.getId())) {
 				movie = movieBean;
 				updateMovieView();
+				fillMovieView();
 				clientFactory.getEventBusHandler().removeHandler(MovieLoadedEvent.TYPE, eventHandler);
 			}
 
@@ -164,34 +155,8 @@ public class MovieView extends Composite {
 					videoBean = videoTmp;
 				}
 			}
-
 			new VideoDialog(videoBean.getVideoName(), videoBean.getVideoId()).center();
-
-			//
-			// int left = coverflow.getCanvas().getAbsoluteLeft() + 10;
-			// int top = coverflow.getCanvas().getAbsoluteTop() + 10;
-			//
-			// DecoratedPopupPanel simplePopup = new DecoratedPopupPanel(true);
-			// simplePopup.ensureDebugId("cwBasicPopup-simplePopup");
-			// simplePopup.setWidth("150px");
-			// simplePopup.show();
-			// simplePopup.setPopupPosition(left, top);
-			//
-			// Video video = new Video(videoBean.getVideoUrl());
-			//
-			// final PopupPanel imagePopup = new PopupPanel(true);
-			// imagePopup.setAnimationEnabled(true);
-			// imagePopup.ensureDebugId("cwBasicPopup-imagePopup");
-			// imagePopup.setWidget(video);
-			// video.addClickHandler(new ClickHandler() {
-			// @Override
-			// public void onClick(ClickEvent event) {
-			// imagePopup.hide();
-			// }
-			// });
-
 		}
-
 	};
 
 	interface MovieViewUiBinder extends UiBinder<Widget, MovieView> {

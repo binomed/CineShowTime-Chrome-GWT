@@ -21,11 +21,11 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.OpenEvent;
 import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DisclosurePanel;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class TheaterView extends Composite {
@@ -40,31 +40,25 @@ public class TheaterView extends Composite {
 
 	@UiField
 	DisclosurePanel theaterPanel;
+	@UiField(provided = true)
+	TheaterViewHeader theaterHeader;
 	@UiField
-	Label theaterPhone;
-	@UiField
-	VerticalPanel theaterCoverflow, theaterHeader;
+	SimplePanel theaterCoverflow;
 	private Coverflow coverflow;
 
 	public TheaterView(final IClientFactory clientFactory, final TheaterBean theater) {
 		this.clientFactory = clientFactory;
 		this.theater = theater;
+		clientFactory.getEventBusHandler().addHandler(TheaterOpenEvent.TYPE, eventHandler);
+
+		// Create theater header
+		theaterHeader = new TheaterViewHeader(clientFactory, theater);
 
 		// Initialization
 		initWidget(uiBinder.createAndBindUi(this));
 
-		// Disclosure panel
-		// HTML headerHtml = new HTML("<font color=\"#FFFFFF\">" + theater.getTheaterName() + "</font>");
-		theaterHeader.add(new TheaterViewHeader(clientFactory, theater));
-
-		clientFactory.getEventBusHandler().addHandler(TheaterOpenEvent.TYPE, eventHandler);
-		// theaterPanel.setHeader(new TheaterViewHeader(clientFactory, theater));
-		theaterPanel.setAnimationEnabled(true);
-
 		// Update theater informations
-		theaterPhone.setText(theater.getPhoneNumber());
-		theaterCoverflow.add(new Label("Programmation (" + theater.getMovieMap().size() + " films)"));
-
+		theaterPanel.setAnimationEnabled(true);
 		theaterPanel.addOpenHandler(new OpenHandler<DisclosurePanel>() {
 
 			@Override
@@ -114,6 +108,12 @@ public class TheaterView extends Composite {
 
 	}
 
+	/** Used by MyUiBinder to instantiate CricketScores */
+	@UiFactory
+	TheaterViewHeader makeTheaterHeader() { // method name is insignificant
+		return new TheaterViewHeader(clientFactory, theater);
+	}
+
 	private final ClickCoverListener movieOpenListener = new ClickCoverListener() {
 		@Override
 		public void onClickCover(String idMovie) {
@@ -154,7 +154,7 @@ public class TheaterView extends Composite {
 
 	}
 
-	private TheaterHandler eventHandler = new TheaterHandler();
+	private final TheaterHandler eventHandler = new TheaterHandler();
 
 	interface TheaterViewUiBinder extends UiBinder<Widget, TheaterView> {
 	}

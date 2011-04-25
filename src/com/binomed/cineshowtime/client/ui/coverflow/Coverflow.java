@@ -18,7 +18,7 @@ public class Coverflow {
 
 	public static final int MOVE_LEFT = -1;
 	public static final int MOVE_RIGHT = 1;
-	public static final String BACKGROUND_COLOR = "#000000";
+	public static final String BACKGROUND_COLOR = "#555555";
 
 	/** HTML5 canvas object */
 	private final GWTCoverflowCanvas coverflowCanvas;
@@ -96,9 +96,7 @@ public class Coverflow {
 				}
 			}
 		});
-		coverflowCanvas.setFrontGradient();
 		moveToCover(idMiddleCover);
-
 	}
 
 	/**
@@ -116,7 +114,7 @@ public class Coverflow {
 				final CoverElement loadedCover = covers.get(coverId);
 				if (loadedCover != null) {
 					loadedCover.setImage(imageElement);
-					loadedCover.draw(coverflowCanvas.getCanvas());
+					drawCoverflow();
 				}
 			}
 		});
@@ -190,16 +188,20 @@ public class Coverflow {
 
 				@Override
 				public void drawStage() {
-					coverflowCanvas.setBackgroundColor();
-					dispo.onDrawCovers(coverflowCanvas, covers);
-					drawCoverflowWidget();
-					coverflowCanvas.setFrontGradient();
+					drawCoverflow();
 				}
 			};
 
 			// start animation
 			myAnimation.start();
 		}
+	}
+
+	public void drawCoverflow() {
+		coverflowCanvas.clearCanvas();
+		dispo.onDrawCovers(coverflowCanvas, covers);
+		drawCoverflowWidget();
+		coverflowCanvas.setFrontGradient();
 	}
 
 	private void drawCoverflowWidget() {

@@ -1,9 +1,9 @@
 package com.binomed.cineshowtime.client.resources;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.i18n.client.Constants;
+import com.google.gwt.i18n.client.Messages;
 
-public interface I18N extends Constants {
+public interface I18N extends Messages {
 
 	public static final I18N instance = GWT.create(I18N.class);
 
@@ -19,6 +19,8 @@ public interface I18N extends Constants {
 	String addFavorites();
 
 	String showTheaterMap();
+
+	String theaterName(String theaterName, int nbMovies);
 
 	// Search panel
 	String locationLabel();

@@ -2,12 +2,12 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 			 xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	
+	<ui:style src="../resources/css/CstStyle.css" />
 	<ui:with field="res" type="com.binomed.cineshowtime.client.resources.CstResource" />
 	<ui:with field="i18n" type="com.binomed.cineshowtime.client.resources.I18N" />
 	
-	<g:VerticalPanel width="100%">
-		<g:Label ui:field="projectionTimeStart"/>
-		<g:Label ui:field="projectionTimeEnd" />
-	</g:VerticalPanel>
-	
+	<g:CaptionPanel ui:field="movieSeanceGroup" styleName="{style.projectionsCaption}" >
+		<g:VerticalPanel ui:field="movieSeanceList"  styleName="{style.projectionsContent}" />
+	</g:CaptionPanel>
+
 </ui:UiBinder> 

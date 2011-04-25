@@ -16,11 +16,18 @@ public class RateView extends Composite {
 	@UiField
 	Image rate1, rate2, rate3, rate4, rate5, rate6, rate7, rate8, rate9, rate10;
 
-	public RateView(boolean full, double rate) {
-
+	public RateView() {
 		// Initialization
 		initWidget(uiBinder.createAndBindUi(this));
+	}
 
+	public RateView(boolean full, double rate) {
+		// Initialization
+		initWidget(uiBinder.createAndBindUi(this));
+		updateRate(full, rate);
+	}
+
+	public void updateRate(boolean full, double rate) {
 		ImageResource rateImg1 = CstResource.instance.rate_star_small_off();
 		ImageResource rateImg2 = CstResource.instance.rate_star_small_off();
 		ImageResource rateImg3 = CstResource.instance.rate_star_small_off();
@@ -105,7 +112,6 @@ public class RateView extends Composite {
 		rate8.setResource(rateImg8);
 		rate9.setResource(rateImg9);
 		rate10.setResource(rateImg10);
-
 	}
 
 	interface RateViewUiBinder extends UiBinder<Widget, RateView> {

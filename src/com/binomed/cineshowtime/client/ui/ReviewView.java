@@ -7,7 +7,6 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class ReviewView extends Composite {
@@ -18,10 +17,11 @@ public class ReviewView extends Composite {
 	Label reviewContent;
 	@UiField
 	Hyperlink reviewSourceLink, reviewLink;
-	@UiField
-	VerticalPanel rate;
+	@UiField(provided = true)
+	RateView rate;
 
 	public ReviewView(ReviewBean review) {
+		rate = new RateView(false, Double.valueOf(review.getRate()));
 
 		// Initialization
 		initWidget(uiBinder.createAndBindUi(this));
@@ -30,8 +30,6 @@ public class ReviewView extends Composite {
 		reviewContent.setText(review.getReview());
 		reviewLink.setText(review.getAuthor());
 		reviewSourceLink.setText(review.getUrlReview());
-		rate.add(new RateView(false, Double.valueOf(review.getRate())));
-
 	}
 
 	interface ReviewViewUiBinder extends UiBinder<Widget, ReviewView> {

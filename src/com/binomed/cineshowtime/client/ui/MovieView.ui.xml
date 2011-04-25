@@ -3,69 +3,41 @@
 			 xmlns:g="urn:import:com.google.gwt.user.client.ui"
 			 xmlns:cst="urn:import:com.binomed.cineshowtime.client.ui">
 	
+	<ui:style src="../resources/css/CstStyle.css" />
 	<ui:with field="res" type="com.binomed.cineshowtime.client.resources.CstResource" />
 	<ui:with field="i18n" type="com.binomed.cineshowtime.client.resources.I18N" />
 	
-	<!--  <g:VerticalPanel width="100%" height="100%" >-->
 	<g:ScrollPanel>
-	<g:VerticalPanel width="100%">
 		<g:HTMLPanel width="100%">
-			<table width="100%">
-				<tr>
-					<td width="20%">
-						<g:Image resource="{res.no_poster}" ui:field="imgPoster" />
-					</td>
-					<td width="30%">
-						<g:VerticalPanel>
-							<g:Label ui:field="movieName"/>
-							<g:HorizontalPanel>
-								<g:Label ui:field="movieTime"/>
-								<g:Label ui:field="sepMovieTimeStyle" text=" - "/>
-								<g:Label ui:field="movieStyle"/>
-							</g:HorizontalPanel>
-							<g:Hyperlink ui:field="movieLinkImdb" text="{i18n.imdbLink}" />
-							<g:VerticalPanel ui:field="movieRate" />
-						</g:VerticalPanel>
-					</td>
-					<td width="50%">
-						<g:CaptionPanel ui:field="movieSeanceGroup" width="100%">
-							<g:VerticalPanel ui:field="movieSeanceList">
-							</g:VerticalPanel>
-						</g:CaptionPanel>					
-					</td>
-				 </tr>
-			</table>
-		</g:HTMLPanel>
-		<!-- 
-		<g:HorizontalPanel ui:field="movieHeader">
-			<g:Image resource="{res.no_poster}" ui:field="imgPoster" />
-			<g:VerticalPanel>
-				<g:Label ui:field="movieName"/>
-				<g:HorizontalPanel>
+			<div>
+				<div style="float:left;" >		
+					<g:Image resource="{res.no_poster}" ui:field="imgPoster" />
+				</div>
+				<div style="padding-left:10px;float:left;">
+					<g:Label ui:field="movieName" styleName="{style.movieName}"/>
 					<g:Label ui:field="movieTime"/>
+					<g:Label ui:field="movieYear"/>
 					<g:Label ui:field="sepMovieTimeStyle" text=" - "/>
 					<g:Label ui:field="movieStyle"/>
-				</g:HorizontalPanel>
-				<g:Hyperlink ui:field="movieLinkImdb" text="{i18n.imdbLink}" />
-				<g:VerticalPanel ui:field="movieRate" />
-			</g:VerticalPanel>
-			<g:CaptionPanel ui:field="movieSeanceGroup" width="100%">
-				<g:VerticalPanel ui:field="movieSeanceList">
-				</g:VerticalPanel>
-			</g:CaptionPanel>					
-		</g:HorizontalPanel>
-		 -->
-		<g:DisclosurePanel ui:field="groupMoviePlot">
-			<g:Label ui:field="moviePlot" />
-		</g:DisclosurePanel>
-		<g:DisclosurePanel ui:field="groupMovieBA">
-			<g:VerticalPanel ui:field="movieTrailerCoverflow" />
-		</g:DisclosurePanel>
-		<g:DisclosurePanel ui:field="groupMovieCritique">
-			<g:VerticalPanel ui:field="movieReview" />
-		</g:DisclosurePanel>
-	</g:VerticalPanel>
+					<g:Hyperlink ui:field="movieLinkImdb" text="{i18n.imdbLink}" />
+					<cst:RateView ui:field="movieRate" />
+				</div>
+				<div style="padding-left:100px;float:left;">
+					<cst:ProjectionView ui:field="movieProjections"/>
+				</div>
+			</div>
+			<div style="clear:both;">			
+				<g:DisclosurePanel ui:field="groupMoviePlot">
+					<g:Label ui:field="moviePlot" />
+				</g:DisclosurePanel>
+				<g:DisclosurePanel ui:field="groupMovieBA">
+					<g:VerticalPanel ui:field="movieTrailerCoverflow" />
+				</g:DisclosurePanel>
+				<g:DisclosurePanel ui:field="groupMovieCritique">
+					<g:VerticalPanel ui:field="movieReview" />
+				</g:DisclosurePanel>
+			</div>
+		</g:HTMLPanel>
 	</g:ScrollPanel>
-	<!-- </g:VerticalPanel>-->
 	
 </ui:UiBinder> 

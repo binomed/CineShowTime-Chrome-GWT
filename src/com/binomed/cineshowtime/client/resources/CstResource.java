@@ -2,7 +2,6 @@ package com.binomed.cineshowtime.client.resources;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
 
 public interface CstResource extends ClientBundle {
@@ -64,15 +63,5 @@ public interface CstResource extends ClientBundle {
 
 	@Source("com/binomed/cineshowtime/client/resources/images/collapse.png")
 	ImageResource collapse();
-
-	// CSS
-	@Source("com/binomed/cineshowtime/client/resources/css/CstStyle.css")
-	public StyleCss styleCss();
-
-	interface StyleCss extends CssResource {
-		String mainPanel();
-
-		String allWidth();
-	}
 
 }

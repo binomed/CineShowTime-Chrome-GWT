@@ -29,7 +29,7 @@ import com.google.gwt.http.client.URL;
 public class CineShowTimeWS extends AbstractCineShowTimeWS {
 
 	private Map<String, MovieBean> movieMap;
-	private IClientFactory clientFactory;
+	private final IClientFactory clientFactory;
 
 	public CineShowTimeWS(IClientFactory clientFactory) {
 		this.clientFactory = clientFactory;
@@ -37,20 +37,17 @@ public class CineShowTimeWS extends AbstractCineShowTimeWS {
 
 	/**
 	 * Return nearest theaters following latitude and longitude
-	 * 
-	 * @param latitude
-	 *            Latitude parameter
-	 * @param longitude
-	 *            Longitude parameter
+	 * @param latitude Latitude parameter
+	 * @param longitude Longitude parameter
 	 * @param lang
-	 * @param callback
-	 *            Specific Callback
+	 * @param callback Specific Callback
 	 */
 	public void requestNearTheatersFromLatLng(double latitude, double longitude, String lang) {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put(PARAM_LAT, String.valueOf(latitude));
 		params.put(PARAM_LONG, String.valueOf(longitude));
 		params.put(PARAM_LANG, lang);
+		params.put("day", "2");
 		doGet(URL_CONTEXT_SHOWTIME_NEAR, params, new RequestCallback() {
 			@Override
 			public void onResponseReceived(Request request, Response response) {
@@ -68,11 +65,8 @@ public class CineShowTimeWS extends AbstractCineShowTimeWS {
 
 	/**
 	 * Return Movie info following given parameters
-	 * 
-	 * @param params
-	 *            Parameters
-	 * @param callback
-	 *            Specific Callback
+	 * @param params Parameters
+	 * @param callback Specific Callback
 	 */
 	public void requestMovie(Map<String, String> params, final String source) {
 		doGet(URL_CONTEXT_SHOWTIME_MOVIE, params, new RequestCallback() {
@@ -93,11 +87,8 @@ public class CineShowTimeWS extends AbstractCineShowTimeWS {
 
 	/**
 	 * Return IMDB info following given parameters
-	 * 
-	 * @param params
-	 *            Parameters
-	 * @param callback
-	 *            Specific Callback
+	 * @param params Parameters
+	 * @param callback Specific Callback
 	 */
 	public void requestImdbInfo(final MovieBean movie, final String ip, final String language, final String place, final String source) {
 		Map<String, String> params = new HashMap<String, String>();

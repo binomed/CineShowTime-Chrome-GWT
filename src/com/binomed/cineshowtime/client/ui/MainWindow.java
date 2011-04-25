@@ -27,7 +27,7 @@ public class MainWindow extends Composite {
 
 	private static MainWindowUiBinder uiBinder = GWT.create(MainWindowUiBinder.class);
 
-	private IClientFactory clientFactory;
+	private final IClientFactory clientFactory;
 
 	@UiField
 	TabLayoutPanel appBodyPanel;
@@ -83,11 +83,10 @@ public class MainWindow extends Composite {
 		// Define register to event
 		clientFactory.getEventBusHandler().addHandler(NearRespNearEvent.TYPE, nearRespHandler);
 		// Call the service
-		// TODO debouchonner la langue
 		service.requestNearTheatersFromLatLng(lat, lng, clientFactory.getLanguage());
 	}
 
-	private NearRespHandler nearRespHandler = new NearRespHandler() {
+	private final NearRespHandler nearRespHandler = new NearRespHandler() {
 
 		@Override
 		public void onError(Throwable error) {
