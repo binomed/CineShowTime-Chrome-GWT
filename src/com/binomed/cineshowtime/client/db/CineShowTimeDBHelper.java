@@ -5,9 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
-import com.binomed.cineshowtime.client.db.callBack.MovieCallBack;
-import com.binomed.cineshowtime.client.db.callBack.PrefCallBack;
-import com.binomed.cineshowtime.client.db.callBack.TheaterCallBack;
+import com.binomed.cineshowtime.client.IClientFactory;
+import com.binomed.cineshowtime.client.event.db.MovieDBEvent;
+import com.binomed.cineshowtime.client.event.db.PrefDBEvent;
+import com.binomed.cineshowtime.client.event.db.TheaterDBEvent;
 import com.binomed.cineshowtime.client.model.LocalisationBean;
 import com.binomed.cineshowtime.client.model.MovieBean;
 import com.binomed.cineshowtime.client.model.NearResp;
@@ -19,12 +20,19 @@ import com.google.code.gwt.database.client.GenericRow;
 import com.google.code.gwt.database.client.service.DataServiceException;
 import com.google.code.gwt.database.client.service.ListCallback;
 import com.google.code.gwt.database.client.service.RowIdListCallback;
-import com.google.code.gwt.database.client.service.ScalarCallback;
 import com.google.code.gwt.database.client.service.VoidCallback;
 
 public class CineShowTimeDBHelper implements ICineShowTimeDBHelper {
 
 	private CineShowTimeDataBase dataBase;
+	private IClientFactory clientFactory;
+	private ArrayList<TheaterBean> theaterFav;
+
+	public CineShowTimeDBHelper(IClientFactory clientFactory, CineShowTimeDataBase dataBase) {
+		super();
+		this.clientFactory = clientFactory;
+		initDataBase(dataBase);
+	}
 
 	@Override
 	public void initDataBase(CineShowTimeDataBase dataBase) {
@@ -202,42 +210,47 @@ public class CineShowTimeDBHelper implements ICineShowTimeDBHelper {
 	}
 
 	@Override
-	public void readPreference(final String key, final PrefCallBack callBack) {
-		dataBase.fetchPreference(key, new ScalarCallback<GenericRow>() {
+	public void readPreference(final String key) {
+		dataBase.fetchPreference(key, new ListCallback<GenericRow>() {
 
 			@Override
 			public void onFailure(DataServiceException error) {
-				callBack.onError(error);
+				clientFactory.getEventBusHandler().fireEvent(new PrefDBEvent(error));
 			}
 
 			@Override
-			public void onSuccess(GenericRow result) {
-				String value = result.getString(CineShowTimeDataBase.KEY_PREFERENCE_VALUE);
-				callBack.prefValue(key, value);
+			public void onSuccess(List<GenericRow> result) {
+				if (result != null && result.size() > 0) {
+					GenericRow row = result.get(0);
+					String value = row.getString(CineShowTimeDataBase.KEY_PREFERENCE_VALUE);
+					clientFactory.getEventBusHandler().fireEvent(new PrefDBEvent(key, value));
+				}
 			}
 		});
 
 	}
 
 	@Override
-	public void getMovie(String movieId, final MovieCallBack callBack) {
-		dataBase.fetchMovie(movieId, new ScalarCallback<GenericRow>() {
+	public void getMovie(String movieId) {
+		dataBase.fetchMovie(movieId, new ListCallback<GenericRow>() {
 
 			@Override
 			public void onFailure(DataServiceException error) {
-				callBack.onError(error);
+				clientFactory.getEventBusHandler().fireEvent(new MovieDBEvent(error));
 
 			}
 
 			@Override
-			public void onSuccess(GenericRow result) {
-				fillMovie(result, callBack);
+			public void onSuccess(List<GenericRow> result) {
+				if (result != null && result.size() > 0) {
+					fillMovie(result.get(0));
+				}
 
 			}
 		});
 	}
 
-	private void fillMovie(GenericRow result, MovieCallBack callBack) {
+	private void fillMovie(GenericRow result) {
 		MovieBean movieBean = new MovieBean();
 
 		movieBean.setId(result.getString(CineShowTimeDataBase.KEY_MOVIE_ID));
@@ -256,17 +269,16 @@ public class CineShowTimeDBHelper implements ICineShowTimeDBHelper {
 		movieBean.setActorList(result.getString(CineShowTimeDataBase.KEY_MOVIE_ACTORS));
 		movieBean.setDirectorList(result.getString(CineShowTimeDataBase.KEY_MOVIE_DIRECTORS));
 
-		getReviews(movieBean, callBack);
+		getReviews(movieBean);
 	}
 
-	private void getReviews(final MovieBean movie, final MovieCallBack callBack) {
+	private void getReviews(final MovieBean movie) {
 
 		dataBase.fetchReviews(movie.getId(), new ListCallback<GenericRow>() {
 
 			@Override
 			public void onFailure(DataServiceException error) {
-				callBack.onError(error);
-
+				clientFactory.getEventBusHandler().fireEvent(new MovieDBEvent(error));
 			}
 
 			@Override
@@ -285,18 +297,18 @@ public class CineShowTimeDBHelper implements ICineShowTimeDBHelper {
 						reviewBean.setUrlReview(row.getString(CineShowTimeDataBase.KEY_REVIEW_URL_REVIEW));
 					}
 				}
-				getVideos(movie, callBack);
+				getVideos(movie);
 			}
 		});
 
 	}
 
-	private void getVideos(final MovieBean movie, final MovieCallBack callBack) {
+	private void getVideos(final MovieBean movie) {
 		dataBase.fetchVideos(movie.getId(), new ListCallback<GenericRow>() {
 
 			@Override
 			public void onFailure(DataServiceException error) {
-				callBack.onError(error);
+				clientFactory.getEventBusHandler().fireEvent(new MovieDBEvent(error));
 
 			}
 
@@ -315,19 +327,19 @@ public class CineShowTimeDBHelper implements ICineShowTimeDBHelper {
 					}
 				}
 
-				callBack.movie(movie);
+				clientFactory.getEventBusHandler().fireEvent(new MovieDBEvent(movie));
 
 			}
 		});
 	}
 
 	@Override
-	public void getTheaterFav(final TheaterCallBack callBack) {
+	public void getTheaterFav() {
 		dataBase.fetchAllFavTheaters(new ListCallback<GenericRow>() {
 
 			@Override
 			public void onFailure(DataServiceException error) {
-				callBack.onError(error);
+				clientFactory.getEventBusHandler().fireEvent(new TheaterDBEvent(error));
 
 			}
 
@@ -353,48 +365,23 @@ public class CineShowTimeDBHelper implements ICineShowTimeDBHelper {
 					theaterBeanList.add(theaterBean);
 				}
 
-				callBack.theaters(theaterBeanList);
+				theaterFav = theaterBeanList;
+				clientFactory.getEventBusHandler().fireEvent(new TheaterDBEvent(theaterBeanList));
 			}
 		});
 	}
 
 	@Override
-	public void getTheaters(final TheaterCallBack callBack) {
+	public void getTheaters() {
 		dataBase.fetchAllTheaters(new ListCallback<GenericRow>() {
 
 			@Override
 			public void onFailure(DataServiceException error) {
-				callBack.onError(error);
-
+				clientFactory.getEventBusHandler().fireEvent(new TheaterDBEvent(error));
 			}
 
 			@Override
 			public void onSuccess(List<GenericRow> result) {
-
-				final ArrayList<TheaterBean> theaterBeanList = new ArrayList<TheaterBean>();
-				final int size = result.size();
-
-				TheaterCallBack callBackSingle = new TheaterCallBack() {
-
-					@Override
-					public void onError(DataServiceException exception) {
-						callBack.onError(exception);
-
-					}
-
-					@Override
-					public void theaters(ArrayList<TheaterBean> theaterList) {
-					}
-
-					@Override
-					public void theater(TheaterBean theater) {
-						theaterBeanList.add(theater);
-						if (theaterBeanList.size() == size) {
-							callBack.theaters(theaterBeanList);
-						}
-
-					}
-				};
 
 				TheaterBean theaterBean = null;
 
@@ -404,19 +391,19 @@ public class CineShowTimeDBHelper implements ICineShowTimeDBHelper {
 					theaterBean.setId(row.getString(CineShowTimeDataBase.KEY_THEATER_ID));
 					theaterBean.setTheaterName(row.getString(CineShowTimeDataBase.KEY_THEATER_NAME));
 
-					getShowTimes(theaterBean, callBackSingle);
+					getShowTimes(theaterBean);
 				}
 
 			}
 		});
 	}
 
-	private void getShowTimes(final TheaterBean theaterBean, final TheaterCallBack callBack) {
+	private void getShowTimes(final TheaterBean theaterBean) {
 		dataBase.fetchShowtime(theaterBean.getId(), new ListCallback<GenericRow>() {
 
 			@Override
 			public void onFailure(DataServiceException error) {
-				callBack.onError(error);
+				clientFactory.getEventBusHandler().fireEvent(new TheaterDBEvent(error));
 			}
 
 			@Override
@@ -441,78 +428,107 @@ public class CineShowTimeDBHelper implements ICineShowTimeDBHelper {
 					showtimeList.add(projectionBean);
 				}
 
-				getLocalisation(theaterBean, callBack);
+				getLocalisation(theaterBean);
 
 			}
 		});
 	}
 
-	private void getLocalisation(final TheaterBean theaterBean, final TheaterCallBack callBack) {
-		dataBase.fetchLocation(theaterBean.getId(), new ScalarCallback<GenericRow>() {
+	private void getLocalisation(final TheaterBean theaterBean) {
+		dataBase.fetchLocation(theaterBean.getId(), new ListCallback<GenericRow>() {
 
 			@Override
 			public void onFailure(DataServiceException error) {
-				callBack.onError(error);
+				clientFactory.getEventBusHandler().fireEvent(new TheaterDBEvent(error));
 			}
 
 			@Override
-			public void onSuccess(GenericRow result) {
-				// Fetch location link to theater
-				LocalisationBean localisationBean = new LocalisationBean();
-				theaterBean.setPlace(localisationBean);
+			public void onSuccess(List<GenericRow> result) {
+				if (result != null && result.size() > 0) {
+					GenericRow row = result.get(0);
+					// Fetch location link to theater
+					LocalisationBean localisationBean = new LocalisationBean();
+					theaterBean.setPlace(localisationBean);
 
-				localisationBean.setCityName(result.getString(CineShowTimeDataBase.KEY_LOCALISATION_CITY_NAME));
-				localisationBean.setCountryName(result.getString(CineShowTimeDataBase.KEY_LOCALISATION_COUNTRY_NAME));
-				localisationBean.setCountryNameCode(result.getString(CineShowTimeDataBase.KEY_LOCALISATION_COUNTRY_CODE));
-				localisationBean.setPostalCityNumber(result.getString(CineShowTimeDataBase.KEY_LOCALISATION_POSTAL_CODE));
-				localisationBean.setDistance(result.getFloat(CineShowTimeDataBase.KEY_LOCALISATION_DISTANCE));
-				localisationBean.setDistanceTime(Double.valueOf(result.getDouble(CineShowTimeDataBase.KEY_LOCALISATION_DISTANCE_TIME)).longValue());
-				localisationBean.setLatitude(result.getDouble(CineShowTimeDataBase.KEY_LOCALISATION_LATITUDE));
-				localisationBean.setLongitude(result.getDouble(CineShowTimeDataBase.KEY_LOCALISATION_LONGITUDE));
-				localisationBean.setSearchQuery(result.getString(CineShowTimeDataBase.KEY_LOCALISATION_SEARCH_QUERY));
+					localisationBean.setCityName(row.getString(CineShowTimeDataBase.KEY_LOCALISATION_CITY_NAME));
+					localisationBean.setCountryName(row.getString(CineShowTimeDataBase.KEY_LOCALISATION_COUNTRY_NAME));
+					localisationBean.setCountryNameCode(row.getString(CineShowTimeDataBase.KEY_LOCALISATION_COUNTRY_CODE));
+					localisationBean.setPostalCityNumber(row.getString(CineShowTimeDataBase.KEY_LOCALISATION_POSTAL_CODE));
+					localisationBean.setDistance(row.getFloat(CineShowTimeDataBase.KEY_LOCALISATION_DISTANCE));
+					localisationBean.setDistanceTime(Double.valueOf(row.getDouble(CineShowTimeDataBase.KEY_LOCALISATION_DISTANCE_TIME)).longValue());
+					localisationBean.setLatitude(row.getDouble(CineShowTimeDataBase.KEY_LOCALISATION_LATITUDE));
+					localisationBean.setLongitude(row.getDouble(CineShowTimeDataBase.KEY_LOCALISATION_LONGITUDE));
+					localisationBean.setSearchQuery(row.getString(CineShowTimeDataBase.KEY_LOCALISATION_SEARCH_QUERY));
 
-				callBack.theater(theaterBean);
+					clientFactory.getEventBusHandler().fireEvent(new TheaterDBEvent(theaterBean));
+				}
 			}
 		});
 	}
 
 	@Override
-	public void getMovies(final MovieCallBack callBack) {
+	public void getMovies() {
 		dataBase.fetchAllMovies(new ListCallback<GenericRow>() {
 
 			@Override
 			public void onFailure(DataServiceException error) {
-				callBack.onError(error);
+				clientFactory.getEventBusHandler().fireEvent(new MovieDBEvent(error));
 			}
 
 			@Override
 			public void onSuccess(List<GenericRow> result) {
-				final ArrayList<MovieBean> movieList = new ArrayList<MovieBean>();
-				final int size = result.size();
-
-				MovieCallBack callBackSingle = new MovieCallBack() {
-
-					@Override
-					public void onError(DataServiceException exception) {
-						callBack.onError(exception);
-					}
-
-					@Override
-					public void movieList(ArrayList<MovieBean> movieList) {
-					}
-
-					@Override
-					public void movie(MovieBean movie) {
-						movieList.add(movie);
-						if (movieList.size() == size) {
-							callBack.movieList(movieList);
-						}
-					}
-				};
 
 				for (GenericRow row : result) {
-					fillMovie(row, callBackSingle);
+					fillMovie(row);
 				}
+
+			}
+		});
+	}
+
+	@Override
+	public ArrayList<TheaterBean> getTheaterFavCache() {
+		return theaterFav;
+	}
+
+	@Override
+	public void removeFav(TheaterBean theater) {
+		if (theaterFav == null) {
+			theaterFav = new ArrayList<TheaterBean>();
+		}
+		theaterFav.remove(theater);
+		dataBase.deleteFavorite(theater.getId(), new VoidCallback() {
+
+			@Override
+			public void onFailure(DataServiceException error) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void onSuccess() {
+				// TODO Auto-generated method stub
+
+			}
+		});
+	}
+
+	@Override
+	public void addFav(TheaterBean theater) {
+		if (theaterFav == null) {
+			theaterFav = new ArrayList<TheaterBean>();
+		}
+		theaterFav.add(theater);
+		dataBase.addTheaterToFavorites(theater, new RowIdListCallback() {
+
+			@Override
+			public void onFailure(DataServiceException error) {
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void onSuccess(List<Integer> rowIds) {
+				// TODO
 
 			}
 		});

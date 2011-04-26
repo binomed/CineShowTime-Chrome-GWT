@@ -1,7 +1,9 @@
 package com.binomed.cineshowtime.client.ui;
 
+import java.util.ArrayList;
+
 import com.binomed.cineshowtime.client.IClientFactory;
-import com.binomed.cineshowtime.client.event.TheaterOpenEvent;
+import com.binomed.cineshowtime.client.event.ui.TheaterOpenEvent;
 import com.binomed.cineshowtime.client.model.TheaterBean;
 import com.binomed.cineshowtime.client.resources.CstResource;
 import com.binomed.cineshowtime.client.resources.I18N;
@@ -24,6 +26,7 @@ public class TheaterViewHeader extends Composite {
 	private final IClientFactory clientFactory;
 	private final TheaterBean theater;
 	private boolean open;
+	private boolean isFav = false;
 
 	@UiField
 	Label theaterName, theaterPlace, theaterPhone;
@@ -49,23 +52,32 @@ public class TheaterViewHeader extends Composite {
 
 	}
 
-	private boolean flag = false;// TODO to remove
-
 	private void changeFav() {
-		// TODO faire qqe chose
-		flag = !flag;
+		if (isFav) {
+			clientFactory.getDataBaseHelper().removeFav(theater);
+		} else {
+			clientFactory.getDataBaseHelper().addFav(theater);
+		}
+		isFav = !isFav;
 	}
 
 	private boolean isFav() {
-		boolean isFav = true;
-		// TODO faire qqe chose
-		isFav = flag;
+		boolean isFav = false;
+		ArrayList<TheaterBean> theaterFav = clientFactory.getDataBaseHelper().getTheaterFavCache();
+		if (theaterFav != null && theaterFav.size() > 0) {
+			for (TheaterBean theater : theaterFav) {
+				if (theater.getId().equals(this.theater.getId())) {
+					isFav = true;
+					break;
+				}
+			}
+		}
 		return isFav;
 	}
 
 	private void showTheaterFav() {
-		boolean isFav = isFav();
-		if (isFav) {
+		isFav = isFav();
+		if (!isFav) {
 			theaterFav.setResource(CstResource.instance.btn_stat_big_off());
 		} else {
 			theaterFav.setResource(CstResource.instance.btn_stat_big_on());

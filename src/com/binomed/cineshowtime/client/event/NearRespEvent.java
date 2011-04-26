@@ -1,9 +1,9 @@
 package com.binomed.cineshowtime.client.event;
 
-import com.binomed.cineshowtime.client.handler.NearRespHandler;
+import com.binomed.cineshowtime.client.handler.service.NearRespHandler;
 import com.binomed.cineshowtime.client.model.NearResp;
 
-abstract class NearRespEvent extends BeanEvent<NearResp, NearRespHandler> {
+public abstract class NearRespEvent extends BeanEvent<NearResp, NearRespHandler> {
 
 	public NearRespEvent(NearResp nearResp) {
 		super(nearResp);

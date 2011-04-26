@@ -1,10 +1,10 @@
 package com.binomed.cineshowtime.client.db;
 
-import com.binomed.cineshowtime.client.db.callBack.MovieCallBack;
-import com.binomed.cineshowtime.client.db.callBack.PrefCallBack;
-import com.binomed.cineshowtime.client.db.callBack.TheaterCallBack;
+import java.util.ArrayList;
+
 import com.binomed.cineshowtime.client.model.MovieBean;
 import com.binomed.cineshowtime.client.model.NearResp;
+import com.binomed.cineshowtime.client.model.TheaterBean;
 
 public interface ICineShowTimeDBHelper {
 
@@ -18,14 +18,20 @@ public interface ICineShowTimeDBHelper {
 
 	void writePreference(String key, String value);
 
-	void readPreference(String key, PrefCallBack callBack);
+	void readPreference(String key);
 
-	void getMovie(String movieId, MovieCallBack callBack);
+	void getMovie(String movieId);
 
-	void getTheaterFav(TheaterCallBack callBack);
+	void getTheaterFav();
 
-	void getTheaters(TheaterCallBack callBack);
+	void getTheaters();
 
-	void getMovies(MovieCallBack callBack);
+	void getMovies();
+
+	ArrayList<TheaterBean> getTheaterFavCache();
+
+	void removeFav(TheaterBean theater);
+
+	void addFav(TheaterBean theater);
 
 }

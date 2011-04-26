@@ -1,8 +1,8 @@
 package com.binomed.cineshowtime.client.ui;
 
 import com.binomed.cineshowtime.client.IClientFactory;
-import com.binomed.cineshowtime.client.event.NearRespNearEvent;
-import com.binomed.cineshowtime.client.handler.NearRespHandler;
+import com.binomed.cineshowtime.client.event.service.NearRespNearEvent;
+import com.binomed.cineshowtime.client.handler.service.NearRespHandler;
 import com.binomed.cineshowtime.client.model.NearResp;
 import com.binomed.cineshowtime.client.model.TheaterBean;
 import com.binomed.cineshowtime.client.resources.CstResource;
@@ -51,6 +51,7 @@ public class MainWindow extends Composite {
 
 		// Load intial content
 		loadTheatersOfUserLocation();
+
 	}
 
 	public void addMovieTab(TheaterBean theater, String idMovie) {
@@ -68,6 +69,8 @@ public class MainWindow extends Composite {
 
 			@Override
 			public void onLatitudeLongitudeResponse(LatLng latLng) {
+				// Load the favorites
+				clientFactory.getDataBaseHelper().getTheaterFav();
 				loadTheaters(latLng.getLatitude(), latLng.getLongitude());
 			}
 

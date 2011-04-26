@@ -1,6 +1,6 @@
-package com.binomed.cineshowtime.client.event;
+package com.binomed.cineshowtime.client.event.ui;
 
-import com.binomed.cineshowtime.client.handler.TheaterOpenHandler;
+import com.binomed.cineshowtime.client.handler.ui.TheaterOpenHandler;
 import com.google.gwt.event.shared.GwtEvent;
 
 public class TheaterOpenEvent extends GwtEvent<TheaterOpenHandler> {

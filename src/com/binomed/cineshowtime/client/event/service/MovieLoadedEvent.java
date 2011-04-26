@@ -1,6 +1,7 @@
-package com.binomed.cineshowtime.client.event;
+package com.binomed.cineshowtime.client.event.service;
 
-import com.binomed.cineshowtime.client.handler.ImdbRespHandler;
+import com.binomed.cineshowtime.client.event.MovieEvent;
+import com.binomed.cineshowtime.client.handler.service.ImdbRespHandler;
 import com.binomed.cineshowtime.client.model.MovieBean;
 import com.google.gwt.event.shared.GwtEvent;
 

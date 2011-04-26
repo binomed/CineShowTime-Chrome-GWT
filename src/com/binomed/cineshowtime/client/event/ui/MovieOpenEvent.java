@@ -1,6 +1,7 @@
-package com.binomed.cineshowtime.client.event;
+package com.binomed.cineshowtime.client.event.ui;
 
-import com.binomed.cineshowtime.client.handler.MovieOpenHandler;
+import com.binomed.cineshowtime.client.event.MovieEvent;
+import com.binomed.cineshowtime.client.handler.ui.MovieOpenHandler;
 import com.binomed.cineshowtime.client.model.MovieBean;
 import com.google.gwt.event.shared.GwtEvent;
 

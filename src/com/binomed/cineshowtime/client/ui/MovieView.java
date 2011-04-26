@@ -5,8 +5,8 @@ import java.util.Date;
 import java.util.List;
 
 import com.binomed.cineshowtime.client.IClientFactory;
-import com.binomed.cineshowtime.client.event.MovieLoadedEvent;
-import com.binomed.cineshowtime.client.handler.ImdbRespHandler;
+import com.binomed.cineshowtime.client.event.service.MovieLoadedEvent;
+import com.binomed.cineshowtime.client.handler.service.ImdbRespHandler;
 import com.binomed.cineshowtime.client.model.MovieBean;
 import com.binomed.cineshowtime.client.model.ReviewBean;
 import com.binomed.cineshowtime.client.model.TheaterBean;

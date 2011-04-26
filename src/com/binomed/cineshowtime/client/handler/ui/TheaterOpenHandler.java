@@ -1,4 +1,4 @@
-package com.binomed.cineshowtime.client.handler;
+package com.binomed.cineshowtime.client.handler.ui;
 
 import com.google.gwt.event.shared.EventHandler;
 

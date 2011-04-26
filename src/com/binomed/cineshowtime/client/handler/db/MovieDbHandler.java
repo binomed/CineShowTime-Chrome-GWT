@@ -1,10 +1,10 @@
-package com.binomed.cineshowtime.client.db.callBack;
+package com.binomed.cineshowtime.client.handler.db;
 
 import java.util.ArrayList;
 
 import com.binomed.cineshowtime.client.model.MovieBean;
 
-public interface MovieCallBack extends ErrorCallBack {
+public interface MovieDbHandler extends ErrorDBHandler {
 
 	void movie(MovieBean movie);
 

@@ -11,7 +11,6 @@ import com.google.code.gwt.database.client.service.Connection;
 import com.google.code.gwt.database.client.service.DataService;
 import com.google.code.gwt.database.client.service.ListCallback;
 import com.google.code.gwt.database.client.service.RowIdListCallback;
-import com.google.code.gwt.database.client.service.ScalarCallback;
 import com.google.code.gwt.database.client.service.Select;
 import com.google.code.gwt.database.client.service.Update;
 import com.google.code.gwt.database.client.service.VoidCallback;
@@ -286,8 +285,9 @@ public interface CineShowTimeDataBase extends DataService {
 			+ ",{theater.getPlace().getCityName()}" //
 			+ ",{theater.getPlace().getCountryNameCode()}" //
 			+ ",{theater.getPlace().getPostalCityNumber()}" //
-			+ ",{ theater.getPlace().getLatitude()}" //
+			+ ",{theater.getPlace().getLatitude()}" //
 			+ ",{theater.getPlace().getLongitude()}" //
+			+ ")"//
 	)
 	void addTheaterToFavorites(TheaterBean theater, RowIdListCallback callback);
 
@@ -300,14 +300,14 @@ public interface CineShowTimeDataBase extends DataService {
 			+ ", " + KEY_REQUEST_TIME //
 			+ ", " + KEY_REQUEST_NULL_RESULT//
 			+ ", " + KEY_REQUEST_NEAR_RESP //
-			+ ") VALUES({cityName},{movieName},{theaterId},{latitude},{longitude},{time},{nullResult},{nearResp}); ")
+			+ ") VALUES({cityName},{movieName},{theaterId},{latitude},{longitude},{time},{nullResult},{nearResp}) ")
 	void createMovieRequest(String cityName, String movieName, Double latitude, Double longitude, String theaterId, short nullResult, short nearResp, long time, RowIdListCallback callBack);
 
 	@Update("INSERT INTO " + DATABASE_THEATERS_TABLE //
 			+ " (" + KEY_THEATER_ID //
 			+ ", " + KEY_THEATER_NAME //
 			+ ", " + KEY_THEATER_PHONE //
-			+ ") VALUES ({theater.getId()},{theater.getTheaterName()},{theater.getPhoneNumber()}); ")
+			+ ") VALUES ({theater.getId()},{theater.getTheaterName()},{theater.getPhoneNumber()})")
 	void createTheater(TheaterBean theater, RowIdListCallback callBack);
 
 	@Update(" INSERT INTO " + DATABASE_MOVIE_TABLE //
@@ -342,6 +342,7 @@ public interface CineShowTimeDataBase extends DataService {
 			+ ",{movie.getMovieTime()}"//
 			+ ",{movie.getActorList()}"//
 			+ ",{movie.getDirectorList()}"//
+			+ ")"//
 	)
 	void createOrUpdateMovie(MovieBean movie, RowIdListCallback callBack);
 
@@ -357,6 +358,7 @@ public interface CineShowTimeDataBase extends DataService {
 			+ ",{time.getShowtime()}"//
 			+ ",{time.getLang() != null ? time.getLang() : \"\"}"//
 			+ ",{time.getReservationLink() != null ? time.getReservationLink() : \"\"}"//
+			+ ")"//
 	)
 	void createShowtime(String theatherId, String movieId, ProjectionBean time, RowIdListCallback callBack);
 
@@ -382,6 +384,7 @@ public interface CineShowTimeDataBase extends DataService {
 			+ ",{location.getLatitude()}"//
 			+ ",{location.getLongitude()}"//
 			+ ",{location.getSearchQuery()}"//
+			+ ")"//
 	)
 	void createLocation(LocalisationBean location, String theaterId, RowIdListCallback callBack);
 
@@ -401,6 +404,7 @@ public interface CineShowTimeDataBase extends DataService {
 			+ ",{theater.getPlace().getPostalCityNumber()}"//
 			+ ",{theater.getPlace().getLatitude()}"//
 			+ ",{theater.getPlace().getLongitude()}"//
+			+ ")"//
 	)
 	void setWidgetTheater(TheaterBean theater, RowIdListCallback callBack);
 
@@ -418,6 +422,7 @@ public interface CineShowTimeDataBase extends DataService {
 			+ ",{review.getUrlReview()}"//
 			+ ",{review.getRate()}"//
 			+ ",{review.getReview()}"//
+			+ ")"//
 	)
 	void createReview(ReviewBean review, String movieId, RowIdListCallback callBack);
 
@@ -431,19 +436,20 @@ public interface CineShowTimeDataBase extends DataService {
 			+ ",{video.getUrlVideo()}"//
 			+ ",{video.getUrlImg()}"//
 			+ ",{video.getVideoName()}"//
+			+ ")"//
 	)
 	void createVideo(YoutubeBean video, String movieId, RowIdListCallback callBack);
 
 	@Update(" INSERT INTO " + DATABASE_VERSION_TABLE //
 			+ " (" + KEY_VERSION_DB //
 			+ ", " + KEY_VERSION_APP //
-			+ ") VALUES({versioDb},{codeVersion});")
+			+ ") VALUES({versionDb},{codeVersion})")
 	void createLastChange(int codeVersion, int versionDb, RowIdListCallback callBack);
 
 	@Update(" INSERT INTO " + DATABASE_PREFERENCES_TABLE //
 			+ " (" + KEY_PREFERENCE_KEY //
 			+ ", " + KEY_PREFERENCE_VALUE //
-			+ ") VALUES({key},{value}); ")
+			+ ") VALUES({key},{value})")
 	void createPreference(String key, String value, RowIdListCallback callBack);
 
 	/*
@@ -463,7 +469,7 @@ public interface CineShowTimeDataBase extends DataService {
 
 	@Select("SELECT * " + " FROM " + DATABASE_REQUEST_TABLE //
 			+ " WHERE " + KEY_REQUEST_TIME + " = (SELECT MAX(" + KEY_REQUEST_TIME + ") FROM " + DATABASE_REQUEST_TABLE + ")")
-	void fetchLastMovieRequest(ScalarCallback<GenericRow> callBack);
+	void fetchLastMovieRequest(ListCallback<GenericRow> callBack);
 
 	@Select("SELECT * "//
 			+ " FROM " + DATABASE_FAV_THEATER_TABLE)
@@ -474,16 +480,15 @@ public interface CineShowTimeDataBase extends DataService {
 			+ " WHERE th." + KEY_THEATER_ID + " = loc." + KEY_LOCALISATION_THEATER_ID //
 			+ " AND th." + KEY_THEATER_ID + " = {theaterId} "//
 	)
-	void fetchTheater(String theaterId, ScalarCallback<GenericRow> callBack);
+	void fetchTheater(String theaterId, ListCallback<GenericRow> callBack);
 
 	@Select("SELECT * " //
 			+ " FROM " + DATABASE_MOVIE_TABLE //
 			+ " WHERE " + KEY_MOVIE_ID + " = {movieId}")
-	void fetchMovie(String movieId, ScalarCallback<GenericRow> callBack);
+	void fetchMovie(String movieId, ListCallback<GenericRow> callBack);
 
 	@Select("SELECT * " //
-			+ " FROM " + DATABASE_MOVIE_TABLE //
-			+ " WHERE " + KEY_MOVIE_ID + " = {movieId}")
+			+ " FROM " + DATABASE_MOVIE_TABLE)
 	void fetchAllMovies(ListCallback<GenericRow> callBack);
 
 	@Select("SELECT * " //
@@ -495,7 +500,7 @@ public interface CineShowTimeDataBase extends DataService {
 	@Select("SELECT * " //
 			+ " FROM " + DATABASE_LOCATION_TABLE //
 			+ " WHERE " + KEY_LOCALISATION_THEATER_ID + " = {theaterId}")
-	void fetchLocation(String theaterId, ScalarCallback<GenericRow> callBack);
+	void fetchLocation(String theaterId, ListCallback<GenericRow> callBack);
 
 	@Select("SELECT * " //
 			+ " FROM " + DATABASE_SHOWTIME_TABLE //
@@ -503,10 +508,10 @@ public interface CineShowTimeDataBase extends DataService {
 	void fetchShowtime(String theaterId, ListCallback<GenericRow> callBack);
 
 	@Select("SELECT * FROM " + DATABASE_VERSION_TABLE)
-	void fetchVersion(ScalarCallback<GenericRow> callBack);
+	void fetchVersion(ListCallback<GenericRow> callBack);
 
 	@Select("SELECT * FROM " + DATABASE_PREFERENCES_TABLE + " WHERE " + KEY_PREFERENCE_KEY + " = {key} ")
-	void fetchPreference(String key, ScalarCallback<GenericRow> callBack);
+	void fetchPreference(String key, ListCallback<GenericRow> callBack);
 
 	@Select("SELECT * " //
 			+ " FROM " + DATABASE_REVIEW_TABLE //

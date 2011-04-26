@@ -1,6 +1,7 @@
-package com.binomed.cineshowtime.client.event;
+package com.binomed.cineshowtime.client.event.service;
 
-import com.binomed.cineshowtime.client.handler.NearRespHandler;
+import com.binomed.cineshowtime.client.event.NearRespEvent;
+import com.binomed.cineshowtime.client.handler.service.NearRespHandler;
 import com.binomed.cineshowtime.client.model.NearResp;
 import com.google.gwt.event.shared.GwtEvent;
 

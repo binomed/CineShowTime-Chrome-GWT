@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.Map;
 
 import com.binomed.cineshowtime.client.IClientFactory;
-import com.binomed.cineshowtime.client.event.MovieLoadedEvent;
-import com.binomed.cineshowtime.client.event.TheaterOpenEvent;
-import com.binomed.cineshowtime.client.handler.ImdbRespHandler;
-import com.binomed.cineshowtime.client.handler.TheaterOpenHandler;
+import com.binomed.cineshowtime.client.event.service.MovieLoadedEvent;
+import com.binomed.cineshowtime.client.event.ui.TheaterOpenEvent;
+import com.binomed.cineshowtime.client.handler.service.ImdbRespHandler;
+import com.binomed.cineshowtime.client.handler.ui.TheaterOpenHandler;
 import com.binomed.cineshowtime.client.model.MovieBean;
 import com.binomed.cineshowtime.client.model.ProjectionBean;
 import com.binomed.cineshowtime.client.model.TheaterBean;

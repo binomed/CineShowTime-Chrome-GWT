@@ -24,6 +24,7 @@ public class CineShowTime_Chrome_GWT implements EntryPoint {
 		// Load and initialize the window
 		RootLayoutPanel.get().add(clientFactory.getMainWindow());
 		// testCoverflow();
+
 	}
 
 	public void testCoverflow() {
