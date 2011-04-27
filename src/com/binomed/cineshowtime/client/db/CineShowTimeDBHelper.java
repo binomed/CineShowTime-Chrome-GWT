@@ -26,7 +26,7 @@ public class CineShowTimeDBHelper implements ICineShowTimeDBHelper {
 
 	private CineShowTimeDataBase dataBase;
 	private IClientFactory clientFactory;
-	private ArrayList<TheaterBean> theaterFav;
+	private ArrayList<TheaterBean> theaterFav = null;
 
 	public CineShowTimeDBHelper(IClientFactory clientFactory, CineShowTimeDataBase dataBase) {
 		super();
@@ -48,8 +48,7 @@ public class CineShowTimeDBHelper implements ICineShowTimeDBHelper {
 
 			@Override
 			public void onSuccess() {
-				// TODO Auto-generated method stub
-
+				getTheaterFav();
 			}
 		};
 
@@ -348,29 +347,31 @@ public class CineShowTimeDBHelper implements ICineShowTimeDBHelper {
 				ArrayList<TheaterBean> theaterBeanList = new ArrayList<TheaterBean>();
 				TheaterBean theaterBean = null;
 				LocalisationBean location = null;
-				for (GenericRow row : result) {
-					theaterBean = new TheaterBean();
+				if (result != null) {
+					for (GenericRow row : result) {
+						theaterBean = new TheaterBean();
 
-					theaterBean.setId(row.getString(CineShowTimeDataBase.KEY_FAV_TH_THEATER_ID));
-					theaterBean.setTheaterName(row.getString(CineShowTimeDataBase.KEY_FAV_TH_THEATER_NAME));
-					location = new LocalisationBean();
-					location.setCityName(row.getString(CineShowTimeDataBase.KEY_FAV_TH_THEATER_PLACE));
-					location.setCountryNameCode(row.getString(CineShowTimeDataBase.KEY_FAV_TH_THEATER_COUNRTY_CODE));
-					location.setPostalCityNumber(row.getString(CineShowTimeDataBase.KEY_FAV_TH_THEATER_POSTAL_CODE));
-					try {
-						location.setLatitude(row.getDouble(CineShowTimeDataBase.KEY_FAV_TH_THEATER_LAT));
-					} catch (Exception e) {
+						theaterBean.setId(row.getString(CineShowTimeDataBase.KEY_FAV_TH_THEATER_ID));
+						theaterBean.setTheaterName(row.getString(CineShowTimeDataBase.KEY_FAV_TH_THEATER_NAME));
+						location = new LocalisationBean();
+						location.setCityName(row.getString(CineShowTimeDataBase.KEY_FAV_TH_THEATER_PLACE));
+						location.setCountryNameCode(row.getString(CineShowTimeDataBase.KEY_FAV_TH_THEATER_COUNRTY_CODE));
+						location.setPostalCityNumber(row.getString(CineShowTimeDataBase.KEY_FAV_TH_THEATER_POSTAL_CODE));
+						try {
+							location.setLatitude(row.getDouble(CineShowTimeDataBase.KEY_FAV_TH_THEATER_LAT));
+						} catch (Exception e) {
+						}
+						try {
+							location.setLongitude(row.getDouble(CineShowTimeDataBase.KEY_FAV_TH_THEATER_LONG));
+						} catch (Exception e) {
+						}
+
+						theaterBean.setPlace(location);
+
+						theaterBeanList.add(theaterBean);
 					}
-					try {
-						location.setLongitude(row.getDouble(CineShowTimeDataBase.KEY_FAV_TH_THEATER_LONG));
-					} catch (Exception e) {
-					}
 
-					theaterBean.setPlace(location);
-
-					theaterBeanList.add(theaterBean);
 				}
-
 				theaterFav = theaterBeanList;
 				clientFactory.getEventBusHandler().fireEvent(new TheaterDBEvent(theaterBeanList));
 			}

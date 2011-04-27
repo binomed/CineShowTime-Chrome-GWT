@@ -64,4 +64,7 @@ public interface CstResource extends ClientBundle {
 	@Source("com/binomed/cineshowtime/client/resources/images/maps.png")
 	ImageResource maps();
 
+	@Source("com/binomed/cineshowtime/client/resources/images/divider-line.png")
+	ImageResource divider_line();
+
 }

@@ -33,6 +33,8 @@ public class ProjectionView extends Composite {
 		Label projectionTimeStart;
 		Label projectionTimeEnd;
 		StringBuilder movieStart = new StringBuilder("");
+		boolean nextShow = true;
+		Date currentTime = new Date();
 		for (ProjectionBean projection : projections) {
 			movieStart.delete(0, movieStart.length());
 			if (projection.getLang() != null) {
@@ -42,6 +44,18 @@ public class ProjectionView extends Composite {
 			Date timeEnd = new Date(projection.getShowtime() + movieTime);
 			projectionTimeStart = new Label(movieStart.append(time.getHours()).append("h").append(time.getMinutes()).append("m").toString());
 			projectionTimeEnd = new Label(I18N.instance.endProjection() + timeEnd.getHours() + "h" + timeEnd.getMinutes() + "m");
+
+			String className = "style.projectionFutur";
+			if (time.getTime() < currentTime.getTime()) {
+				className = "style.projectionPassed";
+			} else if (nextShow) {
+				nextShow = false;
+				className = "style.projectionNear";
+			}
+
+			projectionTimeStart.setStyleName(className);
+			projectionTimeEnd.setStyleName(className);
+
 			movieSeanceList.add(projectionTimeStart);
 			movieSeanceList.add(projectionTimeEnd);
 		}

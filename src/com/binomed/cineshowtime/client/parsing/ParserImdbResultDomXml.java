@@ -26,15 +26,22 @@ public class ParserImdbResultDomXml extends AbstractParser {
 
 		Node nodeMovie = messageDom.getElementsByTagName(NODE_MOVIE).item(0);
 
-		movie.setUrlImg(getString(nodeMovie, ATTR_URL_IMG));
-		movie.setRate(getDouble(nodeMovie, ATTR_RATE));
+		movie.setId(getString(nodeMovie, ATTR_ID));
 		movie.setImdbId(getString(nodeMovie, ATTR_IMDB_ID));
+		movie.setMovieName(getString(nodeMovie, ATTR_MOVIE_NAME));
+		movie.setUrlImg(getString(nodeMovie, ATTR_URL_IMG));
+		movie.setUrlWikipedia(getString(nodeMovie, ATTR_URL_WIKIPEDIA));
+		movie.setRate(getDouble(nodeMovie, ATTR_RATE));
+		movie.setStyle(getString(nodeMovie, ATTR_STYLE));
+		movie.setDirectorList(getString(nodeMovie, ATTR_DIRECTORS));
+		movie.setActorList(getString(nodeMovie, ATTR_ACTORS));
 		movie.setYear(getInt(nodeMovie, ATTR_YEAR));
 
 		Node nodeDesc = ((Element) nodeMovie).getElementsByTagName(NODE_DESC).item(0);
 
 		if (nodeDesc != null) {
 			movie.setDescription(URL.decodeQueryString(((Text) nodeDesc.getFirstChild()).getData()));
+			movie.setImdbDesrciption(getBoolean(nodeDesc, ATTR_IMDB_DESC));
 		}
 
 		List<ReviewBean> reviewList = new ArrayList<ReviewBean>();

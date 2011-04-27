@@ -47,4 +47,16 @@ public interface I18N extends Messages {
 
 	String endProjection();
 
+	String wikipediaLink();
+
+	String rate();
+
+	String duration();
+
+	String director();
+
+	String actor();
+
+	String genre();
+
 }

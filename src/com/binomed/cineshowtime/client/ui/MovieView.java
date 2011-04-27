@@ -6,7 +6,9 @@ import java.util.List;
 
 import com.binomed.cineshowtime.client.IClientFactory;
 import com.binomed.cineshowtime.client.event.service.MovieLoadedEvent;
+import com.binomed.cineshowtime.client.event.ui.SeparatorOpenEvent;
 import com.binomed.cineshowtime.client.handler.service.ImdbRespHandler;
+import com.binomed.cineshowtime.client.handler.ui.SeparatorHandler;
 import com.binomed.cineshowtime.client.model.MovieBean;
 import com.binomed.cineshowtime.client.model.ReviewBean;
 import com.binomed.cineshowtime.client.model.TheaterBean;
@@ -23,7 +25,6 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DisclosurePanel;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
@@ -42,15 +43,17 @@ public class MovieView extends Composite {
 	@UiField
 	RateView movieRate;
 	@UiField
-	Label movieName, movieYear, movieTime, movieStyle, sepMovieTimeStyle, moviePlot;
+	Label movieName, movieYear, movieTime, movieStyle, sepMovieTimeStyle, sepMovieLink, moviePlot, movieDirector, movieActor, movieRateText;
 	@UiField
-	Hyperlink movieLinkImdb;
+	Hyperlink movieLinkImdb, movieLinkWikipedia;
 	@UiField
 	DisclosurePanel groupMoviePlot, groupMovieBA, groupMovieCritique;
 	@UiField
 	ProjectionView movieProjections;
 	@UiField
 	VerticalPanel movieTrailerCoverflow, movieReview;
+	@UiField
+	MovieHeaderSeparator movieTrailerSeparator, moviePlotSeparator, movieReviewSeparator;
 
 	private Coverflow coverflow;
 
@@ -72,12 +75,21 @@ public class MovieView extends Composite {
 	}
 
 	private void fillMovieView() {
-		groupMoviePlot.setHeader(new HTML("<font color=#FFFFFF>" + I18N.instance.groupResume() + "</font>"));
-		groupMovieBA.setHeader(new HTML("<font color=#FFFFFF>" + I18N.instance.groupBA() + "</font>"));
-		groupMovieCritique.setHeader(new HTML("<font color=#FFFFFF>" + I18N.instance.groupCritiques() + "</font>"));
+		moviePlotSeparator.setSource(movie.getId());
+		movieTrailerSeparator.setSource(movie.getId());
+		movieReviewSeparator.setSource(movie.getId());
+		moviePlotSeparator.setFactory(clientFactory);
+		movieTrailerSeparator.setFactory(clientFactory);
+		movieReviewSeparator.setFactory(clientFactory);
+		moviePlotSeparator.setName(I18N.instance.groupResume());
+		movieTrailerSeparator.setName(I18N.instance.groupBA());
+		movieReviewSeparator.setName(I18N.instance.groupCritiques());
+		clientFactory.getEventBusHandler().addHandler(SeparatorOpenEvent.TYPE, separatorHandler);
+		// groupMoviePlot.setHeader(new HTML("<font color=#FFFFFF>" + I18N.instance.groupResume() + "</font>"));
+		// groupMovieBA.setHeader(new HTML("<font color=#FFFFFF>" + I18N.instance.groupBA() + "</font>"));
+		// groupMovieCritique.setHeader(new HTML("<font color=#FFFFFF>" + I18N.instance.groupCritiques() + "</font>"));
 
 		movieName.setText(movie.getMovieName());
-		movieYear.setText(String.valueOf(movie.getYear()));
 		Date time = new Date(movie.getMovieTime());
 		movieTime.setText(time.getHours() + "h" + time.getMinutes() + "m");
 
@@ -95,10 +107,42 @@ public class MovieView extends Composite {
 
 	private void updateMovieView() {
 		imgPoster.setUrl(movie.getUrlImg());
-		movieLinkImdb.setText(movie.getUrlImdb());
+		if ((movie.getYear() != null) && (movie.getYear() != -1)) {
+			movieYear.setText("(" + String.valueOf(movie.getYear()) + ")");
+		}
+		movieLinkImdb.setText(I18N.instance.imdbLink());
+		movieLinkWikipedia.setText(I18N.instance.wikipediaLink());
+		String[] directorArray = movie.getDirectorList().split("\\|");
+		String directors = "";
+		if (directorArray.length > 0) {
+			int i = 0;
+			while ((i < 3) && (i < directorArray.length)) {
+				if (i > 0) {
+					directors += ", ";
+				}
+				directors += directorArray[i];
+				i++;
+			}
+		}
+		movieDirector.setText(directors);
+		String[] actorArray = movie.getActorList().split("\\|");
+		String actors = "";
+		if (actorArray.length > 0) {
+			int i = 0;
+			while ((i < 3) && (i < actorArray.length)) {
+				if (i > 0) {
+					actors += ", ";
+				}
+				actors += actorArray[i];
+				i++;
+			}
+		}
+		movieActor.setText(actors);
+		movieStyle.setText(movie.getStyle());
 		moviePlot.setText(movie.getDescription());
 		groupMoviePlot.setOpen(true);
 
+		movieRateText.setText(movie.getRate() + " / 10");
 		movieRate.updateRate(true, movie.getRate());
 
 		// Add the coverflow
@@ -156,6 +200,24 @@ public class MovieView extends Composite {
 				}
 			}
 			new VideoDialog(videoBean.getVideoName(), videoBean.getVideoId()).center();
+		}
+	};
+
+	private final SeparatorHandler separatorHandler = new SeparatorHandler() {
+
+		@Override
+		public void onSeparatorOpen(String source, String name) {
+			if ((name == null) || (source == null) || !source.equals(movie.getId())) {
+				return;
+			}
+			if (name.equals(I18N.instance.groupResume())) {
+				groupMoviePlot.setOpen(!groupMoviePlot.isOpen());
+			} else if (name.equals(I18N.instance.groupBA())) {
+				groupMovieBA.setOpen(!groupMovieBA.isOpen());
+			} else if (name.equals(I18N.instance.groupCritiques())) {
+				groupMovieCritique.setOpen(!groupMovieCritique.isOpen());
+			}
+
 		}
 	};
 

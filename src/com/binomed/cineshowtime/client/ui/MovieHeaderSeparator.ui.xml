@@ -1,0 +1,23 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+			 xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	
+	<ui:style src="../resources/css/CstStyle.css" />
+	<ui:with field="res" type="com.binomed.cineshowtime.client.resources.CstResource" />
+	<ui:with field="i18n" type="com.binomed.cineshowtime.client.resources.I18N" />
+	
+	<g:HTMLPanel >
+		<div style="float:left;">
+			<div style="float:left;">
+				<g:Image resource="{res.divider_line}" width="20px"/>
+			</div>
+			<div style="float:right;">
+				<g:Label ui:field="separatorName" styleName="{style.movieSeparator}" />
+			</div>
+		</div>
+		<div style="text-align:right;">
+			<g:Image resource="{res.divider_line}" />
+		</div>
+	</g:HTMLPanel>
+
+</ui:UiBinder> 

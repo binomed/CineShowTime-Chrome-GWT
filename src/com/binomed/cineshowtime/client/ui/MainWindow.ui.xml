@@ -25,7 +25,7 @@
 					<g:customHeader><g:Label text="{i18n.theaterTabLabel}" /></g:customHeader>
 					<g:ScrollPanel width="100%">
 						<g:VerticalPanel width="100%">
-							<cst:SearchTheater />
+							<cst:SearchTheater ui:field="searchField" />
 							<g:VerticalPanel ui:field="theatersContent" width="100%"/>
 						</g:VerticalPanel>
 					</g:ScrollPanel>

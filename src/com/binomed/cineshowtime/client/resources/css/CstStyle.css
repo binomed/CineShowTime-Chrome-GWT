@@ -37,6 +37,16 @@
 .movieName {
     font-weight:bold;
     font-size:16px;
+    color:#ff0000;
+}
+.movieLabel {
+    color:#ff0000;
+}
+.movieSeparator {
+	cursor:pointer;
+    font-weight:bold;
+    font-size:14px;
+    color:#DDDDDD;
 }
 
 /* Projections */
@@ -48,4 +58,16 @@
 .projectionsContent {
     font-size:12px;
     font-weight:normal;
+}
+.projectionPassed{
+    font-style:italic; 
+    color:#3C3C3C; 
+}
+.projectionNear{
+    font-weight:bold; 
+    color:#D2D2D2; 
+}
+.projectionFutur{
+    font-weight:normal; 
+    color:lightgrey; 
 }

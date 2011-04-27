@@ -1,5 +1,7 @@
 package com.binomed.cineshowtime.client.ui;
 
+import com.binomed.cineshowtime.client.IClientFactory;
+import com.binomed.cineshowtime.client.event.ui.FavOpenEvent;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.i18n.client.DateTimeFormat;
@@ -30,6 +32,12 @@ public class SearchTheater extends Composite {
 	@UiField
 	DateBox dateSearch;
 
+	private IClientFactory clientFactory;
+
+	public void setClientFactory(IClientFactory clientFactory) {
+		this.clientFactory = clientFactory;
+	}
+
 	public SearchTheater() {
 		// Initialization
 		initWidget(uiBinder.createAndBindUi(this));
@@ -45,6 +53,11 @@ public class SearchTheater extends Composite {
 	@UiHandler("searchButton")
 	void handleSearchClick(ClickEvent e) {
 		Window.alert("Search...");
+	}
+
+	@UiHandler("favoriteSearch")
+	void handleFavoriteSearchClick(ClickEvent e) {
+		clientFactory.getEventBusHandler().fireEvent(new FavOpenEvent());
 	}
 
 	interface SearchTheaterUiBinder extends UiBinder<Widget, SearchTheater> {

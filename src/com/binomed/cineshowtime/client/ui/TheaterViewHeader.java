@@ -48,6 +48,7 @@ public class TheaterViewHeader extends Composite {
 		theaterPhone.setText(theater.getPhoneNumber());
 		theaterOpen.setResource(CstResource.instance.collapse());
 
+		isFav = isFav();
 		showTheaterFav();
 
 	}
@@ -84,7 +85,6 @@ public class TheaterViewHeader extends Composite {
 	}
 
 	private void showTheaterFav() {
-		isFav = isFav();
 		if (!isFav) {
 			theaterFav.setResource(CstResource.instance.btn_stat_big_off());
 		} else {

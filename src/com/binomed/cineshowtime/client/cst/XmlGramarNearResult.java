@@ -40,7 +40,13 @@ public interface XmlGramarNearResult {
 	public static final String ATTR_VIDEO_NAME = "VIDEO_NAME"; //$NON-NLS-1$
 	public static final String ATTR_YEAR = "YEAR"; //$NON-NLS-1$
 	public static final String ATTR_AUTHOR = "AUTHOR"; //$NON-NLS-1$
+	public static final String ATTR_STYLE = "STYLE"; //$NON-NLS-1$
+	public static final String ATTR_ACTORS = "ACTORS"; //$NON-NLS-1$
 	public static final String ATTR_DIRECTORS = "DIRECTORS"; //$NON-NLS-1$
 	public static final String ATTR_SOURCE = "SOURCE"; //$NON-NLS-1$
 	public static final String ATTR_URL_REVIEW = "URL_REVIEW"; //$NON-NLS-1$
+	public static final String ATTR_IMDB_DESC = "IMDB_DESC"; //$NON-NLS-1$
+	public static final String ATTR_URL_IMDB = "URL_IMDB"; //$NON-NLS-1$
+	public static final String ATTR_URL_WIKIPEDIA = "URL_WIKIPEDIA"; //$NON-NLS-1$
+
 }
