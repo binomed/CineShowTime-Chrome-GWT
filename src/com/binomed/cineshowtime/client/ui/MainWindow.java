@@ -1,7 +1,11 @@
 package com.binomed.cineshowtime.client.ui;
 
+import java.util.ArrayList;
+
 import com.binomed.cineshowtime.client.IClientFactory;
+import com.binomed.cineshowtime.client.event.db.TheaterDBEvent;
 import com.binomed.cineshowtime.client.event.service.NearRespNearEvent;
+import com.binomed.cineshowtime.client.handler.db.TheaterDbHandler;
 import com.binomed.cineshowtime.client.handler.service.NearRespHandler;
 import com.binomed.cineshowtime.client.model.NearResp;
 import com.binomed.cineshowtime.client.model.TheaterBean;
@@ -10,6 +14,7 @@ import com.binomed.cineshowtime.client.service.geolocation.UserGeolocation;
 import com.binomed.cineshowtime.client.service.geolocation.UserGeolocationCallback;
 import com.binomed.cineshowtime.client.service.ws.CineShowTimeWS;
 import com.binomed.cineshowtime.client.ui.widget.MovieTabHeaderWidget;
+import com.google.code.gwt.database.client.service.DataServiceException;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.maps.client.geocode.Placemark;
@@ -49,8 +54,8 @@ public class MainWindow extends Composite {
 		imageLoading = new Image(CstResource.instance.movie_countdown());
 		theatersContent.add(imageLoading);
 
-		// Load intial content
-		loadTheatersOfUserLocation();
+		this.clientFactory.getEventBusHandler().addHandler(TheaterDBEvent.TYPE, theaterFavHandler);
+		this.clientFactory.getDataBaseHelper().getTheaterFav();
 
 	}
 
@@ -65,6 +70,9 @@ public class MainWindow extends Composite {
 		UserGeolocation.getInstance().getUserGeolocation(new UserGeolocationCallback() {
 			@Override
 			public void onLocationResponse(JsArray<Placemark> locations) {
+				if ((locations != null) && (locations.length() > 0)) {
+					clientFactory.getCineShowTimeService().setCurrentCityName(locations.get(0));
+				}
 			}
 
 			@Override
@@ -106,6 +114,39 @@ public class MainWindow extends Composite {
 					theatersContent.add(new TheaterView(clientFactory, theater));
 				}
 			}
+
+		}
+	};
+
+	private final TheaterDbHandler theaterFavHandler = new TheaterDbHandler() {
+
+		@Override
+		public void onError(DataServiceException exception) {
+			// TODO Auto-generated method stub
+			clientFactory.getEventBusHandler().removeHandler(TheaterDBEvent.TYPE, theaterFavHandler);
+			Window.alert("Error=" + exception.getMessage());
+		}
+
+		@Override
+		public void theaters(ArrayList<TheaterBean> theaterList) {
+			clientFactory.getEventBusHandler().removeHandler(TheaterDBEvent.TYPE, theaterFavHandler);
+			if ((theaterList != null) && (theaterList.size() > 0)) {
+				clientFactory.getEventBusHandler().addHandler(NearRespNearEvent.TYPE, nearRespHandler);
+				for (TheaterBean theaterFav : theaterList) {
+					// clientFactory.getDataBaseHelper().removeFav(theaterFav);
+					// Call the service
+					clientFactory.getCineShowTimeService().requestNearTheatersFromCityName(theaterFav.getPlace().getCityName() + ", " + theaterFav.getPlace().getCountryNameCode(), theaterFav.getId(), clientFactory.getLanguage());
+				}
+			} else {
+				// Load intial content
+				loadTheatersOfUserLocation();
+			}
+
+		}
+
+		@Override
+		public void theater(TheaterBean theater) {
+			// TODO Auto-generated method stub
 
 		}
 	};

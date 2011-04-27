@@ -220,7 +220,7 @@ public class CineShowTimeDBHelper implements ICineShowTimeDBHelper {
 
 			@Override
 			public void onSuccess(List<GenericRow> result) {
-				if (result != null && result.size() > 0) {
+				if ((result != null) && (result.size() > 0)) {
 					GenericRow row = result.get(0);
 					String value = row.getString(CineShowTimeDataBase.KEY_PREFERENCE_VALUE);
 					clientFactory.getEventBusHandler().fireEvent(new PrefDBEvent(key, value));
@@ -242,7 +242,7 @@ public class CineShowTimeDBHelper implements ICineShowTimeDBHelper {
 
 			@Override
 			public void onSuccess(List<GenericRow> result) {
-				if (result != null && result.size() > 0) {
+				if ((result != null) && (result.size() > 0)) {
 					fillMovie(result.get(0));
 				}
 
@@ -357,8 +357,14 @@ public class CineShowTimeDBHelper implements ICineShowTimeDBHelper {
 					location.setCityName(row.getString(CineShowTimeDataBase.KEY_FAV_TH_THEATER_PLACE));
 					location.setCountryNameCode(row.getString(CineShowTimeDataBase.KEY_FAV_TH_THEATER_COUNRTY_CODE));
 					location.setPostalCityNumber(row.getString(CineShowTimeDataBase.KEY_FAV_TH_THEATER_POSTAL_CODE));
-					location.setLatitude(row.getDouble(CineShowTimeDataBase.KEY_FAV_TH_THEATER_LAT));
-					location.setLongitude(row.getDouble(CineShowTimeDataBase.KEY_FAV_TH_THEATER_LONG));
+					try {
+						location.setLatitude(row.getDouble(CineShowTimeDataBase.KEY_FAV_TH_THEATER_LAT));
+					} catch (Exception e) {
+					}
+					try {
+						location.setLongitude(row.getDouble(CineShowTimeDataBase.KEY_FAV_TH_THEATER_LONG));
+					} catch (Exception e) {
+					}
 
 					theaterBean.setPlace(location);
 
@@ -444,7 +450,7 @@ public class CineShowTimeDBHelper implements ICineShowTimeDBHelper {
 
 			@Override
 			public void onSuccess(List<GenericRow> result) {
-				if (result != null && result.size() > 0) {
+				if ((result != null) && (result.size() > 0)) {
 					GenericRow row = result.get(0);
 					// Fetch location link to theater
 					LocalisationBean localisationBean = new LocalisationBean();

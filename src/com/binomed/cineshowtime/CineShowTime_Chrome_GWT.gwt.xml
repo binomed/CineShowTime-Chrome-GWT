@@ -17,6 +17,7 @@
   <!-- Inherits modules -->
   <inherits name='com.google.gwt.maps.GoogleMaps' />
   <inherits name="com.google.code.gwt.database.Html5Database" />
+  <!-- <inherits name="com.google.common.collect.Collect" />-->
 
   <!-- Compile project only for Chrome -->
   <set-property name="user.agent" value="safari" /> 

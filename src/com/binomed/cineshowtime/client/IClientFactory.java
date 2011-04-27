@@ -13,10 +13,10 @@ public interface IClientFactory {
 
 	CineShowTimeWS getCineShowTimeService();
 
+	ICineShowTimeDBHelper getDataBaseHelper();
+
 	String getLanguage();
 
 	boolean isDataBaseSupport();
-
-	ICineShowTimeDBHelper getDataBaseHelper();
 
 }

@@ -3,10 +3,15 @@ package com.binomed.cineshowtime.client;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.binomed.cineshowtime.client.db.CineShowTimeDBHelper;
+import com.binomed.cineshowtime.client.db.CineShowTimeDataBase;
+import com.binomed.cineshowtime.client.service.ws.CineShowTimeWS;
+import com.binomed.cineshowtime.client.ui.MainWindow;
 import com.binomed.cineshowtime.client.ui.coverflow.CoverData;
 import com.binomed.cineshowtime.client.ui.coverflow.Coverflow;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 
 /**
@@ -20,7 +25,11 @@ public class CineShowTime_Chrome_GWT implements EntryPoint {
 	@Override
 	public void onModuleLoad() {
 		// ClientFactory contain all view and access to WebService
-		IClientFactory clientFactory = GWT.create(ClientFactory.class);
+		ClientFactory clientFactory = GWT.create(ClientFactory.class);
+		clientFactory.setCineShowTimeWS(new CineShowTimeWS(clientFactory));
+		clientFactory.setDataBaseHelper(new CineShowTimeDBHelper(clientFactory, (CineShowTimeDataBase) GWT.create(CineShowTimeDataBase.class)));
+		clientFactory.setEventBus(new HandlerManager(null));
+		clientFactory.setMainWindow(new MainWindow(clientFactory));
 		// Load and initialize the window
 		RootLayoutPanel.get().add(clientFactory.getMainWindow());
 		// testCoverflow();

@@ -56,6 +56,14 @@ public class TheaterViewHeader extends Composite {
 		if (isFav) {
 			clientFactory.getDataBaseHelper().removeFav(theater);
 		} else {
+			if (theater.getPlace().getCityName() == null) {
+				theater.getPlace().setCityName(clientFactory.getCineShowTimeService().getCurrentCityName().getLocality());
+				theater.getPlace().setCountryName(clientFactory.getCineShowTimeService().getCurrentCityName().getCountry());
+				theater.getPlace().setCountryNameCode(clientFactory.getCineShowTimeService().getCurrentCityName().getCountry());
+				theater.getPlace().setPostalCityNumber(clientFactory.getCineShowTimeService().getCurrentCityName().getPostalCode());
+				theater.getPlace().setLatitude(clientFactory.getCineShowTimeService().getCurrentCityName().getPoint().getLatitude());
+				theater.getPlace().setLongitude(clientFactory.getCineShowTimeService().getCurrentCityName().getPoint().getLongitude());
+			}
 			clientFactory.getDataBaseHelper().addFav(theater);
 		}
 		isFav = !isFav;
@@ -64,7 +72,7 @@ public class TheaterViewHeader extends Composite {
 	private boolean isFav() {
 		boolean isFav = false;
 		ArrayList<TheaterBean> theaterFav = clientFactory.getDataBaseHelper().getTheaterFavCache();
-		if (theaterFav != null && theaterFav.size() > 0) {
+		if ((theaterFav != null) && (theaterFav.size() > 0)) {
 			for (TheaterBean theater : theaterFav) {
 				if (theater.getId().equals(this.theater.getId())) {
 					isFav = true;
