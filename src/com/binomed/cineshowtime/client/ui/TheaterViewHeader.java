@@ -122,7 +122,7 @@ public class TheaterViewHeader extends Composite {
 
 	private void expandedCollapse() {
 		open = !open;
-		theaterOpen.setResource(open ? CstResource.instance.expanded() : CstResource.instance.collapse());
+		theaterOpen.setResource(open ? CstResource.instance.expand() : CstResource.instance.collapse());
 		clientFactory.getEventBusHandler().fireEvent(new TheaterOpenEvent(open, theater.getId()));
 	}
 

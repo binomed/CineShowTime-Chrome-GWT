@@ -14,9 +14,6 @@ public class CoverElement {
 	private int leftX;
 	private int topY;
 	private int zIndex;
-	private int sens;
-
-	private boolean isTransformed;
 
 	public CoverElement(CoverData data) {
 		this.data = data;
@@ -74,17 +71,6 @@ public class CoverElement {
 		canvas.getContext2d().restore();
 	}
 
-	public void setPosition(int position) {
-		zIndex = Math.abs(position);
-		if (position < 0) {
-			sens = -1;
-		} else if (position > 0) {
-			sens = -1;
-		} else {
-			sens = 0;
-		}
-	}
-
 	public ImageElement getImage() {
 		return image;
 	}
@@ -135,10 +121,6 @@ public class CoverElement {
 
 	public void setCoverURL(String coverURL) {
 		data.setCoverURL(coverURL);
-	}
-
-	public void setTransform(boolean transform) {
-		this.isTransformed = transform;
 	}
 
 }

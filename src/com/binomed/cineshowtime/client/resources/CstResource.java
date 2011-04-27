@@ -16,9 +16,6 @@ public interface CstResource extends ClientBundle {
 	@Source("com/binomed/cineshowtime/client/resources/images/gps.png")
 	ImageResource gps();
 
-	@Source("com/binomed/cineshowtime/client/resources/images/maps.png")
-	ImageResource maps();
-
 	@Source("com/binomed/cineshowtime/client/resources/images/btn_star_big_off.png")
 	ImageResource btn_stat_big_off();
 
@@ -58,10 +55,13 @@ public interface CstResource extends ClientBundle {
 	@Source("com/binomed/cineshowtime/client/resources/images/movie_countdown.gif")
 	ImageResource movie_countdown();
 
-	@Source("com/binomed/cineshowtime/client/resources/images/expanded.png")
-	ImageResource expanded();
+	@Source("com/binomed/cineshowtime/client/resources/images/expand.png")
+	ImageResource expand();
 
 	@Source("com/binomed/cineshowtime/client/resources/images/collapse.png")
 	ImageResource collapse();
+
+	@Source("com/binomed/cineshowtime/client/resources/images/maps.png")
+	ImageResource maps();
 
 }

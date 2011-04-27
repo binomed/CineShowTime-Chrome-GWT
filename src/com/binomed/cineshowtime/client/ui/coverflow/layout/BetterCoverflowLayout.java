@@ -28,7 +28,8 @@ public class BetterCoverflowLayout implements CoverflowLayout {
 		}
 	}
 
-	// public void onUpdateCovers(String indexCoverCenter, final Map<String, CoverElement> covers, int totalTranslateX) {
+	// public void onUpdateCovers(String indexCoverCenter, final Map<String, CoverElement> covers, int totalTranslateX)
+	// {
 	// int position = -(covers.size() / 2);
 	// for (CoverElement cover : covers.values()) {
 	// cover.setLeftX(cover.getLeftX() + totalTranslateX);
@@ -47,16 +48,12 @@ public class BetterCoverflowLayout implements CoverflowLayout {
 			position = indexCoverCenter;
 		}
 		for (CoverElement cover : covers.values()) {
-			// TODO ordre de dessin
-			cover.setPosition(Math.abs(position));
 			// Update X translation
 			cover.setLeftX(cover.getLeftX() + totalTranslateX);
 			// Update Y translation
 			if (totalTranslateX <= DY) {
 				cover.setTopY(TOP_PADDING - (Math.abs(position) * DY));
 			}
-			// TODO Transformation
-			cover.setTransform(true);
 			// Go to next position
 			position++;
 		}

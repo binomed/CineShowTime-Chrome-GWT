@@ -1,0 +1,4 @@
+<!-- Includes the source files for the theme. -->
+<module>
+      <stylesheet src="gwt/cst/cst.css"/>
+</module>

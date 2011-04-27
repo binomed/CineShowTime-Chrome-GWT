@@ -1,12 +1,8 @@
-h1 {
-  font-size: 2em;
-  font-weight: bold;
-  color: #FFFFFF;
-  text-align: center;
+
+.gwt-TabPanel { 
+	border-radius: 10px !important;
 }
 
-/* Disclosure Panel Styles */
-.gwt-DisclosurePanel .header {
-  color: white; 
-}
+.gwt-TabPanelBottom {
 
+}

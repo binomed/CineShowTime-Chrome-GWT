@@ -62,6 +62,7 @@ public class MainWindow extends Composite {
 	public void addMovieTab(TheaterBean theater, String idMovie) {
 		MovieView movieView = new MovieView(theater, idMovie, clientFactory);
 		appBodyPanel.add(movieView, new MovieTabHeaderWidget(movieView.getMovie().getMovieName(), movieView, appBodyPanel));
+		appBodyPanel.addStyleName("gwt-TabPanel");
 		appBodyPanel.selectTab(movieView);
 	}
 
@@ -135,7 +136,8 @@ public class MainWindow extends Composite {
 				for (TheaterBean theaterFav : theaterList) {
 					// clientFactory.getDataBaseHelper().removeFav(theaterFav);
 					// Call the service
-					clientFactory.getCineShowTimeService().requestNearTheatersFromCityName(theaterFav.getPlace().getCityName() + ", " + theaterFav.getPlace().getCountryNameCode(), theaterFav.getId(), clientFactory.getLanguage());
+					clientFactory.getCineShowTimeService().requestNearTheatersFromCityName(theaterFav.getPlace().getCityName() + ", " + theaterFav.getPlace().getCountryNameCode(),
+							theaterFav.getId(), clientFactory.getLanguage());
 				}
 			} else {
 				// Load intial content
