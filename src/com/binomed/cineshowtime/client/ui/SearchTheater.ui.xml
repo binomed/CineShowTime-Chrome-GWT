@@ -1,6 +1,9 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-			 xmlns:g="urn:import:com.google.gwt.user.client.ui">
+			 xmlns:g="urn:import:com.google.gwt.user.client.ui"
+			 xmlns:db="urn:import:com.google.gwt.user.datepicker.client"
+
+			 >
 	
 	<ui:with field="res" type="com.binomed.cineshowtime.client.resources.CstResource" />
 	<ui:with field="i18n" type="com.binomed.cineshowtime.client.resources.I18N" />
@@ -10,7 +13,7 @@
 			<table>
 				<tr>
 					<td><g:Label text="{i18n.locationLabel}" /></td>
-					<td><g:TextBox ui:field="location"/></td>
+					<td><g:TextBox ui:field="locationSearch"/></td>
 					<td>
 						<g:HTMLPanel>
 							<table>
@@ -26,11 +29,13 @@
 				</tr>
 				<tr>
 					<td><g:Label text="{i18n.theaterMovieLabel}" /></td>
-					<td><g:TextBox ui:field="movie"/></td>
+					<td><g:TextBox ui:field="movieSearch"/></td>
 				</tr>
 				<tr>
 					<td><g:Label text="{i18n.dateLabel}" /></td>
-					<td><g:TextBox ui:field="date"/></td>
+					<td>
+						<db:DateBox ui:field="dateSearch"/>
+					</td>
 					<td></td>
 				</tr>
 				<tr>

@@ -17,6 +17,7 @@ import com.binomed.cineshowtime.client.ui.widget.MovieTabHeaderWidget;
 import com.google.code.gwt.database.client.service.DataServiceException;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JsArray;
+import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.maps.client.geocode.Placemark;
 import com.google.gwt.maps.client.geom.LatLng;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -56,6 +57,8 @@ public class MainWindow extends Composite {
 
 		this.clientFactory.getEventBusHandler().addHandler(TheaterDBEvent.TYPE, theaterFavHandler);
 		this.clientFactory.getDataBaseHelper().getTheaterFav();
+
+		Window.alert(LocaleInfo.getCurrentLocale().getLocaleName());
 
 	}
 
