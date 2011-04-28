@@ -18,6 +18,7 @@ import com.binomed.cineshowtime.client.resources.I18N;
 import com.binomed.cineshowtime.client.ui.coverflow.CoverData;
 import com.binomed.cineshowtime.client.ui.coverflow.Coverflow;
 import com.binomed.cineshowtime.client.ui.coverflow.event.ClickCoverListener;
+import com.binomed.cineshowtime.client.ui.coverflow.layout.SimpleCoverflowLayout;
 import com.binomed.cineshowtime.client.ui.dialog.VideoDialog;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -149,7 +150,7 @@ public class MovieView extends Composite {
 
 		// Add the coverflow
 		if (movie.getYoutubeVideos() != null) {
-			coverflow = new Coverflow(800, 300);
+			coverflow = new Coverflow(800, 300, new SimpleCoverflowLayout());
 			coverflow.addClickCoverListener(movieOpenListener);
 			final List<CoverData> coversData = new ArrayList<CoverData>();
 			for (YoutubeBean video : movie.getYoutubeVideos()) {
