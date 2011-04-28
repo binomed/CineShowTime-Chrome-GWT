@@ -17,6 +17,7 @@ import com.binomed.cineshowtime.client.resources.CstResource;
 import com.binomed.cineshowtime.client.service.geolocation.UserGeolocation;
 import com.binomed.cineshowtime.client.service.geolocation.UserGeolocationCallback;
 import com.binomed.cineshowtime.client.ui.widget.MovieTabHeaderWidget;
+import com.binomed.cineshowtime.client.util.StringUtils;
 import com.google.code.gwt.database.client.service.DataServiceException;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JsArray;
@@ -81,9 +82,24 @@ public class MainWindow extends Composite {
 	}
 
 	public void addMovieTab(TheaterBean theater, String idMovie) {
-		MovieView movieView = new MovieView(theater, idMovie, clientFactory);
-		appBodyPanel.add(movieView, new MovieTabHeaderWidget(movieView.getMovie().getMovieName(), movieView, appBodyPanel));
-		appBodyPanel.selectTab(movieView);
+		int index = getMovieTabIfExist(idMovie);
+		if (index == -1) {
+			MovieView movieView = new MovieView(theater, idMovie, clientFactory);
+			appBodyPanel.add(movieView, new MovieTabHeaderWidget(movieView.getMovie().getMovieName(), movieView, appBodyPanel));
+			appBodyPanel.selectTab(movieView);
+		} else {
+			appBodyPanel.selectTab(index);
+		}
+	}
+
+	private int getMovieTabIfExist(String idMovie) {
+		for (int i = 0; i < appBodyPanel.getWidgetCount(); i++) {
+			if (appBodyPanel.getWidget(i) instanceof MovieView //
+					&& StringUtils.equalsIC(((MovieView) appBodyPanel.getWidget(i)).getIdMovie(), idMovie)) {
+				return i;
+			}
+		}
+		return -1;
 	}
 
 	private void loadTheatersOfUserLocation() {
@@ -98,8 +114,6 @@ public class MainWindow extends Composite {
 
 			@Override
 			public void onLatitudeLongitudeResponse(LatLng latLng) {
-				// Save the user location
-				clientFactory.setUserLocation(latLng);
 				// Load the favorites
 				clientFactory.getCineShowTimeService().requestNearTheatersFromLatLng(latLng.getLatitude(), latLng.getLongitude());
 			}

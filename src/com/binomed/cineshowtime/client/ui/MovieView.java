@@ -33,6 +33,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class MovieView extends Composite {
 
+	private final String idMovie;
 	private static MovieViewUiBinder uiBinder = GWT.create(MovieViewUiBinder.class);
 	private final TheaterBean theater;
 	private MovieBean movie;
@@ -59,6 +60,7 @@ public class MovieView extends Composite {
 
 	public MovieView(final TheaterBean theater, final String idMovie, IClientFactory clientFactory) {
 		this.theater = theater;
+		this.idMovie = idMovie;
 		this.clientFactory = clientFactory;
 
 		// Initialization
@@ -220,6 +222,10 @@ public class MovieView extends Composite {
 
 		}
 	};
+
+	public String getIdMovie() {
+		return idMovie;
+	}
 
 	interface MovieViewUiBinder extends UiBinder<Widget, MovieView> {
 	}

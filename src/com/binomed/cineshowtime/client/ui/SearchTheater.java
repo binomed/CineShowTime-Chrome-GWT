@@ -3,10 +3,14 @@ package com.binomed.cineshowtime.client.ui;
 import com.binomed.cineshowtime.client.IClientFactory;
 import com.binomed.cineshowtime.client.event.ui.FavOpenEvent;
 import com.binomed.cineshowtime.client.event.ui.SearchEvent;
+import com.binomed.cineshowtime.client.service.geolocation.UserGeolocation;
+import com.binomed.cineshowtime.client.service.geolocation.UserGeolocationCallback;
 import com.binomed.cineshowtime.client.util.StringUtils;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.JsArray;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.maps.client.geocode.Placemark;
 import com.google.gwt.maps.client.geom.LatLng;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -66,18 +70,38 @@ public class SearchTheater extends Composite {
 	@UiHandler("nearSearch")
 	void handleNearSearchClick(ClickEvent e) {
 		clientFactory.getEventBusHandler().fireEvent(new SearchEvent());
-		LatLng latLng = clientFactory.getUserLocation();
-		if (latLng != null) {
-			clientFactory.getCineShowTimeService().requestNearTheatersFromLatLng(latLng.getLatitude(), latLng.getLongitude());
-		} else {
-			// TODO : Message
-			Window.alert("No location found.");
-		}
+		loadTheatersOfUserLocation();
 	}
 
 	@UiHandler("favoriteSearch")
 	void handleFavoriteSearchClick(ClickEvent e) {
 		clientFactory.getEventBusHandler().fireEvent(new FavOpenEvent());
+	}
+
+	/**
+	 * TODO : Refactorer avec MainWindow (code dupliqué)
+	 */
+	private void loadTheatersOfUserLocation() {
+		UserGeolocation.getInstance().getUserGeolocation(new UserGeolocationCallback() {
+			@Override
+			public void onLocationResponse(JsArray<Placemark> locations) {
+				if ((locations != null) && (locations.length() > 0)) {
+					clientFactory.getCineShowTimeService().setCurrentCityName(locations.get(0));
+				}
+			}
+
+			@Override
+			public void onLatitudeLongitudeResponse(LatLng latLng) {
+				// Load the favorites
+				clientFactory.getCineShowTimeService().requestNearTheatersFromLatLng(latLng.getLatitude(), latLng.getLongitude());
+			}
+
+			@Override
+			public void onError() {
+				// TODO : Message
+				Window.alert("Error during geolocation !");
+			}
+		});
 	}
 
 	interface SearchTheaterUiBinder extends UiBinder<Widget, SearchTheater> {
