@@ -4,7 +4,7 @@
   "description": "The best way to get your showtimes.",
   "app": {
     "launch": {
-      "local_path": CineShowTime_Chrome_GWT.html?locale=en
+      "local_path": "CineShowTime_Chrome_GWT.html?locale=fr"
     }
   },
   "omnibox": { "keyword" : "cine" },

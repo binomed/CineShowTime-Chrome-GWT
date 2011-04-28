@@ -5,9 +5,11 @@ import com.binomed.cineshowtime.client.db.CineShowTimeDataBase;
 import com.binomed.cineshowtime.client.db.ICineShowTimeDBHelper;
 import com.binomed.cineshowtime.client.service.ws.CineShowTimeWS;
 import com.binomed.cineshowtime.client.ui.MainWindow;
+import com.binomed.cineshowtime.client.util.LocaleUtils;
 import com.google.code.gwt.database.client.Database;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.maps.client.geom.LatLng;
 
 public class ClientFactory implements IClientFactory {
 
@@ -18,6 +20,8 @@ public class ClientFactory implements IClientFactory {
 	private CineShowTimeWS cineShowTimeWS = null;
 
 	private ICineShowTimeDBHelper dataBaseHelper = null;
+
+	private LatLng userLocation = null;
 
 	public ClientFactory() {
 		super();
@@ -44,7 +48,7 @@ public class ClientFactory implements IClientFactory {
 
 	@Override
 	public String getLanguage() {
-		return "fr";
+		return LocaleUtils.getLocale();
 	}
 
 	@Override
@@ -56,4 +60,15 @@ public class ClientFactory implements IClientFactory {
 	public ICineShowTimeDBHelper getDataBaseHelper() {
 		return dataBaseHelper;
 	}
+
+	@Override
+	public LatLng getUserLocation() {
+		return userLocation;
+	}
+
+	@Override
+	public void setUserLocation(LatLng userLocation) {
+		this.userLocation = userLocation;
+	}
+
 }

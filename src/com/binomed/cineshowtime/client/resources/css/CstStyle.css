@@ -6,6 +6,10 @@
 	background-attachment:fixed;
 	color: #FFFFFF;
 }
+.pointerHand {
+    cursor:pointer;
+}
+
 
 /* Theater style */
 .theaterPanelHeader {

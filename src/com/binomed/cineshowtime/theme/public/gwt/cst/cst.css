@@ -21,11 +21,11 @@ pre {
   font-size: small;
 }
 body {
-  color: black;
+  color: #fff;
   margin: 0px;
   border: 0px;
   padding: 0px;
-  background: #fff;
+  background: #000;
   direction: ltr;
 }
 a, a:visited, a:hover {
@@ -245,6 +245,7 @@ a, a:visited, a:hover {
 }
 
 .gwt-Hyperlink {
+	cursor: pointer;
 }
 
 .gwt-Image {
