@@ -6,9 +6,7 @@ import com.google.gwt.maps.client.geom.LatLng;
 
 public interface UserGeolocationCallback {
 
-	void onLatitudeLongitudeResponse(LatLng latLng);
-
-	void onLocationResponse(JsArray<Placemark> locations);
+	void onLocationResponse(JsArray<Placemark> locations, LatLng latLng);
 
 	void onError();
 

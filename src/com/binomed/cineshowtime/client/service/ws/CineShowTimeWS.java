@@ -52,11 +52,11 @@ public class CineShowTimeWS extends AbstractCineShowTimeWS {
 	 * @param callback
 	 *            Specific Callback
 	 */
-	public void requestNearTheatersFromLatLng(double latitude, double longitude) {
+	public void requestNearTheatersFromLatLng(double latitude, double longitude, String lang) {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put(PARAM_LAT, String.valueOf(latitude));
 		params.put(PARAM_LONG, String.valueOf(longitude));
-		params.put(PARAM_LANG, LocaleUtils.getLocale());
+		params.put(PARAM_LANG, lang != null ? lang.toLowerCase() : LocaleUtils.getLocale());
 		Date currentTime = new Date();
 		params.put(PARAM_CURENT_TIME, String.valueOf(currentTime.getTime()));
 		params.put(PARAM_TIME_ZONE, DateTimeFormat.getFormat("z").format(currentTime));
@@ -69,6 +69,7 @@ public class CineShowTimeWS extends AbstractCineShowTimeWS {
 			public void onResponseReceived(Request request, Response response) {
 				NearResp resp = ParserNearResultDomXml.parseResult(response.getText());
 				movieMap = resp.getMapMovies();
+				clientFactory.getDataBaseHelper().writeNearResp(resp);
 				clientFactory.getEventBusHandler().fireEvent(new NearRespNearEvent(resp));
 			}
 
@@ -87,13 +88,16 @@ public class CineShowTimeWS extends AbstractCineShowTimeWS {
 	 * @param theaterId
 	 *            the theaterId (optionnal)
 	 */
-	public void requestNearTheatersFromCityName(String cityName, final String theaterId) {
+	public void requestNearTheatersFromCityName(String cityName, final String theaterId, final int day, String lang) {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put(PARAM_PLACE, cityName);
 		if (theaterId != null) {
 			params.put(PARAM_THEATER_ID, theaterId);
 		}
-		params.put(PARAM_LANG, LocaleUtils.getLocale());
+		if (day != -1) {
+			params.put(PARAM_DAY, String.valueOf(day));
+		}
+		params.put(PARAM_LANG, lang != null ? lang.toLowerCase() : LocaleUtils.getLocale());
 		Date currentTime = new Date();
 		params.put(PARAM_CURENT_TIME, String.valueOf(currentTime.getTime()));
 		params.put(PARAM_TIME_ZONE, DateTimeFormat.getFormat("z").format(currentTime));
@@ -115,36 +119,7 @@ public class CineShowTimeWS extends AbstractCineShowTimeWS {
 				} else {
 					movieMap = resp.getMapMovies();
 				}
-				clientFactory.getEventBusHandler().fireEvent(new NearRespNearEvent(resp));
-			}
-
-			@Override
-			public void onError(Request request, Throwable exception) {
-				clientFactory.getEventBusHandler().fireEvent(new NearRespNearEvent(exception));
-			}
-		});
-	}
-
-	/**
-	 * Return nearest theaters following search parameters
-	 */
-	public void requestNearTheatersForSearch(String cityName, final long time) {
-		Map<String, String> params = new HashMap<String, String>();
-		if (cityName != null) {
-			params.put(PARAM_PLACE, cityName);
-		}
-		if (time != -1) {
-			params.put(PARAM_CURENT_TIME, String.valueOf(time));
-		}
-		params.put(PARAM_LANG, LocaleUtils.getLocale());
-		doGet(URL_CONTEXT_SHOWTIME_NEAR, params, new RequestCallback() {
-			@Override
-			public void onResponseReceived(Request request, Response response) {
-				NearResp resp = ParserNearResultDomXml.parseResult(response.getText());
-				if (movieMap == null) {
-					movieMap = new HashMap<String, MovieBean>();
-				}
-				movieMap = resp.getMapMovies();
+				clientFactory.getDataBaseHelper().writeNearResp(resp);
 				clientFactory.getEventBusHandler().fireEvent(new NearRespNearEvent(resp));
 			}
 
@@ -205,6 +180,7 @@ public class CineShowTimeWS extends AbstractCineShowTimeWS {
 				ParserImdbResultDomXml.parseResult(response.getText(), movie);
 				movie.setState(MovieBean.STATE_LOADED);
 				movieMap.put(movie.getId(), movie);
+				clientFactory.getDataBaseHelper().completeMovie(movie);
 				clientFactory.getEventBusHandler().fireEvent(new MovieLoadedEvent(source, movie));
 			}
 
@@ -213,6 +189,13 @@ public class CineShowTimeWS extends AbstractCineShowTimeWS {
 				clientFactory.getEventBusHandler().fireEvent(new MovieLoadedEvent(source, exception));
 			}
 		});
+	}
+
+	public void cleanMovies() {
+		if (movieMap == null) {
+			movieMap = new HashMap<String, MovieBean>();
+		}
+		movieMap.clear();
 	}
 
 	public void addMovie(MovieBean movie) {

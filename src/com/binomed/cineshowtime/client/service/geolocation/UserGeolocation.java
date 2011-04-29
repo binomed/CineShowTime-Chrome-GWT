@@ -30,12 +30,11 @@ public class UserGeolocation {
 				Geolocation geolocation = new Geolocation(new GeolocationCallback() {
 					@Override
 					public void onLocation(Position position) {
-						LatLng latLng = LatLng.newInstance(position.getLatitude(), position.getLongitude());
-						callback.onLatitudeLongitudeResponse(latLng);
+						final LatLng latLng = LatLng.newInstance(position.getLatitude(), position.getLongitude());
 						geocoder.getLocations(latLng, new LocationCallback() {
 							@Override
 							public void onSuccess(JsArray<Placemark> locations) {
-								callback.onLocationResponse(locations);
+								callback.onLocationResponse(locations, latLng);
 							}
 
 							@Override
@@ -55,4 +54,15 @@ public class UserGeolocation {
 		});
 	}
 
+	public void getPlaceMark(final String address, final LocationCallback callBack) {
+		// Asynchronously loads the Maps API.
+		Maps.loadMapsApi(GoogleKeys.GOOGLE_MAPS_KEY, "2", false, new Runnable() {
+			@Override
+			public void run() {
+				final Geocoder geocoder = new Geocoder();
+				geocoder.getLocations(address, callBack);
+			}
+		});
+
+	}
 }

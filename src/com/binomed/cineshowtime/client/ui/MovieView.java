@@ -115,38 +115,46 @@ public class MovieView extends Composite {
 		}
 		movieLinkImdb.setText(I18N.instance.imdbLink());
 		movieLinkWikipedia.setText(I18N.instance.wikipediaLink());
-		String[] directorArray = movie.getDirectorList().split("\\|");
-		String directors = "";
-		if (directorArray.length > 0) {
-			int i = 0;
-			while ((i < 3) && (i < directorArray.length)) {
-				if (i > 0) {
-					directors += ", ";
+		if (movie.getDirectorList() != null) {
+			String[] directorArray = movie.getDirectorList().split("\\|");
+			String directors = "";
+			if (directorArray.length > 0) {
+				int i = 0;
+				while ((i < 3) && (i < directorArray.length)) {
+					if (i > 0) {
+						directors += ", ";
+					}
+					directors += directorArray[i];
+					i++;
 				}
-				directors += directorArray[i];
-				i++;
 			}
+			movieDirector.setText(directors);
 		}
-		movieDirector.setText(directors);
-		String[] actorArray = movie.getActorList().split("\\|");
-		String actors = "";
-		if (actorArray.length > 0) {
-			int i = 0;
-			while ((i < 3) && (i < actorArray.length)) {
-				if (i > 0) {
-					actors += ", ";
+		if (movie.getActorList() != null) {
+			String[] actorArray = movie.getActorList().split("\\|");
+			String actors = "";
+			if (actorArray.length > 0) {
+				int i = 0;
+				while ((i < 3) && (i < actorArray.length)) {
+					if (i > 0) {
+						actors += ", ";
+					}
+					actors += actorArray[i];
+					i++;
 				}
-				actors += actorArray[i];
-				i++;
 			}
+			movieActor.setText(actors);
 		}
-		movieActor.setText(actors);
 		movieStyle.setText(movie.getStyle());
 		moviePlot.setText(movie.getDescription());
 		groupMoviePlot.setOpen(true);
 
-		movieRateText.setText(movie.getRate() + " / 10");
-		movieRate.updateRate(true, movie.getRate());
+		if (movie.getRate() > 0) {
+			movieRateText.setText(movie.getRate() + " / 10");
+			movieRate.updateRate(true, movie.getRate());
+		} else {
+			movieRate.setVisible(false);
+		}
 
 		// Add the coverflow
 		if (movie.getYoutubeVideos() != null) {

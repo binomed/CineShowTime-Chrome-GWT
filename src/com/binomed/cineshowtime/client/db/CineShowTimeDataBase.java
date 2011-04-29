@@ -249,9 +249,27 @@ public interface CineShowTimeDataBase extends DataService, CineshowtimeDbCst {
 	 * REQUEST PART
 	 */
 
-	@Select("SELECT * "//
-			+ " FROM " + DATABASE_THEATERS_TABLE + " th, " + DATABASE_LOCATION_TABLE + " loc"//
-			+ " WHERE th." + KEY_THEATER_ID + " = loc." + KEY_LOCALISATION_THEATER_ID)
+	@Select("SELECT DISTINCT "//
+			+ "th." + KEY_THEATER_ID//
+			+ ",th." + KEY_THEATER_NAME//
+			+ ",th." + KEY_THEATER_PHONE//
+			+ ",loc." + KEY_LOCALISATION_CITY_NAME//
+			+ ",loc." + KEY_LOCALISATION_COUNTRY_CODE//
+			+ ",loc." + KEY_LOCALISATION_COUNTRY_NAME//
+			+ ",loc." + KEY_LOCALISATION_DISTANCE//
+			+ ",loc." + KEY_LOCALISATION_DISTANCE_TIME//
+			+ ",loc." + KEY_LOCALISATION_LATITUDE//
+			+ ",loc." + KEY_LOCALISATION_LONGITUDE//
+			+ ",loc." + KEY_LOCALISATION_POSTAL_CODE//
+			+ ",loc." + KEY_LOCALISATION_SEARCH_QUERY//
+			+ ",show." + KEY_SHOWTIME_LANG//
+			+ ",show." + KEY_SHOWTIME_MOVIE_ID//
+			+ ",show." + KEY_SHOWTIME_RESERVATION_URL//
+			+ ",show." + KEY_SHOWTIME_TIME//
+			+ " FROM " + DATABASE_THEATERS_TABLE + " th, " + DATABASE_LOCATION_TABLE + " loc, " + DATABASE_SHOWTIME_TABLE + " show "//
+			+ " WHERE th." + KEY_THEATER_ID + " = loc." + KEY_LOCALISATION_THEATER_ID //
+			+ " AND th." + KEY_THEATER_ID + " = show." + KEY_SHOWTIME_THEATER_ID //
+	)
 	void fetchAllTheaters(ListCallback<GenericRow> callBack);
 
 	@Select("SELECT * " + " FROM " + DATABASE_REQUEST_TABLE)
@@ -288,6 +306,11 @@ public interface CineShowTimeDataBase extends DataService, CineshowtimeDbCst {
 	void fetchShowtime(String theaterId, String movieId, ListCallback<GenericRow> callBack);
 
 	@Select("SELECT * " //
+			+ " FROM " + DATABASE_SHOWTIME_TABLE //
+	)
+	void fetchAllShowtimes(ListCallback<GenericRow> callBack);
+
+	@Select("SELECT * " //
 			+ " FROM " + DATABASE_LOCATION_TABLE //
 			+ " WHERE " + KEY_LOCALISATION_THEATER_ID + " = {theaterId}")
 	void fetchLocation(String theaterId, ListCallback<GenericRow> callBack);
@@ -309,9 +332,17 @@ public interface CineShowTimeDataBase extends DataService, CineshowtimeDbCst {
 	void fetchReviews(String movieId, ListCallback<GenericRow> callBack);
 
 	@Select("SELECT * " //
+			+ " FROM " + DATABASE_REVIEW_TABLE)
+	void fetchAllReviews(ListCallback<GenericRow> callBack);
+
+	@Select("SELECT * " //
 			+ " FROM " + DATABASE_VIDEO_TABLE //
 			+ " WHERE " + KEY_REVIEW_MOVIE_MID + " = {movieId}")
 	void fetchVideos(String movieId, ListCallback<GenericRow> callBack);
+
+	@Select("SELECT * " //
+			+ " FROM " + DATABASE_VIDEO_TABLE)
+	void fetchAllVideos(ListCallback<GenericRow> callBack);
 
 	/*
 	 * SQL Part

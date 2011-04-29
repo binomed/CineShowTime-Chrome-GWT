@@ -13,14 +13,18 @@ import com.binomed.cineshowtime.client.handler.ui.TheaterOpenHandler;
 import com.binomed.cineshowtime.client.model.MovieBean;
 import com.binomed.cineshowtime.client.model.ProjectionBean;
 import com.binomed.cineshowtime.client.model.TheaterBean;
+import com.binomed.cineshowtime.client.service.geolocation.UserGeolocation;
 import com.binomed.cineshowtime.client.service.ws.CineShowTimeWS;
 import com.binomed.cineshowtime.client.ui.coverflow.CoverData;
 import com.binomed.cineshowtime.client.ui.coverflow.Coverflow;
 import com.binomed.cineshowtime.client.ui.coverflow.event.ClickCoverListener;
 import com.binomed.cineshowtime.client.ui.coverflow.layout.BetterCoverflowLayout;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.JsArray;
 import com.google.gwt.event.logical.shared.OpenEvent;
 import com.google.gwt.event.logical.shared.OpenHandler;
+import com.google.gwt.maps.client.geocode.LocationCallback;
+import com.google.gwt.maps.client.geocode.Placemark;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
@@ -78,7 +82,6 @@ public class TheaterView extends Composite {
 					int i = 0;
 					Map<String, String> params = new HashMap<String, String>();
 					final Map<String, Integer> mapMovieIndex = new HashMap<String, Integer>();
-					final String ip = "193.253.198.44";
 					for (java.util.Map.Entry<String, List<ProjectionBean>> entryMovie : theater.getMovieMap().entrySet()) {
 						movieTmp = service.getMovie(entryMovie.getKey());
 						mapMovieIndex.put(entryMovie.getKey(), i);
@@ -90,7 +93,7 @@ public class TheaterView extends Composite {
 								clientFactory.getEventBusHandler().addHandler(MovieLoadedEvent.TYPE, eventHandler);
 							}
 							// call the service
-							service.requestImdbInfo(movieTmp, ip, clientFactory.getLanguage(), theater.getPlace().getSearchQuery(), theater.getId());
+							UserGeolocation.getInstance().getPlaceMark(theater.getPlace().getSearchQuery(), new TheaterLocationCallBack(movieTmp, theater, clientFactory));
 						} else if (movieTmp.getState() == MovieBean.STATE_IN_PROGRESS) {
 							// Register the service
 							if (!hasRegister) {
@@ -122,6 +125,40 @@ public class TheaterView extends Composite {
 		}
 
 	};
+
+	static class TheaterLocationCallBack implements LocationCallback {
+
+		private MovieBean movieTmp;
+		private TheaterBean theater;
+		private IClientFactory clientFactory;
+
+		public TheaterLocationCallBack(MovieBean movieTmp, TheaterBean theater, IClientFactory clientFactory) {
+			super();
+			this.movieTmp = movieTmp;
+			this.theater = theater;
+			this.clientFactory = clientFactory;
+		}
+
+		@Override
+		public void onSuccess(JsArray<Placemark> locations) {
+			if ((locations != null) && (locations.length() > 0)) {
+				doSearch(locations.get(0).getCountry());
+			} else {
+				doSearch(null);
+			}
+
+		}
+
+		@Override
+		public void onFailure(int statusCode) {
+			doSearch(null);
+		}
+
+		private void doSearch(String lang) {
+			final String ip = "193.253.198.44";
+			clientFactory.getCineShowTimeService().requestImdbInfo(movieTmp, ip, lang != null ? lang : clientFactory.getLanguage(), theater.getPlace().getSearchQuery(), theater.getId());
+		}
+	}
 
 	class TheaterHandler implements ImdbRespHandler, TheaterOpenHandler {
 

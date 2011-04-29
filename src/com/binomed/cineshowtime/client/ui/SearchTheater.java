@@ -1,15 +1,19 @@
 package com.binomed.cineshowtime.client.ui;
 
+import java.util.Date;
+
 import com.binomed.cineshowtime.client.IClientFactory;
 import com.binomed.cineshowtime.client.event.ui.FavOpenEvent;
 import com.binomed.cineshowtime.client.event.ui.SearchEvent;
 import com.binomed.cineshowtime.client.service.geolocation.UserGeolocation;
 import com.binomed.cineshowtime.client.service.geolocation.UserGeolocationCallback;
+import com.binomed.cineshowtime.client.util.LocaleUtils;
 import com.binomed.cineshowtime.client.util.StringUtils;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.maps.client.geocode.LocationCallback;
 import com.google.gwt.maps.client.geocode.Placemark;
 import com.google.gwt.maps.client.geom.LatLng;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -56,11 +60,38 @@ public class SearchTheater extends Composite {
 	void handleSearchClick(ClickEvent e) {
 		clientFactory.getEventBusHandler().fireEvent(new SearchEvent());
 		if (StringUtils.isNotEmpty(locationSearch.getText()) || dateSearch.getValue() != null) {
-			long time = -1;
-			if (dateSearch.getValue() != null) {
-				time = dateSearch.getValue().getTime();
-			}
-			clientFactory.getCineShowTimeService().requestNearTheatersForSearch(locationSearch.getText(), time);
+			UserGeolocation.getInstance().getPlaceMark(locationSearch.getText(), new LocationCallback() {
+
+				@Override
+				public void onSuccess(JsArray<Placemark> locations) {
+
+					if (locations != null && locations.length() > 0) {
+						doSearch(locations.get(0).getCountry());
+					} else {
+						doSearch(null);
+					}
+				}
+
+				@Override
+				public void onFailure(int statusCode) {
+					doSearch(null);
+
+				}
+
+				private void doSearch(String lang) {
+					int day = -1;
+					if (dateSearch.getValue() != null) {
+						Date currentTime = new Date();
+						day = dateSearch.getValue().getDay() - currentTime.getDay();
+						if (day < 0 || day > 7) {
+							day = -1;
+						}
+
+					}
+					clientFactory.getCineShowTimeService().requestNearTheatersFromCityName(locationSearch.getText(), null, day, lang != null ? lang : LocaleUtils.getLocale());
+				}
+			});
+
 		} else {
 			// TODO : Message
 			Window.alert("Type a search criteria please.");
@@ -84,16 +115,14 @@ public class SearchTheater extends Composite {
 	private void loadTheatersOfUserLocation() {
 		UserGeolocation.getInstance().getUserGeolocation(new UserGeolocationCallback() {
 			@Override
-			public void onLocationResponse(JsArray<Placemark> locations) {
+			public void onLocationResponse(JsArray<Placemark> locations, LatLng latLng) {
 				if ((locations != null) && (locations.length() > 0)) {
 					clientFactory.getCineShowTimeService().setCurrentCityName(locations.get(0));
+					clientFactory.getCineShowTimeService().requestNearTheatersFromLatLng(latLng.getLatitude(), latLng.getLongitude(), locations.get(0).getCountry());
+				} else {
+					// TODO : Message
+					Window.alert("Error during geolocation !");
 				}
-			}
-
-			@Override
-			public void onLatitudeLongitudeResponse(LatLng latLng) {
-				// Load the favorites
-				clientFactory.getCineShowTimeService().requestNearTheatersFromLatLng(latLng.getLatitude(), latLng.getLongitude());
 			}
 
 			@Override

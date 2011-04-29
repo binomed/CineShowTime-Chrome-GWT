@@ -8,7 +8,9 @@ import com.binomed.cineshowtime.client.event.db.LastRequestDBEvent;
 import com.binomed.cineshowtime.client.event.db.TheaterDBEvent;
 import com.binomed.cineshowtime.client.event.service.NearRespNearEvent;
 import com.binomed.cineshowtime.client.event.ui.FavOpenEvent;
-import com.binomed.cineshowtime.client.handler.db.LastRequestHandler;import com.binomed.cineshowtime.client.event.ui.SearchEvent;import com.binomed.cineshowtime.client.handler.db.TheaterDbHandler;
+import com.binomed.cineshowtime.client.event.ui.SearchEvent;
+import com.binomed.cineshowtime.client.handler.db.LastRequestHandler;
+import com.binomed.cineshowtime.client.handler.db.TheaterDbHandler;
 import com.binomed.cineshowtime.client.handler.service.NearRespHandler;
 import com.binomed.cineshowtime.client.handler.ui.FavOpenHandler;
 import com.binomed.cineshowtime.client.handler.ui.SearchHandler;
@@ -83,8 +85,7 @@ public class MainWindow extends Composite {
 		initAndLoading();
 		for (TheaterBean theaterFav : theaterFavList) {
 			// Call the service
-			clientFactory.getCineShowTimeService().requestNearTheatersFromCityName(
-					theaterFav.getPlace().getCityName() + ", " + theaterFav.getPlace().getCountryNameCode(), theaterFav.getId());
+			clientFactory.getCineShowTimeService().requestNearTheatersFromCityName(theaterFav.getPlace().getCityName() + ", " + theaterFav.getPlace().getCountryNameCode(), theaterFav.getId(), -1, theaterFav.getPlace().getCountryNameCode());
 		}
 	}
 
@@ -113,16 +114,14 @@ public class MainWindow extends Composite {
 
 		UserGeolocation.getInstance().getUserGeolocation(new UserGeolocationCallback() {
 			@Override
-			public void onLocationResponse(JsArray<Placemark> locations) {
+			public void onLocationResponse(JsArray<Placemark> locations, LatLng latLng) {
 				if ((locations != null) && (locations.length() > 0)) {
 					clientFactory.getCineShowTimeService().setCurrentCityName(locations.get(0));
+					clientFactory.getCineShowTimeService().requestNearTheatersFromLatLng(latLng.getLatitude(), latLng.getLongitude(), locations.get(0).getCountry());
+				} else {
+					// TODO : Message
+					Window.alert("Error during geolocation !");
 				}
-			}
-
-			@Override
-			public void onLatitudeLongitudeResponse(LatLng latLng) {
-				// Load the favorites
-				clientFactory.getCineShowTimeService().requestNearTheatersFromLatLng(latLng.getLatitude(), latLng.getLongitude());
 			}
 
 			@Override
@@ -130,6 +129,7 @@ public class MainWindow extends Composite {
 				// TODO : Message
 				Window.alert("Error during geolocation !");
 			}
+
 		});
 	}
 
@@ -168,8 +168,6 @@ public class MainWindow extends Composite {
 				// TODO : Message
 				Window.alert("No theater found !");
 			}
-			clientFactory.getDataBaseHelper().writeNearResp(nearResp);
-
 		}
 	};
 
@@ -256,8 +254,7 @@ public class MainWindow extends Composite {
 				initTheatersFav();
 			} else {
 				clientFactory.getEventBusHandler().addHandler(TheaterDBEvent.TYPE, theaterHandler);
-				clientFactory.getDataBaseHelper().getMovies();
-				clientFactory.getDataBaseHelper().getTheaters();
+				clientFactory.getDataBaseHelper().getTheatersAndMovies();
 			}
 
 		}
@@ -280,6 +277,27 @@ public class MainWindow extends Composite {
 		}
 	};
 
-@UiHandler("cleanBtn")	public void onCleanDataBase(ClickEvent event) {		clientFactory.getDataBaseHelper().clean();	}private final SearchHandler searchHandler = new SearchHandler() {		@Override		public void onSearch() {			initAndLoading();		}	};	private void initAndLoading() {		theatersContent.clear();		theatersContent.setSpacing(5);		if (imageLoading == null) {			imageLoading = new Image(CstResource.instance.movie_countdown());		}		theatersContent.add(imageLoading);	}	interface MainWindowUiBinder extends UiBinder<Widget, MainWindow> {
+	@UiHandler("cleanBtn")
+	public void onCleanDataBase(ClickEvent event) {
+		clientFactory.getDataBaseHelper().clean();
+	}
+
+	private final SearchHandler searchHandler = new SearchHandler() {
+		@Override
+		public void onSearch() {
+			initAndLoading();
+		}
+	};
+
+	private void initAndLoading() {
+		theatersContent.clear();
+		theatersContent.setSpacing(5);
+		if (imageLoading == null) {
+			imageLoading = new Image(CstResource.instance.movie_countdown());
+		}
+		theatersContent.add(imageLoading);
+	}
+
+	interface MainWindowUiBinder extends UiBinder<Widget, MainWindow> {
 	}
 }

@@ -28,7 +28,6 @@ public class ParserImdbResultDomXml extends AbstractParser {
 
 		movie.setId(getString(nodeMovie, ATTR_ID));
 		movie.setImdbId(getString(nodeMovie, ATTR_IMDB_ID));
-		movie.setMovieName(getString(nodeMovie, ATTR_MOVIE_NAME));
 		movie.setUrlImg(getString(nodeMovie, ATTR_URL_IMG));
 		movie.setUrlWikipedia(getString(nodeMovie, ATTR_URL_WIKIPEDIA));
 		movie.setRate(getDouble(nodeMovie, ATTR_RATE));
@@ -39,7 +38,7 @@ public class ParserImdbResultDomXml extends AbstractParser {
 
 		Node nodeDesc = ((Element) nodeMovie).getElementsByTagName(NODE_DESC).item(0);
 
-		if (nodeDesc != null) {
+		if (nodeDesc != null && nodeDesc.getChildNodes().getLength() > 0) {
 			movie.setDescription(URL.decodeQueryString(((Text) nodeDesc.getFirstChild()).getData()));
 			movie.setImdbDesrciption(getBoolean(nodeDesc, ATTR_IMDB_DESC));
 		}

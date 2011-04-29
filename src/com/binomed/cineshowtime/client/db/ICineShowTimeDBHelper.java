@@ -27,9 +27,7 @@ public interface ICineShowTimeDBHelper {
 
 	void getTheaterFav();
 
-	void getTheaters();
-
-	void getMovies();
+	void getTheatersAndMovies();
 
 	ArrayList<TheaterBean> getTheaterFavCache();
 
