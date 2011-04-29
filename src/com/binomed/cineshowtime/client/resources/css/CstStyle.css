@@ -7,6 +7,10 @@
 	color: #FFFFFF;
 }
 
+.pointerHand {
+    cursor:pointer;
+}
+
 /* Theater style */
 .theaterPanelHeader {
 	background: rgba(136,136,136,0.2);
