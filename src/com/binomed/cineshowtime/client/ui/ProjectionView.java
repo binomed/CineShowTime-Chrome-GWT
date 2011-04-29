@@ -6,6 +6,7 @@ import java.util.List;
 import com.binomed.cineshowtime.client.model.ProjectionBean;
 import com.binomed.cineshowtime.client.resources.I18N;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.CaptionPanel;
@@ -42,18 +43,21 @@ public class ProjectionView extends Composite {
 			}
 			Date time = new Date(projection.getShowtime());
 			Date timeEnd = new Date(projection.getShowtime() + movieTime);
-			projectionTimeStart = new Label(movieStart.append(time.getHours()).append("h").append(time.getMinutes()).append("m").toString());
-			projectionTimeEnd = new Label(I18N.instance.endProjection() + timeEnd.getHours() + "h" + timeEnd.getMinutes() + "m");
+			projectionTimeStart = new Label(DateTimeFormat.getFormat("HH:mm").format(time));
+			projectionTimeEnd = new Label(I18N.instance.endProjection() + DateTimeFormat.getFormat("HH:mm").format(timeEnd));
 
 			String className = "style.projectionFutur";
+			className = "style.projectionNear";
 			if (time.getTime() < currentTime.getTime()) {
-				className = "style.projectionPassed";
+				className = ".projectionPassed";
+				className = ".projectionNear";
 			} else if (nextShow) {
 				nextShow = false;
-				className = "style.projectionNear";
+				className = "projectionNear";
+				className = "projectionNear";
 			}
 
-			projectionTimeStart.setStyleName(className);
+			projectionTimeStart.setStylePrimaryName(className);
 			projectionTimeEnd.setStyleName(className);
 
 			movieSeanceList.add(projectionTimeStart);

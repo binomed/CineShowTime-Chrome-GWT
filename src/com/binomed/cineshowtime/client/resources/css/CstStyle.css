@@ -71,3 +71,12 @@
     font-weight:normal; 
     color:lightgrey; 
 }
+
+/*GWT Redefinition elements*/
+.gwt-TabPanel { 
+	border-radius: 10px !important;
+}
+
+.gwt-TabPanelBottom {
+
+}

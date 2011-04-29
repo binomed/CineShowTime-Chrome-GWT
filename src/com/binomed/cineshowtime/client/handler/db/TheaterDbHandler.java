@@ -6,7 +6,7 @@ import com.binomed.cineshowtime.client.model.TheaterBean;
 
 public interface TheaterDbHandler extends ErrorDBHandler {
 
-	void theaters(ArrayList<TheaterBean> theaterList);
+	void theaters(ArrayList<TheaterBean> theaterList, boolean isFav);
 
 	void theater(TheaterBean theater);
 

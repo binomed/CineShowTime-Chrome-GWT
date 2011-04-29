@@ -44,6 +44,7 @@
 		<g:south size='2'>
 			<g:HorizontalPanel>
 				<g:HTMLPanel>links...</g:HTMLPanel>
+				<g:Button ui:field="cleanBtn" text="CleanDataBase"></g:Button>
 			</g:HorizontalPanel>
 		</g:south>
 	</g:DockLayoutPanel>

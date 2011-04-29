@@ -1,5 +1,6 @@
 package com.binomed.cineshowtime.client.service.ws;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,12 +11,14 @@ import com.binomed.cineshowtime.client.event.service.NearRespMovieEvent;
 import com.binomed.cineshowtime.client.event.service.NearRespNearEvent;
 import com.binomed.cineshowtime.client.model.MovieBean;
 import com.binomed.cineshowtime.client.model.NearResp;
+import com.binomed.cineshowtime.client.model.RequestBean;
 import com.binomed.cineshowtime.client.parsing.ParserImdbResultDomXml;
 import com.binomed.cineshowtime.client.parsing.ParserNearResultDomXml;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.http.client.URL;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.maps.client.geocode.Placemark;
 
 /**
@@ -32,6 +35,7 @@ public class CineShowTimeWS extends AbstractCineShowTimeWS {
 	private Map<String, MovieBean> movieMap;
 	private final IClientFactory clientFactory;
 	private Placemark currentPlaceMark;
+	private RequestBean request;
 
 	public CineShowTimeWS(IClientFactory clientFactory) {
 		this.clientFactory = clientFactory;
@@ -52,7 +56,14 @@ public class CineShowTimeWS extends AbstractCineShowTimeWS {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put(PARAM_LAT, String.valueOf(latitude));
 		params.put(PARAM_LONG, String.valueOf(longitude));
+		Date currentTime = new Date();
+		params.put(PARAM_CURENT_TIME, String.valueOf(currentTime.getTime()));
+		params.put(PARAM_TIME_ZONE, DateTimeFormat.getFormat("z").format(currentTime));
 		params.put(PARAM_LANG, lang);
+		request = new RequestBean();
+		request.setLatitude(latitude);
+		request.setLongitude(longitude);
+		request.setTime(currentTime);
 		doGet(URL_CONTEXT_SHOWTIME_NEAR, params, new RequestCallback() {
 			@Override
 			public void onResponseReceived(Request request, Response response) {
@@ -86,6 +97,15 @@ public class CineShowTimeWS extends AbstractCineShowTimeWS {
 			params.put(PARAM_THEATER_ID, theaterId);
 		}
 		params.put(PARAM_LANG, lang);
+		Date currentTime = new Date();
+		params.put(PARAM_CURENT_TIME, String.valueOf(currentTime.getTime()));
+		params.put(PARAM_TIME_ZONE, DateTimeFormat.getFormat("z").format(currentTime));
+
+		request = new RequestBean();
+		request.setCityName(cityName);
+		request.setTheaterId(theaterId);
+		request.setTime(currentTime);
+
 		doGet(URL_CONTEXT_SHOWTIME_NEAR, params, new RequestCallback() {
 			@Override
 			public void onResponseReceived(Request request, Response response) {
@@ -139,7 +159,7 @@ public class CineShowTimeWS extends AbstractCineShowTimeWS {
 	 * @param params
 	 *            Parameters
 	 * @param callback
-	 *            Specific Callback
+	 *            Specific http://127.0.0.1:8888/cineshowtime_chrome_gwt/clear.cache.gifCallback
 	 */
 	public void requestImdbInfo(final MovieBean movie, final String ip, final String language, final String place, final String source) {
 		Map<String, String> params = new HashMap<String, String>();
@@ -150,6 +170,9 @@ public class CineShowTimeWS extends AbstractCineShowTimeWS {
 		params.put(HttpParamsCst.PARAM_PLACE, URL.encode(place));
 		params.put(HttpParamsCst.PARAM_TRAILER, "true");
 		params.put(HttpParamsCst.PARAM_MOVIE_ID, movie.getId());
+		Date currentTime = new Date();
+		params.put(PARAM_CURENT_TIME, String.valueOf(currentTime.getTime()));
+		params.put(PARAM_TIME_ZONE, DateTimeFormat.getFormat("z").format(currentTime));
 
 		movie.setState(MovieBean.STATE_IN_PROGRESS);
 		movieMap.put(movie.getId(), movie);
@@ -170,6 +193,13 @@ public class CineShowTimeWS extends AbstractCineShowTimeWS {
 		});
 	}
 
+	public void addMovie(MovieBean movie) {
+		if (movieMap == null) {
+			movieMap = new HashMap<String, MovieBean>();
+		}
+		movieMap.put(movie.getId(), movie);
+	}
+
 	public MovieBean getMovie(String movieId) {
 		if (movieMap == null) {
 			movieMap = new HashMap<String, MovieBean>();
@@ -183,5 +213,9 @@ public class CineShowTimeWS extends AbstractCineShowTimeWS {
 
 	public void setCurrentCityName(Placemark cityName) {
 		this.currentPlaceMark = cityName;
+	}
+
+	public RequestBean getRequest() {
+		return request;
 	}
 }

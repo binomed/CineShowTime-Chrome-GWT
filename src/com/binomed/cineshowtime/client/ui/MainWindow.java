@@ -1,15 +1,19 @@
 package com.binomed.cineshowtime.client.ui;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import com.binomed.cineshowtime.client.IClientFactory;
+import com.binomed.cineshowtime.client.event.db.LastRequestDBEvent;
 import com.binomed.cineshowtime.client.event.db.TheaterDBEvent;
 import com.binomed.cineshowtime.client.event.service.NearRespNearEvent;
 import com.binomed.cineshowtime.client.event.ui.FavOpenEvent;
+import com.binomed.cineshowtime.client.handler.db.LastRequestHandler;
 import com.binomed.cineshowtime.client.handler.db.TheaterDbHandler;
 import com.binomed.cineshowtime.client.handler.service.NearRespHandler;
 import com.binomed.cineshowtime.client.handler.ui.FavOpenHandler;
 import com.binomed.cineshowtime.client.model.NearResp;
+import com.binomed.cineshowtime.client.model.RequestBean;
 import com.binomed.cineshowtime.client.model.TheaterBean;
 import com.binomed.cineshowtime.client.resources.CstResource;
 import com.binomed.cineshowtime.client.service.geolocation.UserGeolocation;
@@ -19,11 +23,14 @@ import com.binomed.cineshowtime.client.ui.widget.MovieTabHeaderWidget;
 import com.google.code.gwt.database.client.service.DataServiceException;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JsArray;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.maps.client.geocode.Placemark;
 import com.google.gwt.maps.client.geom.LatLng;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.TabLayoutPanel;
@@ -45,6 +52,8 @@ public class MainWindow extends Composite {
 	@UiField
 	VerticalPanel theatersContent;
 	Image imageLoading;
+	@UiField
+	Button cleanBtn;
 
 	public MainWindow(IClientFactory clientFactory) {
 		this.clientFactory = clientFactory;
@@ -60,11 +69,11 @@ public class MainWindow extends Composite {
 
 		searchField.setClientFactory(clientFactory);
 
-		initTheatersFav();
-
 		// register to events
 		this.clientFactory.getEventBusHandler().addHandler(FavOpenEvent.TYPE, favOpenHandler);
 		this.clientFactory.getEventBusHandler().addHandler(NearRespNearEvent.TYPE, nearRespHandler);
+		this.clientFactory.getDataBaseHelper().getLastRequest();
+		this.clientFactory.getEventBusHandler().addHandler(LastRequestDBEvent.TYPE, lastRequestHandler);
 	}
 
 	private void initTheatersFav() {
@@ -127,6 +136,16 @@ public class MainWindow extends Composite {
 		service.requestNearTheatersFromLatLng(lat, lng, clientFactory.getLanguage());
 	}
 
+	/*
+	 * ***
+	 * HANDLERS PARTS ****
+	 */
+
+	/*
+	 * 
+	 * Service Handlers
+	 */
+
 	private final NearRespHandler nearRespHandler = new NearRespHandler() {
 
 		@Override
@@ -144,9 +163,15 @@ public class MainWindow extends Composite {
 					theatersContent.add(new TheaterView(clientFactory, theater));
 				}
 			}
+			clientFactory.getDataBaseHelper().writeNearResp(nearResp);
 
 		}
 	};
+
+	/*
+	 * 
+	 * Database Handlers
+	 */
 
 	private final TheaterDbHandler theaterFavHandler = new TheaterDbHandler() {
 
@@ -158,13 +183,15 @@ public class MainWindow extends Composite {
 		}
 
 		@Override
-		public void theaters(ArrayList<TheaterBean> theaterList) {
-			clientFactory.getEventBusHandler().removeHandler(TheaterDBEvent.TYPE, theaterFavHandler);
-			if ((theaterList != null) && (theaterList.size() > 0)) {
-				showTheaterFav(theaterList);
-			} else {
-				// Load intial content
-				loadTheatersOfUserLocation();
+		public void theaters(ArrayList<TheaterBean> theaterList, boolean isFav) {
+			if (isFav) {
+				clientFactory.getEventBusHandler().removeHandler(TheaterDBEvent.TYPE, theaterFavHandler);
+				if ((theaterList != null) && (theaterList.size() > 0)) {
+					showTheaterFav(theaterList);
+				} else {
+					// Load intial content
+					loadTheatersOfUserLocation();
+				}
 			}
 
 		}
@@ -175,6 +202,66 @@ public class MainWindow extends Composite {
 
 		}
 	};
+
+	private final TheaterDbHandler theaterHandler = new TheaterDbHandler() {
+
+		@Override
+		public void onError(DataServiceException exception) {
+			Window.alert("Error=" + exception.getMessage());
+		}
+
+		@Override
+		public void theaters(ArrayList<TheaterBean> theaterList, boolean isFav) {
+			if (!isFav) {
+				clientFactory.getEventBusHandler().removeHandler(TheaterDBEvent.TYPE, theaterHandler);
+				theatersContent.remove(imageLoading);
+				if (theaterList != null) {
+					for (TheaterBean theater : theaterList) {
+						theatersContent.add(new TheaterView(clientFactory, theater));
+					}
+				}
+			}
+		}
+
+		@Override
+		public void theater(TheaterBean theater) {
+		}
+	};
+
+	private final LastRequestHandler lastRequestHandler = new LastRequestHandler() {
+
+		@Override
+		public void onLastRequest(RequestBean request) {
+			clientFactory.getEventBusHandler().removeHandler(LastRequestDBEvent.TYPE, lastRequestHandler);
+			boolean relaunchRequest = false;
+			if (request.isNullResult()) {
+				relaunchRequest = true;
+			} else {
+				Date curentTime = new Date();
+				if ((curentTime.getDay() != request.getTime().getDay() //
+						)
+						|| (curentTime.getMonth() != request.getTime().getMonth() //
+						) || (curentTime.getYear() != request.getTime().getYear() //
+						)) {
+					relaunchRequest = true;
+				}
+			}
+
+			if (relaunchRequest) {
+				initTheatersFav();
+			} else {
+				clientFactory.getEventBusHandler().addHandler(TheaterDBEvent.TYPE, theaterHandler);
+				clientFactory.getDataBaseHelper().getMovies();
+				clientFactory.getDataBaseHelper().getTheaters();
+			}
+
+		}
+	};
+
+	/*
+	 * 
+	 * UI Handlers
+	 */
 
 	private final FavOpenHandler favOpenHandler = new FavOpenHandler() {
 
@@ -187,6 +274,11 @@ public class MainWindow extends Composite {
 
 		}
 	};
+
+	@UiHandler("cleanBtn")
+	public void onCleanDataBase(ClickEvent event) {
+		clientFactory.getDataBaseHelper().clean();
+	}
 
 	interface MainWindowUiBinder extends UiBinder<Widget, MainWindow> {
 	}

@@ -13,10 +13,12 @@ public class TheaterDBEvent extends BeanEvent<TheaterBean, TheaterDbHandler> {
 	public static GwtEvent.Type<TheaterDbHandler> TYPE = new Type<TheaterDbHandler>();
 
 	private ArrayList<TheaterBean> theaterList;
+	private boolean isFav;
 
-	public TheaterDBEvent(ArrayList<TheaterBean> theaterList) {
+	public TheaterDBEvent(ArrayList<TheaterBean> theaterList, boolean isFav) {
 		super((TheaterBean) null);
 		this.theaterList = theaterList;
+		this.isFav = isFav;
 	}
 
 	public TheaterDBEvent(TheaterBean movie) {
@@ -37,7 +39,7 @@ public class TheaterDBEvent extends BeanEvent<TheaterBean, TheaterDbHandler> {
 		if (getBean() != null) {
 			handler.theater(getBean());
 		} else if (theaterList != null) {
-			handler.theaters(theaterList);
+			handler.theaters(theaterList, isFav);
 		} else if (getException() != null) {
 			handler.onError((DataServiceException) getException());
 		}
