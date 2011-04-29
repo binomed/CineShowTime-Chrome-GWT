@@ -18,6 +18,7 @@ import com.binomed.cineshowtime.client.resources.I18N;
 import com.binomed.cineshowtime.client.ui.coverflow.CoverData;
 import com.binomed.cineshowtime.client.ui.coverflow.Coverflow;
 import com.binomed.cineshowtime.client.ui.coverflow.event.ClickCoverListener;
+import com.binomed.cineshowtime.client.ui.coverflow.layout.SimpleCoverflowLayout;
 import com.binomed.cineshowtime.client.ui.dialog.VideoDialog;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -33,6 +34,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class MovieView extends Composite {
 
+	private final String idMovie;
 	private static MovieViewUiBinder uiBinder = GWT.create(MovieViewUiBinder.class);
 	private final TheaterBean theater;
 	private MovieBean movie;
@@ -59,6 +61,7 @@ public class MovieView extends Composite {
 
 	public MovieView(final TheaterBean theater, final String idMovie, IClientFactory clientFactory) {
 		this.theater = theater;
+		this.idMovie = idMovie;
 		this.clientFactory = clientFactory;
 
 		// Initialization
@@ -147,7 +150,7 @@ public class MovieView extends Composite {
 
 		// Add the coverflow
 		if (movie.getYoutubeVideos() != null) {
-			coverflow = new Coverflow(800, 300);
+			coverflow = new Coverflow(800, 300, new SimpleCoverflowLayout());
 			coverflow.addClickCoverListener(movieOpenListener);
 			final List<CoverData> coversData = new ArrayList<CoverData>();
 			for (YoutubeBean video : movie.getYoutubeVideos()) {
@@ -220,6 +223,10 @@ public class MovieView extends Composite {
 
 		}
 	};
+
+	public String getIdMovie() {
+		return idMovie;
+	}
 
 	interface MovieViewUiBinder extends UiBinder<Widget, MovieView> {
 	}

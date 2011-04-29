@@ -14,6 +14,7 @@ import com.binomed.cineshowtime.client.model.NearResp;
 import com.binomed.cineshowtime.client.model.RequestBean;
 import com.binomed.cineshowtime.client.parsing.ParserImdbResultDomXml;
 import com.binomed.cineshowtime.client.parsing.ParserNearResultDomXml;
+import com.binomed.cineshowtime.client.util.LocaleUtils;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
@@ -48,18 +49,17 @@ public class CineShowTimeWS extends AbstractCineShowTimeWS {
 	 *            Latitude parameter
 	 * @param longitude
 	 *            Longitude parameter
-	 * @param lang
 	 * @param callback
 	 *            Specific Callback
 	 */
-	public void requestNearTheatersFromLatLng(double latitude, double longitude, String lang) {
+	public void requestNearTheatersFromLatLng(double latitude, double longitude) {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put(PARAM_LAT, String.valueOf(latitude));
 		params.put(PARAM_LONG, String.valueOf(longitude));
+		params.put(PARAM_LANG, LocaleUtils.getLocale());
 		Date currentTime = new Date();
 		params.put(PARAM_CURENT_TIME, String.valueOf(currentTime.getTime()));
 		params.put(PARAM_TIME_ZONE, DateTimeFormat.getFormat("z").format(currentTime));
-		params.put(PARAM_LANG, lang);
 		request = new RequestBean();
 		request.setLatitude(latitude);
 		request.setLongitude(longitude);
@@ -86,17 +86,14 @@ public class CineShowTimeWS extends AbstractCineShowTimeWS {
 	 *            The cityName parameter
 	 * @param theaterId
 	 *            the theaterId (optionnal)
-	 * @param lang
-	 * @param callback
-	 *            Specific Callback
 	 */
-	public void requestNearTheatersFromCityName(String cityName, final String theaterId, String lang) {
+	public void requestNearTheatersFromCityName(String cityName, final String theaterId) {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put(PARAM_PLACE, cityName);
 		if (theaterId != null) {
 			params.put(PARAM_THEATER_ID, theaterId);
 		}
-		params.put(PARAM_LANG, lang);
+		params.put(PARAM_LANG, LocaleUtils.getLocale());
 		Date currentTime = new Date();
 		params.put(PARAM_CURENT_TIME, String.valueOf(currentTime.getTime()));
 		params.put(PARAM_TIME_ZONE, DateTimeFormat.getFormat("z").format(currentTime));
@@ -129,12 +126,37 @@ public class CineShowTimeWS extends AbstractCineShowTimeWS {
 	}
 
 	/**
+	 * Return nearest theaters following search parameters
+	 */
+	public void requestNearTheatersForSearch(String cityName, final long time) {
+		Map<String, String> params = new HashMap<String, String>();
+		if (cityName != null) {
+			params.put(PARAM_PLACE, cityName);
+		}
+		if (time != -1) {
+			params.put(PARAM_CURENT_TIME, String.valueOf(time));
+		}
+		params.put(PARAM_LANG, LocaleUtils.getLocale());
+		doGet(URL_CONTEXT_SHOWTIME_NEAR, params, new RequestCallback() {
+			@Override
+			public void onResponseReceived(Request request, Response response) {
+				NearResp resp = ParserNearResultDomXml.parseResult(response.getText());
+				if (movieMap == null) {
+					movieMap = new HashMap<String, MovieBean>();
+				}
+				movieMap = resp.getMapMovies();
+				clientFactory.getEventBusHandler().fireEvent(new NearRespNearEvent(resp));
+			}
+
+			@Override
+			public void onError(Request request, Throwable exception) {
+				clientFactory.getEventBusHandler().fireEvent(new NearRespNearEvent(exception));
+			}
+		});
+	}
+
+	/**
 	 * Return Movie info following given parameters
-	 * 
-	 * @param params
-	 *            Parameters
-	 * @param callback
-	 *            Specific Callback
 	 */
 	public void requestMovie(Map<String, String> params, final String source) {
 		doGet(URL_CONTEXT_SHOWTIME_MOVIE, params, new RequestCallback() {
@@ -159,7 +181,7 @@ public class CineShowTimeWS extends AbstractCineShowTimeWS {
 	 * @param params
 	 *            Parameters
 	 * @param callback
-	 *            Specific http://127.0.0.1:8888/cineshowtime_chrome_gwt/clear.cache.gifCallback
+	 *            Specific Callback
 	 */
 	public void requestImdbInfo(final MovieBean movie, final String ip, final String language, final String place, final String source) {
 		Map<String, String> params = new HashMap<String, String>();

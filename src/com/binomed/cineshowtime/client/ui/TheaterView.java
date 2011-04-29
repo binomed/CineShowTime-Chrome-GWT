@@ -17,6 +17,7 @@ import com.binomed.cineshowtime.client.service.ws.CineShowTimeWS;
 import com.binomed.cineshowtime.client.ui.coverflow.CoverData;
 import com.binomed.cineshowtime.client.ui.coverflow.Coverflow;
 import com.binomed.cineshowtime.client.ui.coverflow.event.ClickCoverListener;
+import com.binomed.cineshowtime.client.ui.coverflow.layout.BetterCoverflowLayout;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.OpenEvent;
 import com.google.gwt.event.logical.shared.OpenHandler;
@@ -67,7 +68,7 @@ public class TheaterView extends Composite {
 					isCoverflowLoaded = true;
 
 					// Add the coverflow
-					coverflow = new Coverflow(800, 300);
+					coverflow = new Coverflow(800, 300, new BetterCoverflowLayout());
 					coverflow.addClickCoverListener(movieOpenListener);
 
 					CineShowTimeWS service = clientFactory.getCineShowTimeService();

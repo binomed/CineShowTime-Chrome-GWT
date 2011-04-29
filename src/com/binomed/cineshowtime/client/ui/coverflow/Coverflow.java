@@ -7,7 +7,6 @@ import java.util.Map;
 import com.binomed.cineshowtime.client.resources.CstResource;
 import com.binomed.cineshowtime.client.ui.coverflow.event.ClickCoverListener;
 import com.binomed.cineshowtime.client.ui.coverflow.event.CoverflowMouseEvent;
-import com.binomed.cineshowtime.client.ui.coverflow.layout.BetterCoverflowLayout;
 import com.binomed.cineshowtime.client.ui.coverflow.layout.CoverflowLayout;
 import com.binomed.cineshowtime.client.ui.coverflow.layout.SimpleCoverflowLayout;
 import com.binomed.cineshowtime.client.util.StringUtils;
@@ -31,13 +30,14 @@ public class Coverflow {
 	private String idFirstCover;
 	private String idMiddleCover;
 
-	private final CoverflowLayout dispo = new BetterCoverflowLayout();
+	private final CoverflowLayout layout;
 
 	private ClickCoverListener clickCoverListener;
 
-	public Coverflow(int width, int height) {
-		coverflowCanvas = new GWTCoverflowCanvas(width, height);
+	public Coverflow(int width, int height, CoverflowLayout layout) {
+		this.coverflowCanvas = new GWTCoverflowCanvas(width, height);
 		this.covers = new HashMap<String, CoverElement>();
+		this.layout = layout;
 	}
 
 	public void addClickCoverListener(ClickCoverListener clickCoverListener) {
@@ -46,9 +46,7 @@ public class Coverflow {
 
 	/**
 	 * Initialize the coverflow with covers
-	 * 
-	 * @param covers
-	 *            All Covers elements with an unique String ID as key Images URLs
+	 * @param covers All Covers elements with an unique String ID as key Images URLs
 	 */
 	public void init(final List<CoverData> coversData) {
 		// Initialize Coverflow data
@@ -61,7 +59,7 @@ public class Coverflow {
 			}
 			covers.put(coverData.getId(), new CoverElement(coverData));
 		}
-		dispo.onInitCovers(covers);
+		layout.onInitCovers(covers);
 
 		// Add coverflow move listener
 		coverflowCanvas.setMouseMoveEvent(new CoverflowMouseEvent() {
@@ -103,11 +101,8 @@ public class Coverflow {
 
 	/**
 	 * Change the image of the specified cover (by the index)
-	 * 
-	 * @param index
-	 *            Index of the cover
-	 * @param imageUrl
-	 *            Image URL of the cover
+	 * @param index Index of the cover
+	 * @param imageUrl Image URL of the cover
 	 */
 	public void updateCover(String idCover, String imageUrl) {
 		if (StringUtils.isEmpty(imageUrl)) {
@@ -136,9 +131,7 @@ public class Coverflow {
 
 	/**
 	 * Move the specified cover id to the center of the coverflow
-	 * 
-	 * @param coverIndex
-	 *            Index of the cover
+	 * @param coverIndex Index of the cover
 	 */
 	private void moveToCover(String idCover) {
 		// Compute image center & move distance
@@ -160,11 +153,8 @@ public class Coverflow {
 	/**
 	 * Animate the coverflow moves <br/>
 	 * http://www.html5canvastutorials.com/advanced/html5-canvas-linear-motion-animation/
-	 * 
-	 * @param direction
-	 *            Direction of the coverflow
-	 * @param distance
-	 *            Distance to animate
+	 * @param direction Direction of the coverflow
+	 * @param distance Distance to animate
 	 */
 	private void animateCoverflow(final int direction, final int distance) {
 		if (covers.containsKey(idFirstCover)) {
@@ -193,7 +183,7 @@ public class Coverflow {
 					}
 
 					// Compute next covers X coordonates
-					dispo.onUpdateCovers(idCoverCentered, covers, totalTranslateX);
+					layout.onUpdateCovers(idCoverCentered, covers, totalTranslateX);
 				}
 
 				@Override
@@ -209,7 +199,7 @@ public class Coverflow {
 
 	public void drawCoverflow() {
 		coverflowCanvas.clearCanvas();
-		dispo.onDrawCovers(coverflowCanvas, covers);
+		layout.onDrawCovers(coverflowCanvas, covers);
 		drawCoverflowWidget();
 		coverflowCanvas.setFrontGradient();
 	}

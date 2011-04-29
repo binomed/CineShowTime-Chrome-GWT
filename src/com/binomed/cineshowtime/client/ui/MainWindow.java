@@ -8,18 +8,18 @@ import com.binomed.cineshowtime.client.event.db.LastRequestDBEvent;
 import com.binomed.cineshowtime.client.event.db.TheaterDBEvent;
 import com.binomed.cineshowtime.client.event.service.NearRespNearEvent;
 import com.binomed.cineshowtime.client.event.ui.FavOpenEvent;
-import com.binomed.cineshowtime.client.handler.db.LastRequestHandler;
-import com.binomed.cineshowtime.client.handler.db.TheaterDbHandler;
+import com.binomed.cineshowtime.client.handler.db.LastRequestHandler;import com.binomed.cineshowtime.client.event.ui.SearchEvent;import com.binomed.cineshowtime.client.handler.db.TheaterDbHandler;
 import com.binomed.cineshowtime.client.handler.service.NearRespHandler;
 import com.binomed.cineshowtime.client.handler.ui.FavOpenHandler;
+import com.binomed.cineshowtime.client.handler.ui.SearchHandler;
 import com.binomed.cineshowtime.client.model.NearResp;
 import com.binomed.cineshowtime.client.model.RequestBean;
 import com.binomed.cineshowtime.client.model.TheaterBean;
 import com.binomed.cineshowtime.client.resources.CstResource;
 import com.binomed.cineshowtime.client.service.geolocation.UserGeolocation;
 import com.binomed.cineshowtime.client.service.geolocation.UserGeolocationCallback;
-import com.binomed.cineshowtime.client.service.ws.CineShowTimeWS;
 import com.binomed.cineshowtime.client.ui.widget.MovieTabHeaderWidget;
+import com.binomed.cineshowtime.client.util.StringUtils;
 import com.google.code.gwt.database.client.service.DataServiceException;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JsArray;
@@ -59,17 +59,10 @@ public class MainWindow extends Composite {
 		this.clientFactory = clientFactory;
 		// Initialization
 		initWidget(uiBinder.createAndBindUi(this));
-
-		// Manage UI Style
-		theatersContent.setSpacing(5);
-		imageLoading = new Image(CstResource.instance.movie_countdown());
-		theatersContent.add(imageLoading);
-
-		// Manage intialization
-
 		searchField.setClientFactory(clientFactory);
-
+		initAndLoading();
 		// register to events
+		this.clientFactory.getEventBusHandler().addHandler(SearchEvent.TYPE, searchHandler);
 		this.clientFactory.getEventBusHandler().addHandler(FavOpenEvent.TYPE, favOpenHandler);
 		this.clientFactory.getEventBusHandler().addHandler(NearRespNearEvent.TYPE, nearRespHandler);
 		this.clientFactory.getDataBaseHelper().getLastRequest();
@@ -84,27 +77,36 @@ public class MainWindow extends Composite {
 		} else {
 			showTheaterFav(theaterFavList);
 		}
-
 	}
 
 	private void showTheaterFav(ArrayList<TheaterBean> theaterFavList) {
-		theatersContent.clear();
-		// Manage UI Style
-		theatersContent.setSpacing(5);
-		imageLoading = new Image(CstResource.instance.movie_countdown());
-		theatersContent.add(imageLoading);
+		initAndLoading();
 		for (TheaterBean theaterFav : theaterFavList) {
-			// clientFactory.getDataBaseHelper().removeFav(theaterFav);
 			// Call the service
-			clientFactory.getCineShowTimeService().requestNearTheatersFromCityName(theaterFav.getPlace().getCityName() + ", " + theaterFav.getPlace().getCountryNameCode(), theaterFav.getId(), clientFactory.getLanguage());
+			clientFactory.getCineShowTimeService().requestNearTheatersFromCityName(
+					theaterFav.getPlace().getCityName() + ", " + theaterFav.getPlace().getCountryNameCode(), theaterFav.getId());
 		}
 	}
 
 	public void addMovieTab(TheaterBean theater, String idMovie) {
-		MovieView movieView = new MovieView(theater, idMovie, clientFactory);
-		appBodyPanel.add(movieView, new MovieTabHeaderWidget(movieView.getMovie().getMovieName(), movieView, appBodyPanel));
-		appBodyPanel.addStyleName("gwt-TabPanel");
-		appBodyPanel.selectTab(movieView);
+		int index = getMovieTabIfExist(idMovie);
+		if (index == -1) {
+			MovieView movieView = new MovieView(theater, idMovie, clientFactory);
+			appBodyPanel.add(movieView, new MovieTabHeaderWidget(movieView.getMovie().getMovieName(), movieView, appBodyPanel));
+			appBodyPanel.selectTab(movieView);
+		} else {
+			appBodyPanel.selectTab(index);
+		}
+	}
+
+	private int getMovieTabIfExist(String idMovie) {
+		for (int i = 0; i < appBodyPanel.getWidgetCount(); i++) {
+			if (appBodyPanel.getWidget(i) instanceof MovieView //
+					&& StringUtils.equalsIC(((MovieView) appBodyPanel.getWidget(i)).getIdMovie(), idMovie)) {
+				return i;
+			}
+		}
+		return -1;
 	}
 
 	private void loadTheatersOfUserLocation() {
@@ -120,20 +122,15 @@ public class MainWindow extends Composite {
 			@Override
 			public void onLatitudeLongitudeResponse(LatLng latLng) {
 				// Load the favorites
-				loadTheaters(latLng.getLatitude(), latLng.getLongitude());
+				clientFactory.getCineShowTimeService().requestNearTheatersFromLatLng(latLng.getLatitude(), latLng.getLongitude());
 			}
 
 			@Override
 			public void onError() {
+				// TODO : Message
 				Window.alert("Error during geolocation !");
 			}
 		});
-	}
-
-	private void loadTheaters(double lat, double lng) {
-		CineShowTimeWS service = clientFactory.getCineShowTimeService();
-		// Call the service
-		service.requestNearTheatersFromLatLng(lat, lng, clientFactory.getLanguage());
 	}
 
 	/*
@@ -151,17 +148,25 @@ public class MainWindow extends Composite {
 		@Override
 		public void onError(Throwable error) {
 			theatersContent.remove(imageLoading);
+			// TODO : Message
 			Window.alert("Error=" + error.getMessage());
 
 		}
 
 		@Override
 		public void onNearResp(NearResp nearResp) {
+			// Remove loading image
 			theatersContent.remove(imageLoading);
+			// Remove previous theater list
+			theatersContent.clear();
+			// Display theaters
 			if (nearResp != null) {
 				for (TheaterBean theater : nearResp.getTheaterList()) {
 					theatersContent.add(new TheaterView(clientFactory, theater));
 				}
+			} else {
+				// TODO : Message
+				Window.alert("No theater found !");
 			}
 			clientFactory.getDataBaseHelper().writeNearResp(nearResp);
 
@@ -177,8 +182,8 @@ public class MainWindow extends Composite {
 
 		@Override
 		public void onError(DataServiceException exception) {
-			// TODO Auto-generated method stub
 			clientFactory.getEventBusHandler().removeHandler(TheaterDBEvent.TYPE, theaterFavHandler);
+			// TODO : Message
 			Window.alert("Error=" + exception.getMessage());
 		}
 
@@ -275,11 +280,6 @@ public class MainWindow extends Composite {
 		}
 	};
 
-	@UiHandler("cleanBtn")
-	public void onCleanDataBase(ClickEvent event) {
-		clientFactory.getDataBaseHelper().clean();
-	}
-
-	interface MainWindowUiBinder extends UiBinder<Widget, MainWindow> {
+@UiHandler("cleanBtn")	public void onCleanDataBase(ClickEvent event) {		clientFactory.getDataBaseHelper().clean();	}private final SearchHandler searchHandler = new SearchHandler() {		@Override		public void onSearch() {			initAndLoading();		}	};	private void initAndLoading() {		theatersContent.clear();		theatersContent.setSpacing(5);		if (imageLoading == null) {			imageLoading = new Image(CstResource.instance.movie_countdown());		}		theatersContent.add(imageLoading);	}	interface MainWindowUiBinder extends UiBinder<Widget, MainWindow> {
 	}
 }

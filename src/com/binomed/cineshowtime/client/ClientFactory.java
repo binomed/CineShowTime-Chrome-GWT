@@ -5,6 +5,7 @@ import com.binomed.cineshowtime.client.db.CineShowTimeDataBase;
 import com.binomed.cineshowtime.client.db.ICineShowTimeDBHelper;
 import com.binomed.cineshowtime.client.service.ws.CineShowTimeWS;
 import com.binomed.cineshowtime.client.ui.MainWindow;
+import com.binomed.cineshowtime.client.util.LocaleUtils;
 import com.google.code.gwt.database.client.Database;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerManager;
@@ -44,7 +45,7 @@ public class ClientFactory implements IClientFactory {
 
 	@Override
 	public String getLanguage() {
-		return "fr";
+		return LocaleUtils.getLocale();
 	}
 
 	@Override
@@ -56,4 +57,5 @@ public class ClientFactory implements IClientFactory {
 	public ICineShowTimeDBHelper getDataBaseHelper() {
 		return dataBaseHelper;
 	}
+
 }

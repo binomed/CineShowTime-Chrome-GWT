@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.binomed.cineshowtime.client.ui.coverflow.CoverData;
 import com.binomed.cineshowtime.client.ui.coverflow.Coverflow;
+import com.binomed.cineshowtime.client.ui.coverflow.layout.BetterCoverflowLayout;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
@@ -28,7 +29,7 @@ public class CineShowTime_Chrome_GWT implements EntryPoint {
 	}
 
 	public void testCoverflow() {
-		Coverflow c = new Coverflow(800, 300);
+		Coverflow c = new Coverflow(800, 300, new BetterCoverflowLayout());
 
 		List<CoverData> covers = new ArrayList<CoverData>();
 		covers.add(new SimpleCover("1", "Affiche 1", "http://www.google.com/logos/2011/peruelection11-hp.jpg"));
