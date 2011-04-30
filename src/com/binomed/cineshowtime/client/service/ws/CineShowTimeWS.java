@@ -1,5 +1,6 @@
 package com.binomed.cineshowtime.client.service.ws;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,6 +13,7 @@ import com.binomed.cineshowtime.client.event.service.NearRespNearEvent;
 import com.binomed.cineshowtime.client.model.MovieBean;
 import com.binomed.cineshowtime.client.model.NearResp;
 import com.binomed.cineshowtime.client.model.RequestBean;
+import com.binomed.cineshowtime.client.model.TheaterBean;
 import com.binomed.cineshowtime.client.parsing.ParserImdbResultDomXml;
 import com.binomed.cineshowtime.client.parsing.ParserNearResultDomXml;
 import com.binomed.cineshowtime.client.util.LocaleUtils;
@@ -52,8 +54,9 @@ public class CineShowTimeWS extends AbstractCineShowTimeWS {
 	 * @param callback
 	 *            Specific Callback
 	 */
-	public void requestNearTheatersFromLatLng(double latitude, double longitude, String lang) {
+	public void requestNearTheatersFromLatLng(double latitude, double longitude, String lang, int day) {
 		Map<String, String> params = new HashMap<String, String>();
+		params.put(PARAM_DAY, String.valueOf(day));
 		params.put(PARAM_LAT, String.valueOf(latitude));
 		params.put(PARAM_LONG, String.valueOf(longitude));
 		params.put(PARAM_LANG, lang != null ? lang.toLowerCase() : LocaleUtils.getLocale());
@@ -88,12 +91,9 @@ public class CineShowTimeWS extends AbstractCineShowTimeWS {
 	 * @param theaterId
 	 *            the theaterId (optionnal)
 	 */
-	public void requestNearTheatersFromCityName(String cityName, final String theaterId, final int day, String lang) {
+	public void requestNearTheatersFromCityName(String cityName, final int day, String lang) {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put(PARAM_PLACE, cityName);
-		if (theaterId != null) {
-			params.put(PARAM_THEATER_ID, theaterId);
-		}
 		if (day != -1) {
 			params.put(PARAM_DAY, String.valueOf(day));
 		}
@@ -104,7 +104,6 @@ public class CineShowTimeWS extends AbstractCineShowTimeWS {
 
 		request = new RequestBean();
 		request.setCityName(cityName);
-		request.setTheaterId(theaterId);
 		request.setTime(currentTime);
 
 		doGet(URL_CONTEXT_SHOWTIME_NEAR, params, new RequestCallback() {
@@ -114,11 +113,7 @@ public class CineShowTimeWS extends AbstractCineShowTimeWS {
 				if (movieMap == null) {
 					movieMap = new HashMap<String, MovieBean>();
 				}
-				if (theaterId != null) {
-					movieMap.putAll(resp.getMapMovies());
-				} else {
-					movieMap = resp.getMapMovies();
-				}
+				movieMap = resp.getMapMovies();
 				clientFactory.getDataBaseHelper().writeNearResp(resp);
 				clientFactory.getEventBusHandler().fireEvent(new NearRespNearEvent(resp));
 			}
@@ -128,6 +123,67 @@ public class CineShowTimeWS extends AbstractCineShowTimeWS {
 				clientFactory.getEventBusHandler().fireEvent(new NearRespNearEvent(exception));
 			}
 		});
+	}
+
+	/**
+	 * Return nearest theaters following latitude and longitude
+	 * 
+	 * @param cityName
+	 *            The cityName parameter
+	 * @param theaterId
+	 *            the theaterId (optionnal)
+	 */
+	public void requestNearTheatersFromFav(ArrayList<TheaterBean> theaterFavList, int day) {
+		final int nbRequest = theaterFavList.size();
+		final NearResp finalNearResp = new NearResp();
+		finalNearResp.setTheaterList(new ArrayList<TheaterBean>());
+		finalNearResp.setMapMovies(new HashMap<String, MovieBean>());
+		finalNearResp.setNearResp(true);
+
+		RequestCallback callBack = new RequestCallback() {
+			private int compt = 0;
+
+			@Override
+			public void onResponseReceived(Request request, Response response) {
+				NearResp resp = ParserNearResultDomXml.parseResult(response.getText());
+				finalNearResp.getTheaterList().addAll(resp.getTheaterList());
+				finalNearResp.getMapMovies().putAll(resp.getMapMovies());
+
+				compt++;
+				if (compt == nbRequest) {
+					movieMap = finalNearResp.getMapMovies();
+					clientFactory.getDataBaseHelper().writeNearResp(finalNearResp);
+					clientFactory.getEventBusHandler().fireEvent(new NearRespNearEvent(finalNearResp));
+				}
+
+			}
+
+			@Override
+			public void onError(Request request, Throwable exception) {
+				compt++;
+				clientFactory.getEventBusHandler().fireEvent(new NearRespNearEvent(exception));
+			}
+		};
+		Map<String, String> params = new HashMap<String, String>();
+		String cityName = null;
+		String lang = null;
+		Date currentTime = new Date();
+		for (TheaterBean theaterFav : theaterFavList) {
+			params.clear();
+			cityName = theaterFav.getPlace().getCityName() + ", " + theaterFav.getPlace().getCountryNameCode();
+			lang = theaterFav.getPlace().getCountryNameCode();
+			params.put(PARAM_DAY, String.valueOf(day));
+			params.put(PARAM_PLACE, cityName);
+			params.put(PARAM_THEATER_ID, theaterFav.getId());
+			params.put(PARAM_LANG, lang != null ? lang.toLowerCase() : LocaleUtils.getLocale());
+			params.put(PARAM_CURENT_TIME, String.valueOf(currentTime.getTime()));
+			params.put(PARAM_TIME_ZONE, DateTimeFormat.getFormat("z").format(currentTime));
+
+			doGet(URL_CONTEXT_SHOWTIME_NEAR, params, callBack);
+		}
+		request = new RequestBean();
+		request.setFavSearch(true);
+		request.setTime(currentTime);
 	}
 
 	/**
@@ -222,5 +278,9 @@ public class CineShowTimeWS extends AbstractCineShowTimeWS {
 
 	public RequestBean getRequest() {
 		return request;
+	}
+
+	public void setRequest(RequestBean request) {
+		this.request = request;
 	}
 }

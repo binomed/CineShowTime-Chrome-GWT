@@ -52,12 +52,25 @@ public interface CineShowTimeDataBase extends DataService, CineshowtimeDbCst {
 	@Update(DATABASE_CREATE_LAST_CHANGE_TABLE)
 	void initTableLastChange(VoidCallback callBack);
 
+	@Update(DATABASE_CREATE_VERSION_TABLE)
+	void initTableVersion(VoidCallback callBack);
+
 	/*
 	 * 
 	 * SQL PART
 	 * 
 	 * INSERT PART
 	 */
+
+	@Update("INSERT INTO  " + DATABASE_VERSION_TABLE //
+			+ " (" + KEY_VERSION_DB //
+			+ ", " + KEY_VERSION_APP //
+			+ ") values(" //
+			+ "{versionDb}" //
+			+ ",{versionApp}" //
+			+ ")"//
+	)
+	void createVersion(int versionDb, String versionApp, RowIdListCallback callback);
 
 	@Update("INSERT INTO  " + DATABASE_FAV_THEATER_TABLE //
 			+ " (" + KEY_FAV_TH_THEATER_ID //
@@ -88,8 +101,9 @@ public interface CineShowTimeDataBase extends DataService, CineshowtimeDbCst {
 			+ ", " + KEY_REQUEST_TIME //
 			+ ", " + KEY_REQUEST_NULL_RESULT//
 			+ ", " + KEY_REQUEST_NEAR_RESP //
-			+ ") VALUES({cityName},{movieName},{theaterId},{latitude},{longitude},{time},{nullResult},{nearResp}) ")
-	void createMovieRequest(String cityName, String movieName, Double latitude, Double longitude, String theaterId, Integer nullResult, Integer nearResp, Double time, RowIdListCallback callBack);
+			+ ", " + KEY_REQUEST_FAV_REQUEST //
+			+ ") VALUES({cityName},{movieName},{theaterId},{latitude},{longitude},{time},{nullResult},{nearResp}, {favRequest}) ")
+	void createMovieRequest(String cityName, String movieName, Double latitude, Double longitude, String theaterId, Integer nullResult, Integer nearResp, Integer favRequest, Double time, RowIdListCallback callBack);
 
 	@Update("INSERT INTO " + DATABASE_THEATERS_TABLE //
 			+ " (" + KEY_THEATER_ID //
@@ -344,6 +358,10 @@ public interface CineShowTimeDataBase extends DataService, CineshowtimeDbCst {
 			+ " FROM " + DATABASE_VIDEO_TABLE)
 	void fetchAllVideos(ListCallback<GenericRow> callBack);
 
+	@Select("SELECT * " //
+			+ " FROM " + DATABASE_LAST_CHANGE_TABLE)
+	void fetchLastChange(ListCallback<GenericRow> callBack);
+
 	/*
 	 * SQL Part
 	 * 
@@ -362,26 +380,44 @@ public interface CineShowTimeDataBase extends DataService, CineshowtimeDbCst {
 	@Update("DELETE FROM " + DATABASE_LOCATION_TABLE)
 	void deleteLocation(VoidCallback callBack);
 
+	@Update("DELETE FROM " + DATABASE_LAST_CHANGE_TABLE)
+	void deleteLastChange(VoidCallback callBack);
+
+	@Update("DELETE FROM " + DATABASE_VERSION_TABLE)
+	void deleteVersion(VoidCallback callBack);
+
 	@Update("DELETE FROM " + DATABASE_FAV_THEATER_TABLE + " WHERE " + KEY_FAV_TH_THEATER_ID + " = {theaterId}")
 	void deleteFavorite(String theaterId, VoidCallback callBack);
 
 	@Update("DELETE FROM " + DATABASE_PREFERENCES_TABLE + " WHERE " + KEY_PREFERENCE_KEY + " = {key}")
 	void deletePreference(String key, VoidCallback callBack);
 
-	@Update(sql = "DELETE FROM " + DATABASE_MOVIE_TABLE + " WHERE " + KEY_MOVIE_ID + " NOT IN = ({movieIdList})")
+	@Update(sql = "DELETE FROM " + DATABASE_MOVIE_TABLE + " WHERE " + KEY_MOVIE_ID + " NOT IN ({movieIdList})")
 	void deleteMovies(String movieIdList, VoidCallback callBack);
+
+	@Update(sql = "DELETE FROM " + DATABASE_MOVIE_TABLE)
+	void deleteMovies(VoidCallback callBack);
 
 	@Update(sql = "DELETE FROM " + DATABASE_MOVIE_TABLE + " WHERE " + KEY_MOVIE_ID + " = {movieId}")
 	void deleteMovie(String movieId, VoidCallback callBack);
 
-	@Update(sql = "DELETE FROM " + DATABASE_REVIEW_TABLE + " WHERE " + KEY_REVIEW_MOVIE_MID + " NOT IN = ({movieIdList})")
+	@Update(sql = "DELETE FROM " + DATABASE_REVIEW_TABLE + " WHERE " + KEY_REVIEW_MOVIE_MID + " NOT IN ({movieIdList})")
 	void deleteReviews(String movieIdList, VoidCallback callBack);
 
-	@Update(sql = "DELETE FROM " + DATABASE_VIDEO_TABLE + " WHERE " + KEY_VIDEO_MOVIE_MID + " NOT IN = ({movieIdList})")
+	@Update(sql = "DELETE FROM " + DATABASE_REVIEW_TABLE)
+	void deleteReviews(VoidCallback callBack);
+
+	@Update(sql = "DELETE FROM " + DATABASE_VIDEO_TABLE + " WHERE " + KEY_VIDEO_MOVIE_MID + " NOT IN ({movieIdList})")
 	void deleteVideos(String movieIdList, VoidCallback callBack);
+
+	@Update(sql = "DELETE FROM " + DATABASE_VIDEO_TABLE)
+	void deleteVideos(VoidCallback callBack);
 
 	@Update(DROP_THEATER_TABLE)
 	void dropTheaters(VoidCallback callBack);
+
+	@Update(DROP_LAST_CHANGE_TABLE)
+	void dropLastChange(VoidCallback callBack);
 
 	@Update(DROP_SHOWTIME_TABLE)
 	void dropShowtime(VoidCallback callBack);

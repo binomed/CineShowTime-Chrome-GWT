@@ -2,6 +2,17 @@ package com.binomed.cineshowtime.client.db;
 
 public interface CineshowtimeDbCst {
 
+	/*
+	 * Version application
+	 */
+
+	static final int DATABASE_VERSION = 2;
+	static final String APP_VERSION = "1.0";
+
+	/*
+	 * Data base Column
+	 */
+
 	static final String KEY_THEATER_NAME = "theater_name"; //$NON-NLS-1$
 	static final String KEY_THEATER_PHONE = "phone_number"; //$NON-NLS-1$
 	static final String KEY_THEATER_ID = "_id"; //$NON-NLS-1$
@@ -51,6 +62,7 @@ public interface CineshowtimeDbCst {
 	static final String KEY_REQUEST_THEATER_ID = "theater_id"; //$NON-NLS-1$
 	static final String KEY_REQUEST_NULL_RESULT = "nullResult"; //$NON-NLS-1$
 	static final String KEY_REQUEST_NEAR_RESP = "nearResp"; //$NON-NLS-1$
+	static final String KEY_REQUEST_FAV_REQUEST = "favRequest"; //$NON-NLS-1$
 
 	static final String KEY_FAV_TH_THEATER_ID = "theater_id"; //$NON-NLS-1$
 	static final String KEY_FAV_TH_THEATER_NAME = "theater_name"; //$NON-NLS-1$
@@ -94,8 +106,6 @@ public interface CineshowtimeDbCst {
 	static final String DATABASE_VIDEO_TABLE = "videos"; //$NON-NLS-1$
 	static final String DATABASE_VERSION_TABLE = "versions";//$NON-NLS-1$
 	static final String DATABASE_PREFERENCES_TABLE = "preferences";//$NON-NLS-1$
-
-	static final int DATABASE_VERSION = 1;
 
 	/**
 	 * Database creation sql statement
@@ -166,6 +176,7 @@ public interface CineshowtimeDbCst {
 			+ ", " + KEY_REQUEST_TIME + " double " //$NON-NLS-1$ //$NON-NLS-2$
 			+ ", " + KEY_REQUEST_NULL_RESULT + " integer " //$NON-NLS-1$ //$NON-NLS-2$
 			+ ", " + KEY_REQUEST_NEAR_RESP + " integer " //$NON-NLS-1$ //$NON-NLS-2$
+			+ ", " + KEY_REQUEST_FAV_REQUEST + " integer " //$NON-NLS-1$ //$NON-NLS-2$
 			+ ");"//$NON-NLS-1$
 	;
 

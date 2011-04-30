@@ -9,6 +9,10 @@ import com.binomed.cineshowtime.client.model.TheaterBean;
 
 public interface ICineShowTimeDBHelper {
 
+	boolean isShowLastChange();
+
+	boolean isDataBaseReady();
+
 	void initDataBase(CineShowTimeDataBase dataBase, boolean launchRequest);
 
 	void writeNearResp(NearResp nearResp);

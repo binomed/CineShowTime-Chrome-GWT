@@ -25,9 +25,9 @@
 				 -->
 				<tr>
 					<td><g:Image resource='{res.gps}' styleName="{style.pointerHand}"/></td>
-					<td><g:Hyperlink ui:field="nearSearch" text="{i18n.nearLink}" styleName="{style.pointerHand}"/></td>
+					<td><g:Label ui:field="nearSearch" text="{i18n.nearLink}" styleName="{style.pointerHand}"/></td>
 					<td><g:Image resource='{res.star}' styleName="{style.pointerHand}" /></td>
-					<td><g:Hyperlink ui:field="favoriteSearch" text="{i18n.favoriteLink}" styleName="{style.pointerHand}" /></td>
+					<td><g:Label ui:field="favoriteSearch" text="{i18n.favoriteLink}" styleName="{style.pointerHand}" /></td>
 				</tr>
 			</table>
 		</g:HTMLPanel>

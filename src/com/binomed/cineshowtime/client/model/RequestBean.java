@@ -11,6 +11,7 @@ public class RequestBean {
 	private double latitude, longitude;
 	private boolean nullResult;
 	private boolean nearResp;
+	private boolean favSearch;
 
 	public String getCityName() {
 		return cityName;
@@ -74,6 +75,14 @@ public class RequestBean {
 
 	public void setNearResp(boolean nearResp) {
 		this.nearResp = nearResp;
+	}
+
+	public boolean isFavSearch() {
+		return favSearch;
+	}
+
+	public void setFavSearch(boolean favSearch) {
+		this.favSearch = favSearch;
 	}
 
 }

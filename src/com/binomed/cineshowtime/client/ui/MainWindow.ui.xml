@@ -34,7 +34,7 @@
 				<g:tab>
 					<g:customHeader><g:Label text="{i18n.parametersTabLabel}" /></g:customHeader>
 					<g:ScrollPanel>
-						<g:VerticalPanel ui:field="paramsContent"/>
+						<cst:ParameterView ui:field="paramsContent" />
 					</g:ScrollPanel>
 				</g:tab>		
 			</g:TabLayoutPanel>
@@ -44,7 +44,6 @@
 		<g:south size='2'>
 			<g:HorizontalPanel>
 				<g:HTMLPanel>links...</g:HTMLPanel>
-				<g:Button ui:field="cleanBtn" text="CleanDataBase"></g:Button>
 			</g:HorizontalPanel>
 		</g:south>
 	</g:DockLayoutPanel>

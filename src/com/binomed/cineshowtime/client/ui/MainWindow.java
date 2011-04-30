@@ -4,11 +4,15 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import com.binomed.cineshowtime.client.IClientFactory;
+import com.binomed.cineshowtime.client.event.db.DataBaseReadyDBEvent;
+import com.binomed.cineshowtime.client.event.db.LastChangeDBEvent;
 import com.binomed.cineshowtime.client.event.db.LastRequestDBEvent;
 import com.binomed.cineshowtime.client.event.db.TheaterDBEvent;
 import com.binomed.cineshowtime.client.event.service.NearRespNearEvent;
 import com.binomed.cineshowtime.client.event.ui.FavOpenEvent;
 import com.binomed.cineshowtime.client.event.ui.SearchEvent;
+import com.binomed.cineshowtime.client.handler.db.DataBaseReadyHandler;
+import com.binomed.cineshowtime.client.handler.db.LastChangeHandler;
 import com.binomed.cineshowtime.client.handler.db.LastRequestHandler;
 import com.binomed.cineshowtime.client.handler.db.TheaterDbHandler;
 import com.binomed.cineshowtime.client.handler.service.NearRespHandler;
@@ -20,19 +24,17 @@ import com.binomed.cineshowtime.client.model.TheaterBean;
 import com.binomed.cineshowtime.client.resources.CstResource;
 import com.binomed.cineshowtime.client.service.geolocation.UserGeolocation;
 import com.binomed.cineshowtime.client.service.geolocation.UserGeolocationCallback;
+import com.binomed.cineshowtime.client.ui.dialog.LastChangeDialog;
 import com.binomed.cineshowtime.client.ui.widget.MovieTabHeaderWidget;
 import com.binomed.cineshowtime.client.util.StringUtils;
 import com.google.code.gwt.database.client.service.DataServiceException;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JsArray;
-import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.maps.client.geocode.Placemark;
 import com.google.gwt.maps.client.geom.LatLng;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.TabLayoutPanel;
@@ -48,27 +50,37 @@ public class MainWindow extends Composite {
 	@UiField
 	TabLayoutPanel appBodyPanel;
 	@UiField
-	VerticalPanel paramsContent;
+	ParameterView paramsContent;
 	@UiField
 	SearchTheater searchField;
 	@UiField
 	VerticalPanel theatersContent;
 	Image imageLoading;
-	@UiField
-	Button cleanBtn;
 
 	public MainWindow(IClientFactory clientFactory) {
 		this.clientFactory = clientFactory;
 		// Initialization
 		initWidget(uiBinder.createAndBindUi(this));
 		searchField.setClientFactory(clientFactory);
+		paramsContent.setClientFactory(clientFactory);
 		initAndLoading();
 		// register to events
+
+		if (this.clientFactory.getDataBaseHelper().isDataBaseReady()) {
+			clientFactory.getDataBaseHelper().getLastRequest();
+			clientFactory.getEventBusHandler().addHandler(LastRequestDBEvent.TYPE, lastRequestHandler);
+		} else {
+			this.clientFactory.getEventBusHandler().addHandler(DataBaseReadyDBEvent.TYPE, dataReadyHandler);
+		}
+		if (this.clientFactory.getDataBaseHelper().isShowLastChange()) {
+			new LastChangeDialog().center();
+		} else {
+			this.clientFactory.getEventBusHandler().addHandler(LastChangeDBEvent.TYPE, lastChangeHandler);
+		}
+
 		this.clientFactory.getEventBusHandler().addHandler(SearchEvent.TYPE, searchHandler);
 		this.clientFactory.getEventBusHandler().addHandler(FavOpenEvent.TYPE, favOpenHandler);
 		this.clientFactory.getEventBusHandler().addHandler(NearRespNearEvent.TYPE, nearRespHandler);
-		this.clientFactory.getDataBaseHelper().getLastRequest();
-		this.clientFactory.getEventBusHandler().addHandler(LastRequestDBEvent.TYPE, lastRequestHandler);
 	}
 
 	private void initTheatersFav() {
@@ -83,10 +95,8 @@ public class MainWindow extends Composite {
 
 	private void showTheaterFav(ArrayList<TheaterBean> theaterFavList) {
 		initAndLoading();
-		for (TheaterBean theaterFav : theaterFavList) {
-			// Call the service
-			clientFactory.getCineShowTimeService().requestNearTheatersFromCityName(theaterFav.getPlace().getCityName() + ", " + theaterFav.getPlace().getCountryNameCode(), theaterFav.getId(), -1, theaterFav.getPlace().getCountryNameCode());
-		}
+		// Call the service
+		clientFactory.getCineShowTimeService().requestNearTheatersFromFav(theaterFavList, 0);
 	}
 
 	public void addMovieTab(TheaterBean theater, String idMovie) {
@@ -102,7 +112,8 @@ public class MainWindow extends Composite {
 
 	private int getMovieTabIfExist(String idMovie) {
 		for (int i = 0; i < appBodyPanel.getWidgetCount(); i++) {
-			if (appBodyPanel.getWidget(i) instanceof MovieView //
+			if ((appBodyPanel.getWidget(i) instanceof MovieView //
+					)
 					&& StringUtils.equalsIC(((MovieView) appBodyPanel.getWidget(i)).getIdMovie(), idMovie)) {
 				return i;
 			}
@@ -117,7 +128,7 @@ public class MainWindow extends Composite {
 			public void onLocationResponse(JsArray<Placemark> locations, LatLng latLng) {
 				if ((locations != null) && (locations.length() > 0)) {
 					clientFactory.getCineShowTimeService().setCurrentCityName(locations.get(0));
-					clientFactory.getCineShowTimeService().requestNearTheatersFromLatLng(latLng.getLatitude(), latLng.getLongitude(), locations.get(0).getCountry());
+					clientFactory.getCineShowTimeService().requestNearTheatersFromLatLng(latLng.getLatitude(), latLng.getLongitude(), locations.get(0).getCountry(), 0);
 				} else {
 					// TODO : Message
 					Window.alert("Error during geolocation !");
@@ -210,7 +221,8 @@ public class MainWindow extends Composite {
 
 		@Override
 		public void onError(DataServiceException exception) {
-			Window.alert("Error=" + exception.getMessage());
+			// In case of error, we launch the request from user position
+			loadTheatersOfUserLocation();
 		}
 
 		@Override
@@ -236,8 +248,9 @@ public class MainWindow extends Composite {
 		@Override
 		public void onLastRequest(RequestBean request) {
 			clientFactory.getEventBusHandler().removeHandler(LastRequestDBEvent.TYPE, lastRequestHandler);
+			clientFactory.getCineShowTimeService().setRequest(request);
 			boolean relaunchRequest = false;
-			if (request.isNullResult()) {
+			if ((request == null) || request.isNullResult()) {
 				relaunchRequest = true;
 			} else {
 				Date curentTime = new Date();
@@ -260,6 +273,25 @@ public class MainWindow extends Composite {
 		}
 	};
 
+	private final LastChangeHandler lastChangeHandler = new LastChangeHandler() {
+
+		@Override
+		public void onLastChange() {
+			new LastChangeDialog().center();
+
+		}
+	};
+
+	private final DataBaseReadyHandler dataReadyHandler = new DataBaseReadyHandler() {
+
+		@Override
+		public void dataBaseReady() {
+			clientFactory.getDataBaseHelper().getLastRequest();
+			clientFactory.getEventBusHandler().addHandler(LastRequestDBEvent.TYPE, lastRequestHandler);
+
+		}
+	};
+
 	/*
 	 * 
 	 * UI Handlers
@@ -276,11 +308,6 @@ public class MainWindow extends Composite {
 
 		}
 	};
-
-	@UiHandler("cleanBtn")
-	public void onCleanDataBase(ClickEvent event) {
-		clientFactory.getDataBaseHelper().clean();
-	}
 
 	private final SearchHandler searchHandler = new SearchHandler() {
 		@Override
