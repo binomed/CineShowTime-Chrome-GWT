@@ -1,4 +1,85 @@
+/* Main window styles */
+.mainPanel {
+	width: 100%;
+    background-color: #000000; 
+	background: #000000 url(images/background.png) bottom right no-repeat;
+	background-attachment:fixed;
+	color: #FFFFFF;
+}
+.tabPanel {
+	margin:0 auto;
+}
 
+.pointerHand {
+    cursor:pointer;
+}
+
+/* Theater style */
+.theaterPanelHeader {
+	background: rgba(136,136,136,0.2);
+	border-radius: 10px;
+}
+.theaterNameHeader {
+    cursor:pointer;
+    font-weight:bold;
+    font-size:16px;
+}
+.theaterInfoHeader {
+    color: #DDDDDD;
+    font-style:italic;
+}
+.theaterContent {
+	width: 100%;
+	padding-right:10px;
+	padding-left:10px;
+}
+.theaterCoverlflow {
+	width: 100%;
+	text-align:center;
+	background: rgba(136,136,136,0.2);
+	border-radius: 10px;
+}
+
+/* Movie style */
+.movieName {
+    font-weight:bold;
+    font-size:16px;
+    color:#ff0000;
+}
+.movieLabel {
+    color:#ff0000;
+}
+.movieSeparator {
+	cursor:pointer;
+    font-weight:bold;
+    font-size:14px;
+    color:#DDDDDD;
+}
+
+/* Projections */
+.projectionsCaption {
+    font-weight:bold;
+    font-size:14px;
+    width:100%;
+}
+.projectionsContent {
+    font-size:12px;
+    font-weight:normal;
+}
+.projectionPassed{
+    font-style:italic; 
+    color:#3C3C3C; 
+}
+.projectionNear{
+    font-weight:bold; 
+    color:#D2D2D2; 
+}
+.projectionFutur{
+    font-weight:normal; 
+    color:lightgrey; 
+}
+
+/*GWT Redefinition elements*/
 .gwt-TabPanel { 
 	border-radius: 10px !important;
 }

@@ -46,18 +46,15 @@ public class ProjectionView extends Composite {
 			projectionTimeStart = new Label(DateTimeFormat.getFormat("HH:mm").format(time));
 			projectionTimeEnd = new Label(I18N.instance.endProjection() + DateTimeFormat.getFormat("HH:mm").format(timeEnd));
 
-			String className = "style.projectionFutur";
-			className = "style.projectionNear";
+			String className = "projectionFutur";
 			if (time.getTime() < currentTime.getTime()) {
-				className = ".projectionPassed";
-				className = ".projectionNear";
+				className = "projectionPassed";
 			} else if (nextShow) {
 				nextShow = false;
 				className = "projectionNear";
-				className = "projectionNear";
 			}
 
-			projectionTimeStart.setStylePrimaryName(className);
+			projectionTimeStart.setStyleName(className);
 			projectionTimeEnd.setStyleName(className);
 
 			movieSeanceList.add(projectionTimeStart);

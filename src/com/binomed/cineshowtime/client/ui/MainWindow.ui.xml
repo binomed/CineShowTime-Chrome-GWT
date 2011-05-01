@@ -19,32 +19,36 @@
 		
 		<!-- Body -->
 		<g:center>			
-			<g:TabLayoutPanel barHeight="2" barUnit="EM" ui:field="appBodyPanel">
-				<!-- Theaters list Tab -->
-				<g:tab >
-					<g:customHeader><g:Label text="{i18n.theaterTabLabel}" /></g:customHeader>
-					<g:ScrollPanel width="100%">
-						<g:VerticalPanel width="100%">
-							<cst:SearchTheater ui:field="searchField" />
-							<g:VerticalPanel ui:field="theatersContent" width="100%"/>
-						</g:VerticalPanel>
-					</g:ScrollPanel>
-				</g:tab>
-				<!-- Parameters Tab -->
-				<g:tab>
-					<g:customHeader><g:Label text="{i18n.parametersTabLabel}" /></g:customHeader>
-					<g:ScrollPanel>
-						<cst:ParameterView ui:field="paramsContent" />
-					</g:ScrollPanel>
-				</g:tab>		
-			</g:TabLayoutPanel>
+			<g:HTMLPanel>
+				<g:TabLayoutPanel barHeight="2" barUnit="EM" ui:field="appBodyPanel" width="1024px" height="600px">
+					<!-- Theaters list Tab -->
+					<g:tab >
+						<g:customHeader><g:Label text="{i18n.theaterTabLabel}" /></g:customHeader>
+						<g:ScrollPanel width="100%">
+							<g:VerticalPanel width="100%">
+								<cst:SearchTheater ui:field="searchField" />
+								<g:VerticalPanel ui:field="theatersContent" width="100%"/>
+							</g:VerticalPanel>
+						</g:ScrollPanel>
+					</g:tab>
+					<!-- Parameters Tab -->
+					<g:tab>
+						<g:customHeader><g:Label text="{i18n.parametersTabLabel}" /></g:customHeader>
+						<g:ScrollPanel>
+							<cst:ParameterView ui:field="paramsContent" />
+						</g:ScrollPanel>
+					</g:tab>		
+				</g:TabLayoutPanel>
+			</g:HTMLPanel>
 		</g:center>
 		
 		<!-- Footer -->
 		<g:south size='2'>
-			<g:HorizontalPanel>
-				<g:HTMLPanel>links...</g:HTMLPanel>
-			</g:HorizontalPanel>
+			<g:HTMLPanel>
+				<p align="center">
+					<g:Label text='links...' />
+				</p>
+			</g:HTMLPanel>
 		</g:south>
 	</g:DockLayoutPanel>
 	
