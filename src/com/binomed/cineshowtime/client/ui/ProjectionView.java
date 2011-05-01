@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.binomed.cineshowtime.client.model.ProjectionBean;
+import com.binomed.cineshowtime.client.resources.CstResource;
 import com.binomed.cineshowtime.client.resources.I18N;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.DateTimeFormat;
@@ -46,12 +47,12 @@ public class ProjectionView extends Composite {
 			projectionTimeStart = new Label(DateTimeFormat.getFormat("HH:mm").format(time));
 			projectionTimeEnd = new Label(I18N.instance.endProjection() + DateTimeFormat.getFormat("HH:mm").format(timeEnd));
 
-			String className = "projectionFutur";
+			String className = CstResource.instance.css().projectionFutur();
 			if (time.getTime() < currentTime.getTime()) {
-				className = "projectionPassed";
+				className = CstResource.instance.css().projectionPassed();
 			} else if (nextShow) {
 				nextShow = false;
-				className = "projectionNear";
+				className = CstResource.instance.css().projectionNear();
 			}
 
 			projectionTimeStart.setStyleName(className);

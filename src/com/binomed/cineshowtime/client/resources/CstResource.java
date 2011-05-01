@@ -8,6 +8,9 @@ public interface CstResource extends ClientBundle {
 
 	public static final CstResource instance = GWT.create(CstResource.class);
 
+	@Source("com/binomed/cineshowtime/client/resources/css/CstStyle.css")
+	CineShowTimeCssResource css();
+
 	// Images
 	@Source("com/binomed/cineshowtime/client/resources/images/star.png")
 	// @ImageOptions(repeatStyle = RepeatStyle.Horizontal, height = 16, width = 16)

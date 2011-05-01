@@ -6,6 +6,9 @@
 	background-attachment:fixed;
 	color: #FFFFFF;
 }
+.tabPanel {
+	margin: auto;
+}
 
 .pointerHand {
     cursor:pointer;

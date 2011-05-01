@@ -3,6 +3,7 @@ package com.binomed.cineshowtime.client;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.binomed.cineshowtime.client.resources.CstResource;
 import com.binomed.cineshowtime.client.ui.coverflow.CoverData;
 import com.binomed.cineshowtime.client.ui.coverflow.Coverflow;
 import com.binomed.cineshowtime.client.ui.coverflow.layout.BetterCoverflowLayout;
@@ -20,6 +21,7 @@ public class CineShowTime_Chrome_GWT implements EntryPoint {
 	 */
 	@Override
 	public void onModuleLoad() {
+		CstResource.instance.css().ensureInjected();
 		// ClientFactory contain all view and access to WebService
 		ClientFactory clientFactory = GWT.create(ClientFactory.class);
 		// Load and initialize the window

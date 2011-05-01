@@ -61,7 +61,7 @@ public class MainWindow extends Composite {
 		this.clientFactory = clientFactory;
 		// Initialization
 		initWidget(uiBinder.createAndBindUi(this));
-		appBodyPanel.addStyleName("tabPanel");
+		appBodyPanel.addStyleName(CstResource.instance.css().tabPanel());
 		searchField.setClientFactory(clientFactory);
 		paramsContent.setClientFactory(clientFactory);
 		initAndLoading();
