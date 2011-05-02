@@ -59,7 +59,7 @@ public class CineShowTimeWS extends AbstractCineShowTimeWS {
 		params.put(PARAM_DAY, String.valueOf(day));
 		params.put(PARAM_LAT, String.valueOf(latitude));
 		params.put(PARAM_LONG, String.valueOf(longitude));
-		params.put(PARAM_LANG, lang != null ? lang.toLowerCase() : LocaleUtils.getLocale());
+		params.put(PARAM_LANG, lang != null ? lang.toLowerCase() : LocaleUtils.getLocale().toLowerCase());
 		Date currentTime = new Date();
 		params.put(PARAM_CURENT_TIME, String.valueOf(currentTime.getTime()));
 		params.put(PARAM_TIME_ZONE, DateTimeFormat.getFormat("z").format(currentTime));
@@ -97,7 +97,7 @@ public class CineShowTimeWS extends AbstractCineShowTimeWS {
 		if (day != -1) {
 			params.put(PARAM_DAY, String.valueOf(day));
 		}
-		params.put(PARAM_LANG, lang != null ? lang.toLowerCase() : LocaleUtils.getLocale());
+		params.put(PARAM_LANG, lang != null ? lang.toLowerCase() : LocaleUtils.getLocale().toLowerCase());
 		Date currentTime = new Date();
 		params.put(PARAM_CURENT_TIME, String.valueOf(currentTime.getTime()));
 		params.put(PARAM_TIME_ZONE, DateTimeFormat.getFormat("z").format(currentTime));
@@ -175,7 +175,7 @@ public class CineShowTimeWS extends AbstractCineShowTimeWS {
 			params.put(PARAM_DAY, String.valueOf(day));
 			params.put(PARAM_PLACE, cityName);
 			params.put(PARAM_THEATER_ID, theaterFav.getId());
-			params.put(PARAM_LANG, lang != null ? lang.toLowerCase() : LocaleUtils.getLocale());
+			params.put(PARAM_LANG, lang != null ? lang.toLowerCase() : LocaleUtils.getLocale().toLowerCase());
 			params.put(PARAM_CURENT_TIME, String.valueOf(currentTime.getTime()));
 			params.put(PARAM_TIME_ZONE, DateTimeFormat.getFormat("z").format(currentTime));
 
@@ -219,7 +219,7 @@ public class CineShowTimeWS extends AbstractCineShowTimeWS {
 		params.put(HttpParamsCst.PARAM_IP, ip);
 		params.put(HttpParamsCst.PARAM_MOVIE_CUR_LANG_NAME, URL.encode(movie.getMovieName()));
 		params.put(HttpParamsCst.PARAM_MOVIE_NAME, URL.encode(movie.getEnglishMovieName()));
-		params.put(HttpParamsCst.PARAM_LANG, language);
+		params.put(HttpParamsCst.PARAM_LANG, language.toLowerCase());
 		params.put(HttpParamsCst.PARAM_PLACE, URL.encode(place));
 		params.put(HttpParamsCst.PARAM_TRAILER, "true");
 		params.put(HttpParamsCst.PARAM_MOVIE_ID, movie.getId());

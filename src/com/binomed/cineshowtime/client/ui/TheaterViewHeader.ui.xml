@@ -2,19 +2,18 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 			 xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	
-	<ui:style src="../resources/css/CstStyle.css" />
 	<ui:with field="res" type="com.binomed.cineshowtime.client.resources.CstResource" />
 	<ui:with field="i18n" type="com.binomed.cineshowtime.client.resources.I18N" />
 	
-	<g:HTMLPanel styleName="{style.theaterPanelHeader}">
+	<g:HTMLPanel styleName="{res.css.theaterPanelHeader}">
 		<div style="float:left;">
-			<div style="float:left;">
+			<div style="float:left; padding-right:10px">
 				<g:Image ui:field="theaterOpen" />
 			</div>
 			<div style="float:right;">
-				<g:Label ui:field="theaterName" styleName="{style.theaterNameHeader}"/>
-				<g:Label ui:field="theaterPlace" styleName="{style.theaterInfoHeader}"/>
-				<g:Label ui:field="theaterPhone" styleName="{style.theaterInfoHeader}" />
+				<g:Label ui:field="theaterName" styleName="{res.css.theaterNameHeader}"/>
+				<g:Label ui:field="theaterPlace" styleName="{res.css.theaterInfoHeader}"/>
+				<g:Label ui:field="theaterPhone" styleName="{res.css.theaterInfoHeader}" />
 			</div>
 		</div>
 		<div style="text-align:right;">

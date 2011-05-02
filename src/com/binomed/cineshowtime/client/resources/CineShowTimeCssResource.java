@@ -4,12 +4,23 @@ import com.google.gwt.resources.client.CssResource;
 
 public interface CineShowTimeCssResource extends CssResource {
 
+	/* Commons Style */
+	String pointerHand();
+
+	String center();
+
 	/* Main window styles */
 	String mainPanel();
 
 	String tabPanel();
 
-	String pointerHand();
+	String mainScroll();
+
+	String mainVert();
+
+	/* Search Style */
+
+	String searchLabel();
 
 	/* Theater style */
 	String theaterPanelHeader();
@@ -22,12 +33,26 @@ public interface CineShowTimeCssResource extends CssResource {
 
 	String theaterCoverlflow();
 
+	String imgRight();
+
 	/* Movie style */
+	String moviePoster();
+
 	String movieName();
 
 	String movieLabel();
 
 	String movieSeparator();
+
+	String separatorTitle();
+
+	String separatorRed();
+
+	/* Reviews */
+
+	String reviewRate();
+
+	String reviewLabel();
 
 	/* Projections */
 	String projectionsCaption();

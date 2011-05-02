@@ -8,7 +8,7 @@
 	<ui:with field="i18n" type="com.binomed.cineshowtime.client.resources.I18N" />
 	
 		<g:VerticalPanel width="100%">
-			<g:CaptionPanel ui:field="preferenceCatGen" width="100%">
+			<g:CaptionPanel ui:field="preferenceCatGen" width="95%">
 				<g:Button ui:field="preferenceGenResetDb" text="{i18n.preference_gen_reset_db}" />
 			</g:CaptionPanel>
 		</g:VerticalPanel>

@@ -7,7 +7,7 @@
 	<ui:with field="i18n" type="com.binomed.cineshowtime.client.resources.I18N" />
 	
 	<g:HTMLPanel >
-		<div style="float:left;">
+		<!-- <div style="float:left;">
 			<div style="float:left;">
 				<g:Image resource="{res.divider_line}" width="20px"/>
 			</div>
@@ -17,7 +17,14 @@
 		</div>
 		<div style="text-align:right;">
 			<g:Image resource="{res.divider_line}" />
+		</div>-->
+		
+		<div style="float:left; margin-top:5px; background:#ac171a; border-radius:7px; height:7px; width:20px;" />
+		<div style="float:left; ">
+			<g:Label ui:field="separatorName" styleName="{style.movieSeparator}" />
 		</div>
+		<div style="float:left; margin-top:5px;  background:#ac171a; border-radius:7px; height:7px; width:90px;" />
+		<div style="clear:both"/>
 	</g:HTMLPanel>
 
 </ui:UiBinder> 

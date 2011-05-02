@@ -31,7 +31,7 @@ public class TheaterViewHeader extends Composite {
 	@UiField
 	Label theaterName, theaterPlace, theaterPhone;
 	@UiField
-	Image theaterFav, theaterOpen;
+	Image theaterFav, theaterOpen, theaterMap;
 
 	public TheaterViewHeader(final IClientFactory clientFactory, final TheaterBean theater) {
 		this.clientFactory = clientFactory;
@@ -47,6 +47,10 @@ public class TheaterViewHeader extends Composite {
 		}
 		theaterPhone.setText(theater.getPhoneNumber());
 		theaterOpen.setResource(CstResource.instance.collapse());
+
+		theaterOpen.addStyleName(CstResource.instance.css().pointerHand());
+		theaterFav.addStyleName(CstResource.instance.css().imgRight());
+		theaterMap.addStyleName(CstResource.instance.css().imgRight());
 
 		isFav = isFav();
 		showTheaterFav();

@@ -55,6 +55,9 @@ public interface CstResource extends ClientBundle {
 	@Source("com/binomed/cineshowtime/client/resources/images/loading_preview.png")
 	ImageResource loading_preview();
 
+	@Source("com/binomed/cineshowtime/client/resources/images/loadcover.gif")
+	ImageResource load_cover();
+
 	@Source("com/binomed/cineshowtime/client/resources/images/movie_countdown.gif")
 	ImageResource movie_countdown();
 

@@ -3,11 +3,11 @@
 			 xmlns:g="urn:import:com.google.gwt.user.client.ui"
 			 xmlns:cst="urn:import:com.binomed.cineshowtime.client.ui">
 	
-	<ui:style src="../resources/css/CstStyle.css" />
+	<!-- <ui:style src="../resources/css/CstStyle.css" />-->
 	<ui:with field="res" type="com.binomed.cineshowtime.client.resources.CstResource" />
 	<ui:with field="i18n" type="com.binomed.cineshowtime.client.resources.I18N" />
 
-	<g:DockLayoutPanel unit="EM" styleName="{style.mainPanel}" >
+	<g:DockLayoutPanel unit="EM" styleName="{res.css.mainPanel}" >
 		<!-- Header -->
 		<g:north size='5'>
 			<g:HTMLPanel>
@@ -19,17 +19,19 @@
 		
 		<!-- Body -->
 		<g:center>			
-			<g:HTMLPanel>
-				<g:TabLayoutPanel barHeight="2" barUnit="EM" ui:field="appBodyPanel" width="1024px" height="600px">
+			<!--  <g:HTMLPanel>-->
+				<g:TabLayoutPanel barHeight="2" barUnit="EM" ui:field="appBodyPanel">
 					<!-- Theaters list Tab -->
-					<g:tab >
-						<g:customHeader><g:Label text="{i18n.theaterTabLabel}" /></g:customHeader>
-						<g:ScrollPanel width="100%">
-							<g:VerticalPanel width="100%">
+					<g:tab styleName="{res.css.mainScroll}" >
+						<g:customHeader><g:Label text="{i18n.theaterTabLabel}"  /></g:customHeader>
+						<g:VerticalPanel width="100%" height="100%">
+						<g:ScrollPanel styleName="{res.css.mainScroll}">
+							<g:VerticalPanel width="100%" styleName="{res.css.mainVert}">
 								<cst:SearchTheater ui:field="searchField" />
 								<g:VerticalPanel ui:field="theatersContent" width="100%"/>
 							</g:VerticalPanel>
 						</g:ScrollPanel>
+						</g:VerticalPanel>
 					</g:tab>
 					<!-- Parameters Tab -->
 					<g:tab>
@@ -39,7 +41,7 @@
 						</g:ScrollPanel>
 					</g:tab>		
 				</g:TabLayoutPanel>
-			</g:HTMLPanel>
+			<!-- </g:HTMLPanel>-->
 		</g:center>
 		
 		<!-- Footer -->

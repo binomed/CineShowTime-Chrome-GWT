@@ -323,6 +323,7 @@ public class MainWindow extends Composite {
 		if (imageLoading == null) {
 			imageLoading = new Image(CstResource.instance.movie_countdown());
 		}
+		imageLoading.addStyleName(CstResource.instance.css().center());
 		theatersContent.add(imageLoading);
 	}
 

@@ -4,8 +4,8 @@ import com.binomed.cineshowtime.client.model.ReviewBean;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -16,7 +16,7 @@ public class ReviewView extends Composite {
 	@UiField
 	Label reviewContent;
 	@UiField
-	Hyperlink reviewSourceLink, reviewLink;
+	Anchor reviewSourceLink, reviewLink;
 	@UiField(provided = true)
 	RateView rate;
 
@@ -26,10 +26,10 @@ public class ReviewView extends Composite {
 		// Initialization
 		initWidget(uiBinder.createAndBindUi(this));
 
-		// TODO à compléter
 		reviewContent.setText(review.getReview());
-		reviewLink.setText(review.getAuthor());
-		reviewSourceLink.setText(review.getUrlReview());
+		reviewLink.setHref(review.getUrlReview());
+		reviewSourceLink.setText(review.getAuthor());
+		reviewSourceLink.setHref(review.getSource());
 	}
 
 	interface ReviewViewUiBinder extends UiBinder<Widget, ReviewView> {

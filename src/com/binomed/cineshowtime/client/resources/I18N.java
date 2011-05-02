@@ -59,6 +59,12 @@ public interface I18N extends Messages {
 
 	String genre();
 
+	// Review View
+
+	String on();
+
+	String readMore();
+
 	// Last Change
 	String last_change_title();
 

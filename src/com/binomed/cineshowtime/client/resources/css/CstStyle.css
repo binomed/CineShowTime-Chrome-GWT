@@ -1,17 +1,38 @@
+/*Commons Styles*/
+.pointerHand {
+    cursor:pointer;
+}
+.center{
+    margin:auto;
+}
+
 /* Main window styles */
 .mainPanel {
 	width: 100%;
     background-color: #000000; 
-	background: #000000 url(images/background.png) bottom right no-repeat;
+	/*background: #000000 url(images/background.png) bottom right no-repeat;*/
 	background-attachment:fixed;
 	color: #FFFFFF;
 }
 .tabPanel {
+	width:1024px;
+	height:550px;
 	margin: auto;
+	background: #000000 url(images/background.png) bottom right no-repeat;
+}
+.mainScroll {
+	width:100%;
+	height:500px;
+}
+.mainVert {
+	width:100%;
 }
 
-.pointerHand {
-    cursor:pointer;
+/*Search Style*/
+
+.searchLabel{
+	color:#ff0000;
+	font-weight:bold; 
 }
 
 /* Theater style */
@@ -20,12 +41,13 @@
 	border-radius: 10px;
 }
 .theaterNameHeader {
+    color: #aaaaaa;
     cursor:pointer;
     font-weight:bold;
     font-size:16px;
 }
 .theaterInfoHeader {
-    color: #DDDDDD;
+    color: #696969;
     font-style:italic;
 }
 .theaterContent {
@@ -39,21 +61,53 @@
 	background: rgba(136,136,136,0.2);
 	border-radius: 10px;
 }
+.imgRight{
+	width:30px;
+	height:30px;
+}
 
 /* Movie style */
+.moviePoster{
+	padding-top:10px;
+	padding-bottom:10px;
+	padding-right:10px;
+	padding-left:10px;	
+}
 .movieName {
+	padding-top:50px;
     font-weight:bold;
     font-size:16px;
     color:#ff0000;
+    padding-right:1em;
 }
 .movieLabel {
     color:#ff0000;
+    font-weight:bold; 
+    padding-right:5px;
+    padding-bottom:10px;
 }
 .movieSeparator {
 	cursor:pointer;
     font-weight:bold;
     font-size:14px;
     color:#DDDDDD;
+	padding-left:5px;
+	padding-right:5px;
+}
+.separatorTitle {
+}
+.separatorRed {
+	background-color:#ff0000;
+    border-radius:50px;
+    height:7px;
+}
+
+/*Reviews*/
+.reviewRate{
+	padding-right:10px;	
+}
+.reviewLabel{
+	padding-right:5px;	
 }
 
 /* Projections */

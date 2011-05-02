@@ -3,7 +3,6 @@
 			 xmlns:g="urn:import:com.google.gwt.user.client.ui"
 			 xmlns:db="urn:import:com.google.gwt.user.datepicker.client">
 	
-	<ui:style src="../resources/css/CstStyle.css" />
 	<ui:with field="res" type="com.binomed.cineshowtime.client.resources.CstResource" />
 	<ui:with field="i18n" type="com.binomed.cineshowtime.client.resources.I18N" />
 	
@@ -11,9 +10,9 @@
 		<g:HTMLPanel>
 			<table>
 				<tr>
-					<td><g:Label text="{i18n.locationLabel}" /></td>
+					<td><g:Label text="{i18n.locationLabel}" styleName="{res.css.searchLabel}"/></td>
 					<td><g:TextBox ui:field="locationSearch"/></td>
-					<td><g:Label text="{i18n.dateLabel}" /></td>
+					<td><g:Label text="{i18n.dateLabel}" styleName="{res.css.searchLabel}"/></td>
 					<td><db:DateBox ui:field="dateSearch"/>	</td>
 					<td><g:Button ui:field="searchButton" text="{i18n.searchBtn}"/></td>
 				</tr>
@@ -24,10 +23,10 @@
 				</tr>
 				 -->
 				<tr>
-					<td><g:Image resource='{res.gps}' styleName="{style.pointerHand}"/></td>
-					<td><g:Label ui:field="nearSearch" text="{i18n.nearLink}" styleName="{style.pointerHand}"/></td>
-					<td><g:Image resource='{res.star}' styleName="{style.pointerHand}" /></td>
-					<td><g:Label ui:field="favoriteSearch" text="{i18n.favoriteLink}" styleName="{style.pointerHand}" /></td>
+					<td><g:Image resource='{res.gps}' styleName="{res.css.pointerHand}"/></td>
+					<td><g:Label ui:field="nearSearch" text="{i18n.nearLink}" styleName="{res.css.pointerHand}"/></td>
+					<td><g:Image resource='{res.star}' styleName="{res.css.pointerHand}" /></td>
+					<td><g:Label ui:field="favoriteSearch" text="{i18n.favoriteLink}" styleName="{res.css.pointerHand}" /></td>
 				</tr>
 			</table>
 		</g:HTMLPanel>
