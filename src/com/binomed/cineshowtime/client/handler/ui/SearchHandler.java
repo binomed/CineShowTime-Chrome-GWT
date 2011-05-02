@@ -4,6 +4,6 @@ import com.google.gwt.event.shared.EventHandler;
 
 public interface SearchHandler extends EventHandler {
 
-	void onSearch();
+	void onSearch(int searchType, String param);
 
 }

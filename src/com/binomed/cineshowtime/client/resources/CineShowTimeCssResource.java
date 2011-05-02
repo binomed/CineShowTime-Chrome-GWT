@@ -33,6 +33,10 @@ public interface CineShowTimeCssResource extends CssResource {
 
 	String theaterInfoHeader();
 
+	String theaterResultHeader();
+
+	String theaterResultLabel();
+
 	String theaterContent();
 
 	String theaterDisclosure();

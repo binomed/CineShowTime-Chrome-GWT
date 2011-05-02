@@ -36,8 +36,6 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TabLayoutPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -55,8 +53,9 @@ public class MainWindow extends Composite {
 	@UiField
 	SearchTheater searchField;
 	@UiField
+	TheaterViewResult searchResultHeader;
+	@UiField
 	VerticalPanel theatersContent;
-	SimplePanel imageLoadingPanel;
 
 	public MainWindow(IClientFactory clientFactory) {
 		this.clientFactory = clientFactory;
@@ -96,7 +95,6 @@ public class MainWindow extends Composite {
 	}
 
 	private void showTheaterFav(ArrayList<TheaterBean> theaterFavList) {
-		initAndLoading();
 		// Call the service
 		clientFactory.getCineShowTimeService().requestNearTheatersFromFav(theaterFavList, 0);
 	}
@@ -123,15 +121,16 @@ public class MainWindow extends Composite {
 		return -1;
 	}
 
-	private void loadTheatersOfUserLocation() {
-
+	private void loadTheatersOfUserLocation(final int day) {
 		UserGeolocation.getInstance().getUserGeolocation(new UserGeolocationCallback() {
 			@Override
 			public void onLocationResponse(JsArray<Placemark> locations, LatLng latLng) {
 				if ((locations != null) && (locations.length() > 0)) {
 					clientFactory.getCineShowTimeService().setCurrentCityName(locations.get(0));
 					clientFactory.getCineShowTimeService().requestNearTheatersFromLatLng(latLng.getLatitude(), latLng.getLongitude(),
-							locations.get(0).getCountry(), 0);
+							locations.get(0).getCountry(), day);
+					searchResultHeader.setLocation(locations.get(0).getCity());
+					searchResultHeader.updateResultHeader();
 				} else {
 					// TODO : Message
 					Window.alert("Error during geolocation !");
@@ -161,7 +160,9 @@ public class MainWindow extends Composite {
 
 		@Override
 		public void onError(Throwable error) {
-			theatersContent.remove(imageLoadingPanel);
+			searchResultHeader.setLoading(false);
+			searchResultHeader.updateResultHeader();
+			theatersContent.setVisible(true);
 			// TODO : Message
 			Window.alert("Error=" + error.getMessage());
 
@@ -170,11 +171,13 @@ public class MainWindow extends Composite {
 		@Override
 		public void onNearResp(NearResp nearResp) {
 			// Remove loading image
-			theatersContent.remove(imageLoadingPanel);
+			searchResultHeader.setLoading(false);
+			theatersContent.setVisible(true);
 			// Remove previous theater list
 			theatersContent.clear();
 			// Display theaters
 			if (nearResp != null) {
+				searchResultHeader.setNbTheaters(nearResp.getTheaterList().size());
 				for (TheaterBean theater : nearResp.getTheaterList()) {
 					theatersContent.add(new TheaterView(clientFactory, theater));
 				}
@@ -183,6 +186,7 @@ public class MainWindow extends Composite {
 				// TODO : Message
 				Window.alert("No theater found !");
 			}
+			searchResultHeader.updateResultHeader();
 		}
 	};
 
@@ -208,7 +212,7 @@ public class MainWindow extends Composite {
 					showTheaterFav(theaterList);
 				} else {
 					// Load intial content
-					loadTheatersOfUserLocation();
+					loadTheatersOfUserLocation(0);
 				}
 			}
 
@@ -226,21 +230,24 @@ public class MainWindow extends Composite {
 		@Override
 		public void onError(DataServiceException exception) {
 			// In case of error, we launch the request from user position
-			loadTheatersOfUserLocation();
+			loadTheatersOfUserLocation(0);
 		}
 
 		@Override
 		public void theaters(ArrayList<TheaterBean> theaterList, boolean isFav) {
+			searchResultHeader.setLoading(false);
 			if (!isFav) {
 				clientFactory.getEventBusHandler().removeHandler(TheaterDBEvent.TYPE, theaterHandler);
-				theatersContent.remove(imageLoadingPanel);
+				theatersContent.setVisible(true);
 				if (theaterList != null) {
+					searchResultHeader.setNbTheaters(theaterList.size());
 					for (TheaterBean theater : theaterList) {
 						theatersContent.add(new TheaterView(clientFactory, theater));
 					}
 				}
 				removeLastTheaterBorderStyle();
 			}
+			searchResultHeader.updateResultHeader();
 		}
 
 		@Override
@@ -316,28 +323,31 @@ public class MainWindow extends Composite {
 
 	private final SearchHandler searchHandler = new SearchHandler() {
 		@Override
-		public void onSearch() {
+		public void onSearch(int searchType, String param) {
 			initAndLoading();
+			if (searchType == SearchEvent.SEARCH_NEAR) {
+				loadTheatersOfUserLocation(0);
+				searchResultHeader.setNear(true);
+			} else if (searchType == SearchEvent.SEARCH_FAV) {
+				searchResultHeader.setFavorite(true);
+			} else if (searchType == SearchEvent.SEARCH_CINE) {
+				searchResultHeader.setCineSearch(param);
+			} else if (searchType == SearchEvent.SEARCH_DATE) {
+				loadTheatersOfUserLocation(Integer.valueOf(param));
+				searchResultHeader.setDateSearch(param);
+			}
+			searchResultHeader.updateResultHeader();
 		}
 	};
 
 	private void initAndLoading() {
 		// Clean and init theater content list
+		theatersContent.setVisible(false);
 		theatersContent.clear();
 		theatersContent.setSpacing(5);
-
-		// Show header
-
 		// Show image loading theaters
-		if (imageLoadingPanel == null) {
-			imageLoadingPanel = new SimplePanel();
-			Image loadingImg = new Image(CstResource.instance.movie_countdown());
-			loadingImg.addStyleName(CstResource.instance.css().center());
-			imageLoadingPanel.add(loadingImg);
-			imageLoadingPanel.setWidth("100%");
-			imageLoadingPanel.addStyleName(CstResource.instance.css().center());
-		}
-		theatersContent.add(imageLoadingPanel);
+		searchResultHeader.setLoading(true);
+		searchResultHeader.updateResultHeader();
 	}
 
 	/**
