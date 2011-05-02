@@ -45,7 +45,7 @@ public class MovieView extends Composite {
 	@UiField
 	RateView movieRate;
 	@UiField
-	Label movieName, movieYear, movieTime, movieStyle, sepMovieTimeStyle, sepMovieLink, moviePlot, movieDirector, movieActor, movieRateText;
+	Label movieName, movieYear, movieTime, movieStyle, moviePlot, movieDirector, movieActor, movieRateText;
 	@UiField
 	Hyperlink movieLinkImdb, movieLinkWikipedia;
 	@UiField

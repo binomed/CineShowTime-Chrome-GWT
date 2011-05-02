@@ -63,6 +63,8 @@ public interface I18N extends Messages {
 
 	String genre();
 
+	String year();
+
 	// Review View
 
 	String on();

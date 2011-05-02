@@ -15,23 +15,19 @@
 				<div style="padding-left:10px;float:left;">
 					<g:HorizontalPanel>
 						<g:Label ui:field="movieName" styleName="{res.css.movieName}"/>
+					</g:HorizontalPanel>
+					<g:HorizontalPanel>
+						<g:Label text="{i18n.year}" styleName="{res.css.movieLabel}"/>
 						<g:Label ui:field="movieYear"/>
 					</g:HorizontalPanel>
 					<g:HorizontalPanel>
+						<g:Label text="{i18n.duration}" styleName="{res.css.movieLabel}"/>
 						<g:Label ui:field="movieTime"/>
-						<g:Label ui:field="sepMovieTimeStyle" text=" - "/>
+					</g:HorizontalPanel>
+					<g:HorizontalPanel>
+						<g:Label text="{i18n.genre}" styleName="{res.css.movieLabel}"/>
 						<g:Label ui:field="movieStyle"/>
 					</g:HorizontalPanel>
-					<g:HorizontalPanel>
-						<g:Hyperlink ui:field="movieLinkImdb" text="{i18n.imdbLink}" />
-						<g:Label ui:field="sepMovieLink" text=", "/>
-						<g:Hyperlink ui:field="movieLinkWikipedia" text="{i18n.wikipediaLink}" />
-					</g:HorizontalPanel>
-					<g:HorizontalPanel>
-						<g:Label text="{i18n.rate}" styleName="{res.css.movieLabel}"/>
-						<g:Label ui:field="movieRateText"/>
-					</g:HorizontalPanel>
-					<cst:RateView ui:field="movieRate" />
 					<g:HorizontalPanel>
 						<g:Label text="{i18n.director}" styleName="{res.css.movieLabel}"/>
 						<g:Label ui:field="movieDirector"/>
@@ -39,6 +35,19 @@
 					<g:HorizontalPanel>
 						<g:Label text="{i18n.actor}" styleName="{res.css.movieLabel}"/>
 						<g:Label ui:field="movieActor"/>
+					</g:HorizontalPanel>
+					<g:HorizontalPanel>
+						<g:Label text="{i18n.rate}" styleName="{res.css.movieLabel}"/>
+						<g:Label ui:field="movieRateText"/>
+						<cst:RateView ui:field="movieRate" />
+					</g:HorizontalPanel>
+					<g:HorizontalPanel>
+						<g:Image resource="{res.imdb}" />
+						<g:Hyperlink ui:field="movieLinkImdb" text="{i18n.imdbLink}" />
+					</g:HorizontalPanel>
+					<g:HorizontalPanel>
+						<g:Image resource="{res.wikipedia}" />
+						<g:Hyperlink ui:field="movieLinkWikipedia" text="{i18n.wikipediaLink}" />
 					</g:HorizontalPanel>
 				</div>
 				<div style="padding-left:100px;float:left;">
