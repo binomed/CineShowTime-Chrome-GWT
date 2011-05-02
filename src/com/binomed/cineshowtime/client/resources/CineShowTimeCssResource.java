@@ -31,6 +31,10 @@ String theaterResultList();/* Separator View */	String separatorExpand();	String
 
 	String theaterInfoHeader();
 
+	String theaterResultHeader();
+
+	String theaterResultLabel();
+
 	String theaterContent();
 
 	String theaterDisclosure();

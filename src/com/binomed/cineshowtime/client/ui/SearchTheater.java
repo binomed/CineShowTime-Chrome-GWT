@@ -9,7 +9,6 @@ import com.binomed.cineshowtime.client.event.ui.SearchEvent;
 import com.binomed.cineshowtime.client.model.RequestBean;
 import com.binomed.cineshowtime.client.model.TheaterBean;
 import com.binomed.cineshowtime.client.service.geolocation.UserGeolocation;
-import com.binomed.cineshowtime.client.service.geolocation.UserGeolocationCallback;
 import com.binomed.cineshowtime.client.util.LocaleUtils;
 import com.binomed.cineshowtime.client.util.StringUtils;
 import com.google.gwt.core.client.GWT;
@@ -20,7 +19,6 @@ import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.maps.client.geocode.LocationCallback;
 import com.google.gwt.maps.client.geocode.Placemark;
-import com.google.gwt.maps.client.geom.LatLng;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -67,7 +65,6 @@ public class SearchTheater extends Composite {
 
 	public void doSearch() {
 		if (StringUtils.isNotEmpty(locationSearch.getText()) || (dateSearch.getValue() != null)) {
-			clientFactory.getEventBusHandler().fireEvent(new SearchEvent());
 			// If the city is empty, then we want the result for same request but for another day
 			if (StringUtils.isEmpty(locationSearch.getText())) {
 				int day = -1;
@@ -87,18 +84,20 @@ public class SearchTheater extends Composite {
 							ArrayList<TheaterBean> theaterFavList = clientFactory.getDataBaseHelper().getTheaterFavCache();
 							clientFactory.getCineShowTimeService().requestNearTheatersFromFav(theaterFavList, day);
 						} else if ((lastRequest.getLongitude() != 0) && (lastRequest.getLatitude() != 0)) {
-							loadTheatersOfUserLocation(day);
+							clientFactory.getEventBusHandler().fireEvent(new SearchEvent(SearchEvent.SEARCH_DATE, String.valueOf(day)));
 						} else {
+							clientFactory.getEventBusHandler().fireEvent(new SearchEvent(SearchEvent.SEARCH_CINE, locationSearch.getText()));
 							loadTheaterOfUserCityEnter(lastRequest.getCityName());
 						}
 					} else {
-						loadTheatersOfUserLocation(day);
+						clientFactory.getEventBusHandler().fireEvent(new SearchEvent(SearchEvent.SEARCH_DATE, String.valueOf(day)));
 					}
 
 				} else {
 					// TODO : Message d'erreur de date
 				}
 			} else {
+				clientFactory.getEventBusHandler().fireEvent(new SearchEvent(SearchEvent.SEARCH_CINE, locationSearch.getText()));
 				loadTheaterOfUserCityEnter(locationSearch.getText());
 			}
 
@@ -144,37 +143,13 @@ public class SearchTheater extends Composite {
 
 	@UiHandler("nearSearch")
 	void handleNearSearchClick(ClickEvent e) {
-		clientFactory.getEventBusHandler().fireEvent(new SearchEvent());
-		loadTheatersOfUserLocation(0);
+		clientFactory.getEventBusHandler().fireEvent(new SearchEvent(SearchEvent.SEARCH_NEAR, null));
 	}
 
 	@UiHandler("favoriteSearch")
 	void handleFavoriteSearchClick(ClickEvent e) {
+		clientFactory.getEventBusHandler().fireEvent(new SearchEvent(SearchEvent.SEARCH_FAV, null));
 		clientFactory.getEventBusHandler().fireEvent(new FavOpenEvent());
-	}
-
-	/**
-	 * TODO : Refactorer avec MainWindow (code dupliqué)
-	 */
-	private void loadTheatersOfUserLocation(final int day) {
-		UserGeolocation.getInstance().getUserGeolocation(new UserGeolocationCallback() {
-			@Override
-			public void onLocationResponse(JsArray<Placemark> locations, LatLng latLng) {
-				if ((locations != null) && (locations.length() > 0)) {
-					clientFactory.getCineShowTimeService().setCurrentCityName(locations.get(0));
-					clientFactory.getCineShowTimeService().requestNearTheatersFromLatLng(latLng.getLatitude(), latLng.getLongitude(), locations.get(0).getCountry(), day);
-				} else {
-					// TODO : Message
-					Window.alert("Error during geolocation !");
-				}
-			}
-
-			@Override
-			public void onError() {
-				// TODO : Message
-				Window.alert("Error during geolocation !");
-			}
-		});
 	}
 
 	interface SearchTheaterUiBinder extends UiBinder<Widget, SearchTheater> {

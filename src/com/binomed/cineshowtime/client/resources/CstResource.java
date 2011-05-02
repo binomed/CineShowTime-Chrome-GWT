@@ -79,4 +79,10 @@ public interface CstResource extends ClientBundle {
 	@Source("com/binomed/cineshowtime/client/resources/images/divider-line.png")
 	ImageResource divider_line();
 
+	@Source("com/binomed/cineshowtime/client/resources/images/wikipedia.png")
+	ImageResource wikipedia();
+
+	@Source("com/binomed/cineshowtime/client/resources/images/imdb.png")
+	ImageResource imdb();
+
 }

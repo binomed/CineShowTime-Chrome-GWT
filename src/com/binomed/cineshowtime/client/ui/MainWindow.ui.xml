@@ -29,6 +29,7 @@
 								<g:VerticalPanel styleName="{res.css.theaterTab}">
 									<cst:SearchTheater ui:field="searchField"  styleName="{res.css.searchPanel}"/>
 									<cst:HeaderSeparator expandShow="false" name="{i18n.theaterResult}" width="100%"/>
+									<cst:TheaterViewResult ui:field="searchResultHeader"  />
 									<g:VerticalPanel ui:field="theatersContent" styleName="{res.css.theaterResultList}"/>
 								</g:VerticalPanel>
 							</g:ScrollPanel>
