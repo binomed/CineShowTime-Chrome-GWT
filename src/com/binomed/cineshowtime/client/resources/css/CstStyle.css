@@ -15,14 +15,14 @@
 	color: #FFFFFF;
 }
 .tabPanel {
-	width:1024px;
-	height:550px;
+	width:80%;
+	height:90%;
 	margin: auto;
 	background: #000000 url(images/background.png) bottom right no-repeat;
 }
 .mainScroll {
 	width:100%;
-	height:500px;
+	height:100%;
 }
 .mainVert {
 	width:100%;
@@ -93,13 +93,16 @@
     color:#DDDDDD;
 	padding-left:5px;
 	padding-right:5px;
+	margin-left: 20px;
 }
 .separatorTitle {
 }
 .separatorRed {
-	background-color:#ff0000;
+	background-color:#ac171a;
     border-radius:50px;
-    height:7px;
+	margin-left: 20px;
+    height:3px;
+    widht:80%;
 }
 
 /*Reviews*/
@@ -108,6 +111,36 @@
 }
 .reviewLabel{
 	padding-right:5px;	
+}
+
+.reviewTitleLeft{
+	float:left;
+	margin-top:7px;
+	background:#ac171a;
+	width:90px;
+	height:7px;
+	padding: 0px;
+    border-radius: 5px;    
+}
+.reviewTitle{
+	position:relative;
+	float:left;
+	color:white;
+	cursor:pointer;
+    font-weight:bold;
+    font-size:14px;
+    color:#DDDDDD;
+	padding-left:5px;
+	padding-right:5px;    
+}
+.reviewTitleRight{
+	position:relative;
+	background:#ac171a;
+	top:7px;
+	padding: 0px;
+    border-radius: 5px;
+	height:7px;
+	overflow:hidden;
 }
 
 /* Projections */
