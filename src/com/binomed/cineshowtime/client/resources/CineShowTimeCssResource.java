@@ -9,6 +9,8 @@ public interface CineShowTimeCssResource extends CssResource {
 
 	String center();
 
+	String theaterResultList();
+
 	/* Main window styles */
 	String mainPanel();
 
@@ -16,9 +18,11 @@ public interface CineShowTimeCssResource extends CssResource {
 
 	String mainScroll();
 
-	String mainVert();
+	String theaterTab();
 
 	/* Search Style */
+
+	String searchPanel();
 
 	String searchLabel();
 
@@ -30,6 +34,8 @@ public interface CineShowTimeCssResource extends CssResource {
 	String theaterInfoHeader();
 
 	String theaterContent();
+
+	String theaterDisclosure();
 
 	String theaterCoverlflow();
 

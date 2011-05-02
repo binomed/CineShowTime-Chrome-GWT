@@ -7,9 +7,9 @@
 	<ui:with field="res" type="com.binomed.cineshowtime.client.resources.CstResource" />
 	<ui:with field="i18n" type="com.binomed.cineshowtime.client.resources.I18N" />
 	
-	<g:VerticalPanel width="100%">
+	<g:VerticalPanel width="100%" >
 		<cst:TheaterViewHeader ui:field="theaterHeader" />
-		<g:DisclosurePanel ui:field="theaterPanel" styleName="{style.theaterContent}">
+		<g:DisclosurePanel ui:field="theaterPanel" styleName="{style.theaterDisclosure}">
 			<g:SimplePanel ui:field="theaterCoverflow" styleName="{style.theaterCoverlflow}"/>
 		</g:DisclosurePanel>
 	</g:VerticalPanel>
