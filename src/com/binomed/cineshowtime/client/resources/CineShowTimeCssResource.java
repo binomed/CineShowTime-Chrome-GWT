@@ -9,6 +9,13 @@ public interface CineShowTimeCssResource extends CssResource {
 
 	String center();
 
+	/* Separator View */
+	String separatorExpand();
+
+	String separatorTitle();
+
+	String separatorRed();
+
 	/* Main window styles */
 	String mainPanel();
 
@@ -43,10 +50,6 @@ public interface CineShowTimeCssResource extends CssResource {
 	String movieLabel();
 
 	String movieSeparator();
-
-	String separatorTitle();
-
-	String separatorRed();
 
 	/* Reviews */
 

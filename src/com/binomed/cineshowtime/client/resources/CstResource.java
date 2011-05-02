@@ -67,6 +67,12 @@ public interface CstResource extends ClientBundle {
 	@Source("com/binomed/cineshowtime/client/resources/images/collapse.png")
 	ImageResource collapse();
 
+	@Source("com/binomed/cineshowtime/client/resources/images/plus.png")
+	ImageResource plus();
+
+	@Source("com/binomed/cineshowtime/client/resources/images/minus.png")
+	ImageResource minus();
+
 	@Source("com/binomed/cineshowtime/client/resources/images/maps.png")
 	ImageResource maps();
 

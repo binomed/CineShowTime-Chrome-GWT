@@ -1,11 +1,15 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 			 xmlns:g="urn:import:com.google.gwt.user.client.ui"
-			 xmlns:db="urn:import:com.google.gwt.user.datepicker.client">
+			 xmlns:db="urn:import:com.google.gwt.user.datepicker.client"
+			 xmlns:cst="urn:import:com.binomed.cineshowtime.client.ui">
 	
 	<ui:with field="res" type="com.binomed.cineshowtime.client.resources.CstResource" />
 	<ui:with field="i18n" type="com.binomed.cineshowtime.client.resources.I18N" />
 	
+	<g:VerticalPanel>
+		<cst:HeaderSeparator ui:field="searchTitle" expandShow="false"/>
+	</g:VerticalPanel>
 	<g:DisclosurePanel ui:field="searchPanel">
 		<g:HTMLPanel>
 			<table>
