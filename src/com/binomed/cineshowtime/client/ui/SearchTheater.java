@@ -24,8 +24,6 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.DisclosurePanel;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.datepicker.client.DateBox;
@@ -34,8 +32,6 @@ public class SearchTheater extends Composite {
 
 	private static SearchTheaterUiBinder uiBinder = GWT.create(SearchTheaterUiBinder.class);
 
-	@UiField
-	DisclosurePanel searchPanel;
 	@UiField
 	TextBox locationSearch; // , movieSearch;
 	@UiField
@@ -50,10 +46,6 @@ public class SearchTheater extends Composite {
 	public SearchTheater() {
 		// Initialization
 		initWidget(uiBinder.createAndBindUi(this));
-		// Disclosure panel
-		searchPanel.setHeader(new HTML("<font color=\"#FFFFFF\"><b>Rechercher</b></font>"));
-		searchPanel.setAnimationEnabled(true);
-		searchPanel.setOpen(true);
 
 		DateTimeFormat format = DateTimeFormat.getFormat("dd/MM/yyyy");
 		dateSearch.setFormat(new DateBox.DefaultFormat(format));

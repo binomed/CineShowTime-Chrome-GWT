@@ -25,12 +25,13 @@
 					<g:tab styleName="{res.css.mainScroll}" >
 						<g:customHeader><g:Label text="{i18n.theaterTabLabel}"  /></g:customHeader>
 						<g:VerticalPanel width="100%" height="100%">
-						<g:ScrollPanel styleName="{res.css.mainScroll}">
-							<g:VerticalPanel width="100%" styleName="{res.css.mainVert}">
-								<cst:SearchTheater ui:field="searchField" />
-								<g:VerticalPanel ui:field="theatersContent" width="100%"/>
-							</g:VerticalPanel>
-						</g:ScrollPanel>
+							<g:ScrollPanel styleName="{res.css.mainScroll}">
+								<g:VerticalPanel styleName="{res.css.theaterTab}">
+									<cst:SearchTheater ui:field="searchField"  styleName="{res.css.searchPanel}"/>
+									<cst:HeaderSeparator expandShow="false" name="{i18n.theaterResult}" width="100%"/>
+									<g:VerticalPanel ui:field="theatersContent" styleName="{res.css.theaterResultList}"/>
+								</g:VerticalPanel>
+							</g:ScrollPanel>
 						</g:VerticalPanel>
 					</g:tab>
 					<!-- Parameters Tab -->

@@ -5,7 +5,7 @@
 	<ui:with field="res" type="com.binomed.cineshowtime.client.resources.CstResource" />
 	<ui:with field="i18n" type="com.binomed.cineshowtime.client.resources.I18N" />
 	
-	<g:HTMLPanel >
+	<g:HTMLPanel width="100%">
 		<g:Image ui:field="separatorExpand" styleName="{res.css.separatorExpand}"/>
 		<div class="{res.css.separatorTitle}">
 			<g:Label ui:field="separatorName"/>

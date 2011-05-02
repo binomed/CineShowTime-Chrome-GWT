@@ -7,10 +7,8 @@
 	<ui:with field="res" type="com.binomed.cineshowtime.client.resources.CstResource" />
 	<ui:with field="i18n" type="com.binomed.cineshowtime.client.resources.I18N" />
 	
-	<g:VerticalPanel>
-		<cst:HeaderSeparator ui:field="searchTitle" expandShow="false"/>
-	</g:VerticalPanel>
-	<g:DisclosurePanel ui:field="searchPanel">
+	<g:VerticalPanel width="100%">
+		<cst:HeaderSeparator ui:field="searchTitle" expandShow="false" name="{i18n.searchTitle}" width="100%"/>
 		<g:HTMLPanel>
 			<table>
 				<tr>
@@ -34,6 +32,6 @@
 				</tr>
 			</table>
 		</g:HTMLPanel>
-	</g:DisclosurePanel>
+	</g:VerticalPanel>
 	
 </ui:UiBinder> 

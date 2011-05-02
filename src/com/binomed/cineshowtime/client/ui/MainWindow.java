@@ -37,6 +37,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TabLayoutPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -55,7 +56,7 @@ public class MainWindow extends Composite {
 	SearchTheater searchField;
 	@UiField
 	VerticalPanel theatersContent;
-	Image imageLoading;
+	SimplePanel imageLoadingPanel;
 
 	public MainWindow(IClientFactory clientFactory) {
 		this.clientFactory = clientFactory;
@@ -159,7 +160,7 @@ public class MainWindow extends Composite {
 
 		@Override
 		public void onError(Throwable error) {
-			theatersContent.remove(imageLoading);
+			theatersContent.remove(imageLoadingPanel);
 			// TODO : Message
 			Window.alert("Error=" + error.getMessage());
 
@@ -168,7 +169,7 @@ public class MainWindow extends Composite {
 		@Override
 		public void onNearResp(NearResp nearResp) {
 			// Remove loading image
-			theatersContent.remove(imageLoading);
+			theatersContent.remove(imageLoadingPanel);
 			// Remove previous theater list
 			theatersContent.clear();
 			// Display theaters
@@ -176,6 +177,7 @@ public class MainWindow extends Composite {
 				for (TheaterBean theater : nearResp.getTheaterList()) {
 					theatersContent.add(new TheaterView(clientFactory, theater));
 				}
+				removeLastTheaterBorderStyle();
 			} else {
 				// TODO : Message
 				Window.alert("No theater found !");
@@ -230,12 +232,13 @@ public class MainWindow extends Composite {
 		public void theaters(ArrayList<TheaterBean> theaterList, boolean isFav) {
 			if (!isFav) {
 				clientFactory.getEventBusHandler().removeHandler(TheaterDBEvent.TYPE, theaterHandler);
-				theatersContent.remove(imageLoading);
+				theatersContent.remove(imageLoadingPanel);
 				if (theaterList != null) {
 					for (TheaterBean theater : theaterList) {
 						theatersContent.add(new TheaterView(clientFactory, theater));
 					}
 				}
+				removeLastTheaterBorderStyle();
 			}
 		}
 
@@ -318,13 +321,32 @@ public class MainWindow extends Composite {
 	};
 
 	private void initAndLoading() {
+		// Clean and init theater content list
 		theatersContent.clear();
 		theatersContent.setSpacing(5);
-		if (imageLoading == null) {
-			imageLoading = new Image(CstResource.instance.movie_countdown());
+
+		// Show header
+
+		// Show image loading theaters
+		if (imageLoadingPanel == null) {
+			imageLoadingPanel = new SimplePanel();
+			Image loadingImg = new Image(CstResource.instance.movie_countdown());
+			loadingImg.addStyleName(CstResource.instance.css().center());
+			imageLoadingPanel.add(loadingImg);
+			imageLoadingPanel.setWidth("100%");
+			imageLoadingPanel.addStyleName(CstResource.instance.css().center());
 		}
-		imageLoading.addStyleName(CstResource.instance.css().center());
-		theatersContent.add(imageLoading);
+		theatersContent.add(imageLoadingPanel);
+	}
+
+	/**
+	 * Remove the last theater border down
+	 */
+	private void removeLastTheaterBorderStyle() {
+		Widget lastTheater = theatersContent.getWidget(theatersContent.getWidgetCount() - 1);
+		if (lastTheater != null) {
+			lastTheater.removeStyleName(CstResource.instance.css().theaterContent());
+		}
 	}
 
 	interface MainWindowUiBinder extends UiBinder<Widget, MainWindow> {

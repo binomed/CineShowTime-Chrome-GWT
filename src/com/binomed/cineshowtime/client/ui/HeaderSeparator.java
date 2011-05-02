@@ -2,6 +2,7 @@ package com.binomed.cineshowtime.client.ui;
 
 import com.binomed.cineshowtime.client.IClientFactory;
 import com.binomed.cineshowtime.client.event.ui.SeparatorOpenEvent;
+import com.binomed.cineshowtime.client.resources.CstResource;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -26,10 +27,15 @@ public class HeaderSeparator extends Composite {
 	private String source;
 
 	public @UiConstructor
-	HeaderSeparator(boolean expandShow) {
+	HeaderSeparator(boolean expandShow, String name) {
 		// Initialization
 		initWidget(uiBinder.createAndBindUi(this));
 		separatorExpand.setVisible(expandShow);
+		separatorName.setText(name);
+		if (expandShow) {
+			separatorExpand.addStyleName(CstResource.instance.css().pointerHand());
+			separatorName.addStyleName(CstResource.instance.css().pointerHand());
+		}
 	}
 
 	public void setFactory(IClientFactory factory) {
