@@ -3,7 +3,6 @@
 			 xmlns:g="urn:import:com.google.gwt.user.client.ui"
 			 xmlns:cst="urn:import:com.binomed.cineshowtime.client.ui">
 	
-	<ui:style src="../resources/css/CstStyle.css" />
 	<ui:with field="res" type="com.binomed.cineshowtime.client.resources.CstResource" />
 	<ui:with field="i18n" type="com.binomed.cineshowtime.client.resources.I18N" />
 	
@@ -15,7 +14,7 @@
 				</div>
 				<div style="padding-left:10px;float:left;">
 					<g:HorizontalPanel>
-						<g:Label ui:field="movieName" styleName="{style.movieName}"/>
+						<g:Label ui:field="movieName" styleName="{res.css.movieName}"/>
 						<g:Label ui:field="movieYear"/>
 					</g:HorizontalPanel>
 					<g:HorizontalPanel>
@@ -29,16 +28,16 @@
 						<g:Hyperlink ui:field="movieLinkWikipedia" text="{i18n.wikipediaLink}" />
 					</g:HorizontalPanel>
 					<g:HorizontalPanel>
-						<g:Label text="{i18n.rate}" styleName="{style.movieLabel}"/>
+						<g:Label text="{i18n.rate}" styleName="{res.css.movieLabel}"/>
 						<g:Label ui:field="movieRateText"/>
 					</g:HorizontalPanel>
 					<cst:RateView ui:field="movieRate" />
 					<g:HorizontalPanel>
-						<g:Label text="{i18n.director}" styleName="{style.movieLabel}"/>
+						<g:Label text="{i18n.director}" styleName="{res.css.movieLabel}"/>
 						<g:Label ui:field="movieDirector"/>
 					</g:HorizontalPanel>
 					<g:HorizontalPanel>
-						<g:Label text="{i18n.actor}" styleName="{style.movieLabel}"/>
+						<g:Label text="{i18n.actor}" styleName="{res.css.movieLabel}"/>
 						<g:Label ui:field="movieActor"/>
 					</g:HorizontalPanel>
 				</div>

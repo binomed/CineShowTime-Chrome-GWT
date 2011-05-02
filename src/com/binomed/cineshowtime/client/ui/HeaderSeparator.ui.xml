@@ -1,0 +1,16 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+			 xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	
+	<ui:with field="res" type="com.binomed.cineshowtime.client.resources.CstResource" />
+	<ui:with field="i18n" type="com.binomed.cineshowtime.client.resources.I18N" />
+	
+	<g:HTMLPanel width="100%">
+		<g:Image ui:field="separatorExpand" styleName="{res.css.separatorExpand}"/>
+		<div class="{res.css.separatorTitle}">
+			<g:Label ui:field="separatorName"/>
+		</div>
+		<div class="{res.css.separatorRed}" />
+	</g:HTMLPanel>
+
+</ui:UiBinder> 

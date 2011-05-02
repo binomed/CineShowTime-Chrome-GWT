@@ -7,6 +7,31 @@
     text-align:center;
 }
 
+/* Separator View */
+.separatorExpand {
+	float:left;
+	cursor:pointer;
+    margin-left:5px;
+	padding-right:10px;
+}
+.separatorTitle {
+	cursor:pointer;
+    font-weight:bold;
+    font-size:14px;
+    color:#DDDDDD;
+	margin-left:20px;
+	padding-right:5px;
+}
+.separatorRed {
+	background-color:#ac171a;
+    border-radius:5px;
+	margin-left:20px;
+	margin-top:5px;
+	margin-bottom:15px;
+    height:3px;
+    width:85%
+}
+
 /* Main window styles */
 .mainPanel {
 	width: 100%;
@@ -33,7 +58,7 @@
 }
 
 .searchLabel{
-	color:#ff0000;
+	color:#ac171a;
 	font-weight:bold; 
 }
 
@@ -120,11 +145,11 @@
 	padding-top:50px;
     font-weight:bold;
     font-size:16px;
-    color:#ff0000;
+    color:#ac171a;
     padding-right:1em;
 }
 .movieLabel {
-    color:#ff0000;
+    color:#ac171a;
     font-weight:bold; 
     padding-right:5px;
     padding-bottom:10px;
@@ -137,13 +162,7 @@
 	padding-left:5px;
 	padding-right:5px;
 }
-.separatorTitle {
-}
-.separatorRed {
-	background-color:#ff0000;
-    border-radius:50px;
-    height:7px;
-}
+
 
 /*Reviews*/
 .reviewRate{
