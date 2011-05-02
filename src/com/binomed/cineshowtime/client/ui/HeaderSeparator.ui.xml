@@ -7,10 +7,12 @@
 	
 	<g:HTMLPanel width="100%">
 		<g:Image ui:field="separatorExpand" styleName="{res.css.separatorExpand}"/>
-		<div class="{res.css.separatorTitle}">
-			<g:Label ui:field="separatorName"/>
+		<div sytle="float:left;"><!--  -->
+			<div class="{res.css.separatorTitle}">
+				<g:Label ui:field="separatorName"/>
+			</div>
+			<div class="{res.css.separatorRed}" />
 		</div>
-		<div class="{res.css.separatorRed}" />
 	</g:HTMLPanel>
 
 </ui:UiBinder> 

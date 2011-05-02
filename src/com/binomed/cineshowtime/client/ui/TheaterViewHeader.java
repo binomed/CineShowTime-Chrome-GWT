@@ -49,8 +49,8 @@ public class TheaterViewHeader extends Composite {
 		theaterOpen.setResource(CstResource.instance.collapse());
 
 		theaterOpen.addStyleName(CstResource.instance.css().pointerHand());
-		theaterFav.addStyleName(CstResource.instance.css().imgRight());
-		theaterMap.addStyleName(CstResource.instance.css().imgRight());
+		theaterFav.addStyleName(CstResource.instance.css().pointerHand());
+		theaterMap.addStyleName(CstResource.instance.css().pointerHand());
 
 		isFav = isFav();
 		showTheaterFav();

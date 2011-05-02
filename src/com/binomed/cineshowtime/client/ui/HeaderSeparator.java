@@ -25,6 +25,7 @@ public class HeaderSeparator extends Composite {
 	private IClientFactory factory;
 	private String name;
 	private String source;
+	private boolean expand;
 
 	public @UiConstructor
 	HeaderSeparator(boolean expandShow, String name) {
@@ -32,8 +33,12 @@ public class HeaderSeparator extends Composite {
 		initWidget(uiBinder.createAndBindUi(this));
 		separatorExpand.setVisible(expandShow);
 		separatorName.setText(name);
+		expand = false;
+		this.name = name;
 		if (expandShow) {
+			separatorExpand.setResource(CstResource.instance.plus());
 			separatorExpand.addStyleName(CstResource.instance.css().pointerHand());
+			separatorExpand.addStyleName(CstResource.instance.css().separatorExpand());
 			separatorName.addStyleName(CstResource.instance.css().pointerHand());
 		}
 	}
@@ -42,17 +47,23 @@ public class HeaderSeparator extends Composite {
 		this.factory = factory;
 	}
 
-	public void setName(String name) {
-		this.name = name;
-		separatorName.setText(name);
-	}
-
 	public void setSource(String source) {
 		this.source = source;
 	}
 
+	@UiHandler("separatorExpand")
+	public void onExpand(ClickEvent event) {
+		manageExpand();
+	}
+
 	@UiHandler("separatorName")
 	public void onOpenSeparator(ClickEvent event) {
+		manageExpand();
+	}
+
+	public void manageExpand() {
+		expand = !expand;
+		separatorExpand.setResource(expand ? CstResource.instance.minus() : CstResource.instance.plus());
 		factory.getEventBusHandler().fireEvent(new SeparatorOpenEvent(source, name));
 	}
 

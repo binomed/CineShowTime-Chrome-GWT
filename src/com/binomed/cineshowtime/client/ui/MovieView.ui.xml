@@ -46,16 +46,14 @@
 				</div>
 			</div>
 			<div style="clear:both;">			
-				<cst:MovieHeaderSeparator ui:field="moviePlotSeparator"/>
-				<g:DisclosurePanel ui:field="groupMoviePlot">
-					<g:Label ui:field="moviePlot" />
-				</g:DisclosurePanel>
-				<cst:MovieHeaderSeparator ui:field="movieTrailerSeparator"/>
-				<g:DisclosurePanel ui:field="groupMovieBA">
+				<cst:HeaderSeparator expandShow="false"  name="{i18n.groupResume}" ui:field="separatorResume"/>
+				<g:Label ui:field="moviePlot" />
+				<cst:HeaderSeparator expandShow="true"  name="{i18n.groupBA}" ui:field="separatorTrailer"/>
+				<g:DisclosurePanel ui:field="groupTrailer">
 					<g:VerticalPanel ui:field="movieTrailerCoverflow" />
 				</g:DisclosurePanel>
-				<cst:MovieHeaderSeparator ui:field="movieReviewSeparator"/>
-				<g:DisclosurePanel ui:field="groupMovieCritique">
+				<cst:HeaderSeparator expandShow="true"  name="{i18n.groupCritiques}" ui:field="separatorReview"/>
+				<g:DisclosurePanel  ui:field="groupReview">
 					<g:VerticalPanel ui:field="movieReview" />
 				</g:DisclosurePanel>
 			</div>

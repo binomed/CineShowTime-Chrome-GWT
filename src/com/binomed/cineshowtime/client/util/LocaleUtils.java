@@ -13,10 +13,20 @@ public class LocaleUtils {
 
 	public static String getLocale() {
 		LocaleInfo locale = LocaleInfo.getCurrentLocale();
-		if (locale == null || StringUtils.equalsIC(locale.getLocaleName(), DEFAULT)) {
+		if ((locale == null) || StringUtils.equalsIC(locale.getLocaleName(), DEFAULT)) {
 			return DEFAULT_LOCALE;
 		}
 		return locale.getLocaleName();
 	}
+
+	public static native String getTimeZone() /*-{
+		var myDate = new Date();
+		var gmtHours = -myDate.getTimezoneOffset() / 60;
+		if (gmtHours > 0) {
+			return "GMT+" + gmtHours;
+		} else {
+			return "GMT-" + gmtHours;
+		}
+	}-*/;
 
 }

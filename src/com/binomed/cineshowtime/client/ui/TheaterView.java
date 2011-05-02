@@ -95,8 +95,7 @@ public class TheaterView extends Composite {
 								clientFactory.getEventBusHandler().addHandler(MovieLoadedEvent.TYPE, eventHandler);
 							}
 							// call the service
-							UserGeolocation.getInstance().getPlaceMark(theater.getPlace().getSearchQuery(),
-									new TheaterLocationCallBack(movieTmp, theater, clientFactory));
+							UserGeolocation.getInstance().getPlaceMark(theater.getPlace().getSearchQuery(), new TheaterLocationCallBack(movieTmp, theater, clientFactory));
 						} else if (movieTmp.getState() == MovieBean.STATE_IN_PROGRESS) {
 							// Register the service
 							if (!hasRegister) {
@@ -158,9 +157,7 @@ public class TheaterView extends Composite {
 		}
 
 		private void doSearch(String lang) {
-			final String ip = "193.253.198.44";
-			clientFactory.getCineShowTimeService().requestImdbInfo(movieTmp, ip, lang != null ? lang : clientFactory.getLanguage(),
-					theater.getPlace().getSearchQuery(), theater.getId());
+			clientFactory.getCineShowTimeService().requestImdbInfo(movieTmp, lang != null ? lang : clientFactory.getLanguage(), theater.getPlace().getSearchQuery(), theater.getId());
 		}
 	}
 

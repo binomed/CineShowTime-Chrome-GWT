@@ -15,6 +15,8 @@ import com.binomed.cineshowtime.client.util.StringUtils;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.maps.client.geocode.LocationCallback;
 import com.google.gwt.maps.client.geocode.Placemark;
@@ -51,8 +53,19 @@ public class SearchTheater extends Composite {
 		dateSearch.setFormat(new DateBox.DefaultFormat(format));
 	}
 
+	@UiHandler("locationSearch")
+	void handleSearchEnter(KeyPressEvent e) {
+		if (e.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
+			doSearch();
+		}
+	}
+
 	@UiHandler("searchButton")
 	void handleSearchClick(ClickEvent e) {
+		doSearch();
+	}
+
+	public void doSearch() {
 		if (StringUtils.isNotEmpty(locationSearch.getText()) || (dateSearch.getValue() != null)) {
 			clientFactory.getEventBusHandler().fireEvent(new SearchEvent());
 			// If the city is empty, then we want the result for same request but for another day

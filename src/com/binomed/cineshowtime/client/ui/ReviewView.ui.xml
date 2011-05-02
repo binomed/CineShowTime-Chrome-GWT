@@ -9,11 +9,11 @@
 	<g:VerticalPanel width="100%">
 		<g:HorizontalPanel width="100%">
 			<cst:RateView ui:field="rate"/>
-			<g:Label text="i18n.on" styleName="res.css.reviewLabel"/>
+			<g:Label text="{i18n.on}" styleName="{res.css.reviewLabel}"/>
 			<g:Anchor ui:field="reviewSourceLink" />
 		</g:HorizontalPanel>
 		<g:Label ui:field="reviewContent"/>
-		<g:Anchor  text="i18n.readMore" ui:field="reviewLink" />
+		<g:Anchor  text="{i18n.readMore}" ui:field="reviewLink" />
 	</g:VerticalPanel>
 	
 </ui:UiBinder> 

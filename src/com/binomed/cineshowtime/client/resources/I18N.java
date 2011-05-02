@@ -63,6 +63,11 @@ public interface I18N extends Messages {
 
 	String genre();
 
+	// Projection
+	String projectionFrom();
+
+	String projectionTo();
+
 	// Review View
 
 	String on();
