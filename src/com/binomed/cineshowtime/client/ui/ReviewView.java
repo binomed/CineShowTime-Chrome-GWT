@@ -16,7 +16,8 @@ public class ReviewView extends Composite {
 	@UiField
 	Label reviewContent;
 	@UiField
-	HeaderSeparator reviewTitle;
+	// HeaderSeparator reviewTitle;
+	Label reviewTitle;
 	@UiField
 	Anchor reviewSourceLink, reviewLink;
 	@UiField(provided = true)
@@ -30,7 +31,7 @@ public class ReviewView extends Composite {
 
 		reviewContent.setText(review.getReview());
 		reviewLink.setHref(review.getUrlReview());
-		reviewTitle.setTitle(review.getAuthor());
+		reviewTitle.setText(review.getAuthor());
 		reviewSourceLink.setText(review.getSource());
 		reviewSourceLink.setHref(review.getSource());
 	}

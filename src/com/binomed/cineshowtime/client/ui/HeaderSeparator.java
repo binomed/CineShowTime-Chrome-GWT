@@ -26,13 +26,16 @@ public class HeaderSeparator extends Composite {
 	private String name;
 	private String source;
 	private boolean expand;
+	private boolean expandShow;
 
 	public @UiConstructor
 	HeaderSeparator(boolean expandShow, String name) {
 		// Initialization
 		initWidget(uiBinder.createAndBindUi(this));
+		this.expandShow = expandShow;
 		separatorExpand.setVisible(expandShow);
 		separatorName.setText(name);
+
 		expand = false;
 		this.name = name;
 		if (expandShow) {
@@ -62,9 +65,11 @@ public class HeaderSeparator extends Composite {
 	}
 
 	public void manageExpand() {
-		expand = !expand;
-		separatorExpand.setResource(expand ? CstResource.instance.minus() : CstResource.instance.plus());
-		factory.getEventBusHandler().fireEvent(new SeparatorOpenEvent(source, name));
+		if (expandShow) {
+			expand = !expand;
+			separatorExpand.setResource(expand ? CstResource.instance.minus() : CstResource.instance.plus());
+			factory.getEventBusHandler().fireEvent(new SeparatorOpenEvent(source, name));
+		}
 	}
 
 	interface HeaderSeparatorUiBinder extends UiBinder<Widget, HeaderSeparator> {

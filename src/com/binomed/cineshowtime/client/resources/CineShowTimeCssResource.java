@@ -63,6 +63,8 @@ public interface CineShowTimeCssResource extends CssResource {
 
 	/* Reviews */
 
+	String review();
+
 	String reviewRate();
 
 	String reviewLabel();
@@ -83,12 +85,5 @@ public interface CineShowTimeCssResource extends CssResource {
 	String projectionNear();
 
 	String projectionFutur();
-
-	/* GWT Redefinition elements */
-	@ClassName("gwt-TabPanel")
-	String gwtTabPanel();
-
-	@ClassName("gwt-TabPanelBottom")
-	String gwtTabPanelBottom();
 
 }

@@ -6,9 +6,16 @@
 	<ui:with field="res" type="com.binomed.cineshowtime.client.resources.CstResource" />
 	<ui:with field="i18n" type="com.binomed.cineshowtime.client.resources.I18N" />
 	
-	<g:VerticalPanel width="100%">
-		<cst:HeaderSeparator ui:field="reviewTitle"/>
-		<g:HorizontalPanel width="100%">
+	<g:VerticalPanel styleName="{res.css.review}">
+		<!-- <cst:HeaderSeparator ui:field="reviewTitle"/>-->
+		<g:HTMLPanel width="90%">
+			<div><!--  -->
+				<div class="{res.css.reviewTitleLeft}"/>
+				<g:Label ui:field="reviewTitle" styleName="{res.css.reviewTitle}"/>
+				<div class="{res.css.reviewTitleRight}"/>
+			</div>
+		</g:HTMLPanel>
+		<g:HorizontalPanel>
 			<cst:RateView ui:field="rate"/>
 			<g:Label text="{i18n.on}" styleName="{res.css.reviewLabel}"/>
 			<g:Anchor ui:field="reviewSourceLink" />

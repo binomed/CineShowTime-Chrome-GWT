@@ -15,7 +15,6 @@
     margin-bottom:5px;
 }
 .separatorTitle {
-	cursor:pointer;
     font-weight:bold;
     font-size:14px;
     color:#DDDDDD;
@@ -162,6 +161,10 @@
 
 
 /*Reviews*/
+.review{
+	padding-bottom:10px;	
+	width:100%
+}
 .reviewRate{
 	padding-right:10px;	
 }
@@ -171,12 +174,14 @@
 
 .reviewTitleLeft{
 	float:left;
-	margin-top:7px;
-	background:#ac171a;
-	width:90px;
-	height:7px;
+	margin-top:10px;
+	background:#DDDDDD;
+	width:30px;
+	height:1px;
 	padding: 0px;
-    border-radius: 5px;    
+    -moz-border-radius: 3px;
+    -khtml-border-radius: 3px;
+    -webkit-border-radius: 3px; 
 }
 .reviewTitle{
 	position:relative;
@@ -191,11 +196,13 @@
 }
 .reviewTitleRight{
 	position:relative;
-	background:#ac171a;
-	top:7px;
+	background:#DDDDDD;
+	top:10px;
 	padding: 0px;
-    border-radius: 5px;
-	height:7px;
+     -moz-border-radius: 3px;
+    -khtml-border-radius: 3px;
+    -webkit-border-radius: 3px;
+	height:1px;
 	overflow:hidden;
 }
 
@@ -229,11 +236,3 @@
     color:lightgrey; 
 }
 
-/*GWT Redefinition elements*/
-.gwt-TabPanel { 
-	border-radius: 10px !important;
-}
-
-.gwt-TabPanelBottom {
-
-}

@@ -45,7 +45,7 @@ public class ProjectionView extends Composite {
 			Date time = new Date(projection.getShowtime());
 			Date timeEnd = new Date(projection.getShowtime() + movieTime);
 			text = I18N.instance.projectionFrom() + " " + DateTimeFormat.getFormat("HH:mm").format(time) //
-					+ " " + I18N.instance.projectionTo() + DateTimeFormat.getFormat("HH:mm").format(timeEnd);//
+					+ " " + I18N.instance.projectionTo() + " " + DateTimeFormat.getFormat("HH:mm").format(timeEnd);//
 			if (projection.getLang() != null) {
 				text += " (" + projection.getLang() + ")";
 			}

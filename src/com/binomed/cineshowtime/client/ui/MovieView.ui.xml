@@ -64,8 +64,8 @@
 					<g:VerticalPanel ui:field="movieTrailerCoverflow" />
 				</g:DisclosurePanel>
 				<cst:HeaderSeparator expandShow="true"  name="{i18n.groupCritiques}" ui:field="separatorReview"/>
-				<g:DisclosurePanel  ui:field="groupReview">
-					<g:VerticalPanel ui:field="movieReview" />
+				<g:DisclosurePanel  ui:field="groupReview" width="100%">
+					<g:VerticalPanel ui:field="movieReview" width="100%"/>
 				</g:DisclosurePanel>
 			</div>
 		</g:HTMLPanel>
