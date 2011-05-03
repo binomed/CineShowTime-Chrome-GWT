@@ -1,4 +1,5 @@
 <!-- Includes the source files for the theme. -->
 <module>
+	  <inherits name="com.google.gwt.user.theme.chrome.Chrome"/>
       <stylesheet src="gwt/cst/cst.css"/>
 </module>
