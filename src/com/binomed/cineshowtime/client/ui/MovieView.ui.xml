@@ -4,7 +4,7 @@
 			 xmlns:cst="urn:import:com.binomed.cineshowtime.client.ui">
 	
 	<ui:with field="res" type="com.binomed.cineshowtime.client.resources.CstResource" />
-	<ui:with field="i18n" type="com.binomed.cineshowtime.client.resources.I18N" />
+	<ui:with field="i18n" type="com.binomed.cineshowtime.client.resources.i18n.I18N" />
 	
 	<g:ScrollPanel>
 		<g:HTMLPanel width="100%" styleName="{res.css.movieContent}">

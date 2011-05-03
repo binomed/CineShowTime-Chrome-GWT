@@ -5,7 +5,7 @@
 	
 	<ui:style src="../resources/css/CstStyle.css" />
 	<ui:with field="res" type="com.binomed.cineshowtime.client.resources.CstResource" />
-	<ui:with field="i18n" type="com.binomed.cineshowtime.client.resources.I18N" />
+	<ui:with field="i18n" type="com.binomed.cineshowtime.client.resources.i18n.I18N" />
 	
 		<g:VerticalPanel width="100%">
 			<g:CaptionPanel ui:field="preferenceCatGen" width="95%">

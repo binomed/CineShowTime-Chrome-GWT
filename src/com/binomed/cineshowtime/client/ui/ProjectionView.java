@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.binomed.cineshowtime.client.model.ProjectionBean;
 import com.binomed.cineshowtime.client.resources.CstResource;
-import com.binomed.cineshowtime.client.resources.I18N;
+import com.binomed.cineshowtime.client.resources.i18n.I18N;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.uibinder.client.UiBinder;

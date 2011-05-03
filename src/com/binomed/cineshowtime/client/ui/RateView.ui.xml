@@ -3,7 +3,7 @@
 			 xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	
 	<ui:with field="res" type="com.binomed.cineshowtime.client.resources.CstResource" />
-	<ui:with field="i18n" type="com.binomed.cineshowtime.client.resources.I18N" />
+	<ui:with field="i18n" type="com.binomed.cineshowtime.client.resources.i18n.I18N" />
 	
 	<g:HorizontalPanel>
 			<g:Image resource='{res.rate_star_small_on}' ui:field="rate1" />

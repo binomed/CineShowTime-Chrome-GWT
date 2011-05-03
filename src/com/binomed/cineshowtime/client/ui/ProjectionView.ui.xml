@@ -4,7 +4,7 @@
 	
 	<ui:style src="../resources/css/CstStyle.css" />
 	<ui:with field="res" type="com.binomed.cineshowtime.client.resources.CstResource" />
-	<ui:with field="i18n" type="com.binomed.cineshowtime.client.resources.I18N" />
+	<ui:with field="i18n" type="com.binomed.cineshowtime.client.resources.i18n.I18N" />
 	
 	<g:CaptionPanel ui:field="movieSeanceGroup" styleName="{style.projectionsCaption}" >
 		<g:VerticalPanel ui:field="movieSeanceList"  styleName="{style.projectionsContent}" />
