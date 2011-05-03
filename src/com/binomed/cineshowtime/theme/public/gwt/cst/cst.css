@@ -5,25 +5,41 @@
 }
 
 .gwt-TabLayoutPanel .gwt-TabLayoutPanelContent {
-  border-color: #bcbcbc; 
-  border-style: solid;
-  border-width: 3px 2px 2px;
-  overflow: hidden;
-  padding: 6px;
+  border: solid 1px;
+  border-radius: 5px;
+  box-shadow:2px 2px 2px #333333
 }
 
 .gwt-TabLayoutPanel .gwt-TabLayoutPanelTab {
-  margin-left: 6px;
-  padding: 3px 6px 3px 6px;
   cursor: pointer;
   cursor: hand;
-  color: red;
-  font-weight: bold;
+  font-size:14px;
+  font-weight:bold; 
+  color: #FFFFFF;
+  -webkit-stroke-width: 1.0px;
+  -webkit-stroke-color: #000000;
+  -webkit-fill-color: #FFFFFF;
+  text-shadow: 2px 2px 2px #333333;
   text-align: center;
-  background: #e3e3e3;
+  background-image: -webkit-gradient(
+    linear,
+    right bottom,
+    right top,
+    color-stop(0.22, rgb(0,0,0)),
+    color-stop(0.61, rgb(172,23,25))
+	);
+  background-image: -moz-linear-gradient(
+    center bottom,
+    rgb(0,0,0) 22%,
+    rgb(172,23,25) 61%
+  );
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
 }
 
 .gwt-TabLayoutPanel .gwt-TabLayoutPanelTab-selected {
   cursor: default;
-  background: #bcbcbc;
+  -moz-box-shadow: 0 0 5px #888;
+  -webkit-box-shadow: 0 0 5px #888;
+  box-shadow: 0 0 5px #888;
 }

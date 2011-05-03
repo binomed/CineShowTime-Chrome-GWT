@@ -78,11 +78,4 @@ public interface CineShowTimeCssResource extends CssResource {
 
 	String projectionFutur();
 
-	/* GWT Redefinition elements */
-	@ClassName("gwt-TabPanel")
-	String gwtTabPanel();
-
-	@ClassName("gwt-TabPanelBottom")
-	String gwtTabPanelBottom();
-
 }
