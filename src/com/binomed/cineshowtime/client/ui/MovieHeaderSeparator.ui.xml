@@ -1,16 +1,17 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-			 xmlns:g="urn:import:com.google.gwt.user.client.ui"
-			 xmlns:cst="urn:import:com.binomed.cineshowtime.client.ui">
+			 xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	
 	<ui:style src="../resources/css/CstStyle.css" />
 	<ui:with field="res" type="com.binomed.cineshowtime.client.resources.CstResource" />
 	<ui:with field="i18n" type="com.binomed.cineshowtime.client.resources.i18n.I18N" />
 	
-		<g:VerticalPanel width="100%">
-			<g:CaptionPanel ui:field="preferenceCatGen" width="95%">
-				<g:Button ui:field="preferenceGenResetDb" text="{i18n.preference_gen_reset_db}" />
-			</g:CaptionPanel>
-		</g:VerticalPanel>
-	
+	<g:HTMLPanel >
+		<div class="{res.css.movieSeparator}">
+			<g:Label ui:field="separatorName" />
+		</div>
+		<div class="{res.css.separatorRed}"/>
+		<div style="clear:both"/>
+	</g:HTMLPanel>
+
 </ui:UiBinder> 

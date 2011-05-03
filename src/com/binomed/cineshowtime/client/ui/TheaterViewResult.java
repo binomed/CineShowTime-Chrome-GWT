@@ -1,7 +1,7 @@
 package com.binomed.cineshowtime.client.ui;
 
 import com.binomed.cineshowtime.client.resources.CstResource;
-import com.binomed.cineshowtime.client.resources.I18N;
+import com.binomed.cineshowtime.client.resources.i18n.I18N;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;

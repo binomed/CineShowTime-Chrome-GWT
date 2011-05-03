@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.binomed.cineshowtime.client.model.ProjectionBean;
 import com.binomed.cineshowtime.client.resources.CstResource;
-import com.binomed.cineshowtime.client.resources.I18N;
+import com.binomed.cineshowtime.client.resources.i18n.I18N;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -45,7 +45,7 @@ public class ProjectionView extends Composite {
 			Date time = new Date(projection.getShowtime());
 			Date timeEnd = new Date(projection.getShowtime() + movieTime);
 			text = I18N.instance.projectionFrom() + " " + DateTimeFormat.getFormat("HH:mm").format(time) //
-					+ " " + I18N.instance.projectionTo() + DateTimeFormat.getFormat("HH:mm").format(timeEnd);//
+					+ " " + I18N.instance.projectionTo() + " " + DateTimeFormat.getFormat("HH:mm").format(timeEnd);//
 			if (projection.getLang() != null) {
 				text += " (" + projection.getLang() + ")";
 			}

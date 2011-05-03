@@ -1,5 +1,6 @@
 package com.binomed.cineshowtime.client.util;
 
+
 public class StringUtils {
 
 	private StringUtils() {

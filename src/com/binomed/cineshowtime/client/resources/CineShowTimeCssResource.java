@@ -63,9 +63,17 @@ public interface CineShowTimeCssResource extends CssResource {
 
 	/* Reviews */
 
+	String review();
+
 	String reviewRate();
 
 	String reviewLabel();
+
+	String reviewTitleLeft();
+
+	String reviewTitle();
+
+	String reviewTitleRight();
 
 	/* Projections */
 	String projectionsCaption();

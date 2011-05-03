@@ -5,7 +5,7 @@
 			 xmlns:cst="urn:import:com.binomed.cineshowtime.client.ui">
 	
 	<ui:with field="res" type="com.binomed.cineshowtime.client.resources.CstResource" />
-	<ui:with field="i18n" type="com.binomed.cineshowtime.client.resources.I18N" />
+	<ui:with field="i18n" type="com.binomed.cineshowtime.client.resources.i18n.I18N" />
 	
 	<g:VerticalPanel width="100%">
 		<cst:HeaderSeparator ui:field="searchTitle" expandShow="false" name="{i18n.searchTitle}" width="100%"/>

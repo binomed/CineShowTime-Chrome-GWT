@@ -7,7 +7,7 @@ public interface CineshowtimeDbCst {
 	 */
 
 	static final int DATABASE_VERSION = 2;
-	static final String APP_VERSION = "1.0";
+	static final String APP_VERSION = "1.1";
 
 	/*
 	 * Data base Column

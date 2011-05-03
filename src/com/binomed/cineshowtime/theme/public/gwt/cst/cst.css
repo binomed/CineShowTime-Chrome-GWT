@@ -7,6 +7,7 @@
 .gwt-TabLayoutPanel .gwt-TabLayoutPanelContent {
   border: solid 1px;
   border-radius: 5px;
+  background-color: rgba(85,85,85,0.3); 
   box-shadow:2px 2px 2px #333333
 }
 
@@ -14,25 +15,14 @@
   cursor: pointer;
   cursor: hand;
   font-size:14px;
-  font-weight:bold; 
+  font-weight:bold;
   color: #FFFFFF;
   -webkit-stroke-width: 1.0px;
   -webkit-stroke-color: #000000;
   -webkit-fill-color: #FFFFFF;
   text-shadow: 2px 2px 2px #333333;
   text-align: center;
-  background-image: -webkit-gradient(
-    linear,
-    right bottom,
-    right top,
-    color-stop(0.22, rgb(0,0,0)),
-    color-stop(0.61, rgb(172,23,25))
-	);
-  background-image: -moz-linear-gradient(
-    center bottom,
-    rgb(0,0,0) 22%,
-    rgb(172,23,25) 61%
-  );
+  background-color: rgba(85,85,85,0.3); 
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
 }
@@ -41,5 +31,6 @@
   cursor: default;
   -moz-box-shadow: 0 0 5px #888;
   -webkit-box-shadow: 0 0 5px #888;
+  background-color: rgba(136,136,136,0.4); 
   box-shadow: 0 0 5px #888;
 }

@@ -6,7 +6,7 @@ import com.binomed.cineshowtime.client.IClientFactory;
 import com.binomed.cineshowtime.client.event.ui.TheaterOpenEvent;
 import com.binomed.cineshowtime.client.model.TheaterBean;
 import com.binomed.cineshowtime.client.resources.CstResource;
-import com.binomed.cineshowtime.client.resources.I18N;
+import com.binomed.cineshowtime.client.resources.i18n.I18N;
 import com.binomed.cineshowtime.client.ui.dialog.MapDialog;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
