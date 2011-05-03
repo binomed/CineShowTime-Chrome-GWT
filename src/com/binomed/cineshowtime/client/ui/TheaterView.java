@@ -13,6 +13,7 @@ import com.binomed.cineshowtime.client.handler.ui.TheaterOpenHandler;
 import com.binomed.cineshowtime.client.model.MovieBean;
 import com.binomed.cineshowtime.client.model.ProjectionBean;
 import com.binomed.cineshowtime.client.model.TheaterBean;
+import com.binomed.cineshowtime.client.resources.CstResource;
 import com.binomed.cineshowtime.client.service.geolocation.UserGeolocation;
 import com.binomed.cineshowtime.client.service.ws.CineShowTimeWS;
 import com.binomed.cineshowtime.client.ui.coverflow.CoverData;
@@ -61,6 +62,7 @@ public class TheaterView extends Composite {
 
 		// Initialization
 		initWidget(uiBinder.createAndBindUi(this));
+		this.addStyleName(CstResource.instance.css().theaterContent());
 
 		// Update theater informations
 		theaterPanel.setAnimationEnabled(true);
@@ -128,9 +130,9 @@ public class TheaterView extends Composite {
 
 	static class TheaterLocationCallBack implements LocationCallback {
 
-		private MovieBean movieTmp;
-		private TheaterBean theater;
-		private IClientFactory clientFactory;
+		private final MovieBean movieTmp;
+		private final TheaterBean theater;
+		private final IClientFactory clientFactory;
 
 		public TheaterLocationCallBack(MovieBean movieTmp, TheaterBean theater, IClientFactory clientFactory) {
 			super();
@@ -155,8 +157,7 @@ public class TheaterView extends Composite {
 		}
 
 		private void doSearch(String lang) {
-			final String ip = "193.253.198.44";
-			clientFactory.getCineShowTimeService().requestImdbInfo(movieTmp, ip, lang != null ? lang : clientFactory.getLanguage(), theater.getPlace().getSearchQuery(), theater.getId());
+			clientFactory.getCineShowTimeService().requestImdbInfo(movieTmp, lang != null ? lang : clientFactory.getLanguage(), theater.getPlace().getSearchQuery(), theater.getId());
 		}
 	}
 

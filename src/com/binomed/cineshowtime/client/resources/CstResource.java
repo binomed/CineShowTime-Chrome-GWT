@@ -67,10 +67,22 @@ public interface CstResource extends ClientBundle {
 	@Source("com/binomed/cineshowtime/client/resources/images/collapse.png")
 	ImageResource collapse();
 
+	@Source("com/binomed/cineshowtime/client/resources/images/plus.png")
+	ImageResource plus();
+
+	@Source("com/binomed/cineshowtime/client/resources/images/minus.png")
+	ImageResource minus();
+
 	@Source("com/binomed/cineshowtime/client/resources/images/maps.png")
 	ImageResource maps();
 
 	@Source("com/binomed/cineshowtime/client/resources/images/divider-line.png")
 	ImageResource divider_line();
+
+	@Source("com/binomed/cineshowtime/client/resources/images/wikipedia.png")
+	ImageResource wikipedia();
+
+	@Source("com/binomed/cineshowtime/client/resources/images/imdb.png")
+	ImageResource imdb();
 
 }

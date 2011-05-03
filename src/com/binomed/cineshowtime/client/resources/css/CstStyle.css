@@ -4,6 +4,32 @@
 }
 .center{
     margin:auto;
+    text-align:center;
+}
+
+/* Separator View */
+.separatorExpand {
+	float:left;
+	cursor:pointer;
+    margin-left:0px;
+    margin-bottom:5px;
+}
+.separatorTitle {
+	cursor:pointer;
+    font-weight:bold;
+    font-size:14px;
+    color:#DDDDDD;
+	margin-left:20px;
+	padding-right:5px;
+}
+.separatorRed {
+	background-color:#ac171a;
+    border-radius:5px;
+	margin-left:30px;
+	margin-top:5px;
+	margin-bottom:15px;
+    height:3px;
+    width:85%
 }
 
 /* Main window styles */
@@ -15,31 +41,55 @@
 	color: #FFFFFF;
 }
 .tabPanel {
-	width:80%;
-	height:90%;
-	margin: auto;
-	background: #000000 url(images/background.png) bottom right no-repeat;
+	width:80%;	height:100%;	margin: auto;	background: #000000 url(images/background.png) bottom right no-repeat;
 }
 .mainScroll {
 	width:100%;
 	height:100%;
 }
-.mainVert {
-	width:100%;
-}
 
 /*Search Style*/
 
+.searchPanel {
+	padding-bottom: 10px;	
+}
+
 .searchLabel{
-	color:#ff0000;
+	color:#ac171a;
 	font-weight:bold; 
 }
 
 /* Theater style */
-.theaterPanelHeader {
-	background: rgba(136,136,136,0.2);
-	border-radius: 10px;
+.theaterTab{
+	width:100%;
+    padding: 10px;
 }
+
+.theaterResultList{
+	width: 100%;
+	/*background: rgba(136,136,136,0.2);*/
+	border-radius: 5px;
+	-moz-box-shadow: 0 0 5px #888;
+	-webkit-box-shadow: 0 0 5px#888;
+	box-shadow: 0 0 5px #888;
+}
+
+.theaterContent {
+	width: 100%;
+	border-bottom-color: #696969;
+	border-bottom-style: solid;
+	border-bottom-width: 1px;
+}
+
+.theaterDisclosure {
+	text-align:center;
+	margin:auto;
+}
+
+.theaterPanelHeader {
+	padding-bottom: 5px;
+}
+
 .theaterNameHeader {
     color: #aaaaaa;
     cursor:pointer;
@@ -50,20 +100,16 @@
     color: #696969;
     font-style:italic;
 }
-.theaterContent {
-	width: 100%;
-	padding-right:10px;
-	padding-left:10px;
-}
+
 .theaterCoverlflow {
 	width: 100%;
 	text-align:center;
-	background: rgba(136,136,136,0.2);
-	border-radius: 10px;
+	padding-top: 10px;
+	background: transparent;
 }
 .imgRight{
-	width:30px;
-	height:30px;
+	width:10px;
+	height:10px;
 }
 
 /* Movie style */
@@ -77,11 +123,11 @@
 	padding-top:50px;
     font-weight:bold;
     font-size:16px;
-    color:#ff0000;
+    color:#ac171a;
     padding-right:1em;
 }
 .movieLabel {
-    color:#ff0000;
+    color:#ac171a;
     font-weight:bold; 
     padding-right:5px;
     padding-bottom:10px;
@@ -95,15 +141,7 @@
 	padding-right:5px;
 	margin-left: 20px;
 }
-.separatorTitle {
-}
-.separatorRed {
-	background-color:#ac171a;
-    border-radius:50px;
-	margin-left: 20px;
-    height:3px;
-    widht:80%;
-}
+
 
 /*Reviews*/
 .reviewRate{
@@ -154,14 +192,21 @@
     font-weight:normal;
 }
 .projectionPassed{
+	margin-left:5px;
+	margin-bottom:5px;
     font-style:italic; 
     color:#3C3C3C; 
 }
 .projectionNear{
+	margin-left:5px;
+	margin-bottom:5px;
     font-weight:bold; 
+    font-size:14px;
     color:#D2D2D2; 
 }
 .projectionFutur{
+	margin-bottom:5px;
+	margin-left:5px;
     font-weight:normal; 
     color:lightgrey; 
 }

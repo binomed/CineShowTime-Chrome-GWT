@@ -3,16 +3,16 @@
 			 xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	
 	<ui:with field="res" type="com.binomed.cineshowtime.client.resources.CstResource" />
-	<ui:with field="i18n" type="com.binomed.cineshowtime.client.resources.i18n.I18N" />
+	<ui:with field="i18n" type="com.binomed.cineshowtime.client.resources.I18N" />
 	
-	<g:HTMLPanel >
-		<div class="{res.css.reviewTitleLeft}" />
-		<div class="{res.css.reviewTitle}">
-			<g:Label ui:field="separatorName" />
+	<g:HTMLPanel width="100%">
+		<g:Image ui:field="separatorExpand" styleName="{res.css.separatorExpand}"/>
+		<div sytle="float:left;"><!--  -->
+			<div class="{res.css.separatorTitle}">
+				<g:Label ui:field="separatorName"/>
+			</div>
+			<div class="{res.css.separatorRed}" />
 		</div>
-		<div class="{res.css.reviewTitleRight}"/>
-		<div style="clear:both"/>
 	</g:HTMLPanel>
-
 
 </ui:UiBinder> 

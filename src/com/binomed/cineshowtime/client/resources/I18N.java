@@ -15,6 +15,8 @@ public interface I18N extends Messages {
 
 	String parametersTabLabel();
 
+	String theaterResult();
+
 	// Theater view
 	String addFavorites();
 
@@ -23,6 +25,8 @@ public interface I18N extends Messages {
 	String theaterName(String theaterName, int nbMovies);
 
 	// Search panel
+	String searchTitle();
+
 	String locationLabel();
 
 	String theaterMovieLabel();
@@ -59,6 +63,12 @@ public interface I18N extends Messages {
 
 	String genre();
 
+	String year();
+
+	// Projection
+	String projectionFrom();
+
+	String projectionTo();
 	// Review View
 
 	String on();

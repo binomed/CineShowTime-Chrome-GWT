@@ -3,7 +3,6 @@
 			 xmlns:g="urn:import:com.google.gwt.user.client.ui"
 			 xmlns:cst="urn:import:com.binomed.cineshowtime.client.ui">
 	
-	<ui:style src="../resources/css/CstStyle.css" />
 	<ui:with field="res" type="com.binomed.cineshowtime.client.resources.CstResource" />
 	<ui:with field="i18n" type="com.binomed.cineshowtime.client.resources.I18N" />
 	
@@ -15,31 +14,40 @@
 				</div>
 				<div style="padding-left:10px;float:left;">
 					<g:HorizontalPanel>
-						<g:Label ui:field="movieName" styleName="{style.movieName}"/>
+						<g:Label ui:field="movieName" styleName="{res.css.movieName}"/>
+					</g:HorizontalPanel>
+					<g:HorizontalPanel>
+						<g:Label text="{i18n.year}" styleName="{res.css.movieLabel}"/>
 						<g:Label ui:field="movieYear"/>
 					</g:HorizontalPanel>
 					<g:HorizontalPanel>
+						<g:Label text="{i18n.duration}" styleName="{res.css.movieLabel}"/>
 						<g:Label ui:field="movieTime"/>
-						<g:Label ui:field="sepMovieTimeStyle" text=" - "/>
+					</g:HorizontalPanel>
+					<g:HorizontalPanel>
+						<g:Label text="{i18n.genre}" styleName="{res.css.movieLabel}"/>
 						<g:Label ui:field="movieStyle"/>
 					</g:HorizontalPanel>
 					<g:HorizontalPanel>
-						<g:Hyperlink ui:field="movieLinkImdb" text="{i18n.imdbLink}" />
-						<g:Label ui:field="sepMovieLink" text=", "/>
-						<g:Hyperlink ui:field="movieLinkWikipedia" text="{i18n.wikipediaLink}" />
-					</g:HorizontalPanel>
-					<g:HorizontalPanel>
-						<g:Label text="{i18n.rate}" styleName="{style.movieLabel}"/>
-						<g:Label ui:field="movieRateText"/>
-					</g:HorizontalPanel>
-					<cst:RateView ui:field="movieRate" />
-					<g:HorizontalPanel>
-						<g:Label text="{i18n.director}" styleName="{style.movieLabel}"/>
+						<g:Label text="{i18n.director}" styleName="{res.css.movieLabel}"/>
 						<g:Label ui:field="movieDirector"/>
 					</g:HorizontalPanel>
 					<g:HorizontalPanel>
-						<g:Label text="{i18n.actor}" styleName="{style.movieLabel}"/>
+						<g:Label text="{i18n.actor}" styleName="{res.css.movieLabel}"/>
 						<g:Label ui:field="movieActor"/>
+					</g:HorizontalPanel>
+					<g:HorizontalPanel>
+						<g:Label text="{i18n.rate}" styleName="{res.css.movieLabel}"/>
+						<g:Label ui:field="movieRateText"/>
+						<cst:RateView ui:field="movieRate" />
+					</g:HorizontalPanel>
+					<g:HorizontalPanel>
+						<g:Image resource="{res.imdb}" />
+						<g:Hyperlink ui:field="movieLinkImdb" text="{i18n.imdbLink}" />
+					</g:HorizontalPanel>
+					<g:HorizontalPanel>
+						<g:Image resource="{res.wikipedia}" />
+						<g:Hyperlink ui:field="movieLinkWikipedia" text="{i18n.wikipediaLink}" />
 					</g:HorizontalPanel>
 				</div>
 				<div style="padding-left:100px;float:left;">
@@ -47,16 +55,14 @@
 				</div>
 			</div>
 			<div style="clear:both;">			
-				<cst:MovieHeaderSeparator ui:field="moviePlotSeparator"/>
-				<g:DisclosurePanel ui:field="groupMoviePlot">
-					<g:Label ui:field="moviePlot" />
-				</g:DisclosurePanel>
-				<cst:MovieHeaderSeparator ui:field="movieTrailerSeparator"/>
-				<g:DisclosurePanel ui:field="groupMovieBA">
+				<cst:HeaderSeparator expandShow="false"  name="{i18n.groupResume}" ui:field="separatorResume"/>
+				<g:Label ui:field="moviePlot" />
+				<cst:HeaderSeparator expandShow="true"  name="{i18n.groupBA}" ui:field="separatorTrailer"/>
+				<g:DisclosurePanel ui:field="groupTrailer">
 					<g:VerticalPanel ui:field="movieTrailerCoverflow" />
 				</g:DisclosurePanel>
-				<cst:MovieHeaderSeparator ui:field="movieReviewSeparator"/>
-				<g:DisclosurePanel ui:field="groupMovieCritique">
+				<cst:HeaderSeparator expandShow="true"  name="{i18n.groupCritiques}" ui:field="separatorReview"/>
+				<g:DisclosurePanel  ui:field="groupReview">
 					<g:VerticalPanel ui:field="movieReview" />
 				</g:DisclosurePanel>
 			</div>

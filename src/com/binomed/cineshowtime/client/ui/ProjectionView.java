@@ -32,8 +32,8 @@ public class ProjectionView extends Composite {
 
 	public void updateProjections(String theaterName, long movieTime, List<ProjectionBean> projections) {
 		movieSeanceGroup.setCaptionText(theaterName);
+		String text;
 		Label projectionTimeStart;
-		Label projectionTimeEnd;
 		StringBuilder movieStart = new StringBuilder("");
 		boolean nextShow = true;
 		Date currentTime = new Date();
@@ -44,8 +44,13 @@ public class ProjectionView extends Composite {
 			}
 			Date time = new Date(projection.getShowtime());
 			Date timeEnd = new Date(projection.getShowtime() + movieTime);
-			projectionTimeStart = new Label(DateTimeFormat.getFormat("HH:mm").format(time));
-			projectionTimeEnd = new Label(I18N.instance.endProjection() + DateTimeFormat.getFormat("HH:mm").format(timeEnd));
+			text = I18N.instance.projectionFrom() + " " + DateTimeFormat.getFormat("HH:mm").format(time) //
+					+ " " + I18N.instance.projectionTo() + DateTimeFormat.getFormat("HH:mm").format(timeEnd);//
+			if (projection.getLang() != null) {
+				text += " (" + projection.getLang() + ")";
+			}
+
+			projectionTimeStart = new Label(text);
 
 			String className = CstResource.instance.css().projectionFutur();
 			if (time.getTime() < currentTime.getTime()) {
@@ -56,10 +61,8 @@ public class ProjectionView extends Composite {
 			}
 
 			projectionTimeStart.setStyleName(className);
-			projectionTimeEnd.setStyleName(className);
 
 			movieSeanceList.add(projectionTimeStart);
-			movieSeanceList.add(projectionTimeEnd);
 		}
 	}
 

@@ -45,17 +45,17 @@ public class MovieView extends Composite {
 	@UiField
 	RateView movieRate;
 	@UiField
-	Label movieName, movieYear, movieTime, movieStyle, sepMovieTimeStyle, sepMovieLink, moviePlot, movieDirector, movieActor, movieRateText;
+	Label movieName, movieYear, movieTime, movieStyle, moviePlot, movieDirector, movieActor, movieRateText;
 	@UiField
 	Hyperlink movieLinkImdb, movieLinkWikipedia;
-	@UiField
-	DisclosurePanel groupMoviePlot, groupMovieBA, groupMovieCritique;
 	@UiField
 	ProjectionView movieProjections;
 	@UiField
 	VerticalPanel movieTrailerCoverflow, movieReview;
 	@UiField
-	MovieHeaderSeparator movieTrailerSeparator, moviePlotSeparator, movieReviewSeparator;
+	HeaderSeparator separatorTrailer, separatorReview;
+	@UiField
+	DisclosurePanel groupTrailer, groupReview;
 
 	private Coverflow coverflow;
 
@@ -78,19 +78,11 @@ public class MovieView extends Composite {
 	}
 
 	private void fillMovieView() {
-		moviePlotSeparator.setSource(movie.getId());
-		movieTrailerSeparator.setSource(movie.getId());
-		movieReviewSeparator.setSource(movie.getId());
-		moviePlotSeparator.setFactory(clientFactory);
-		movieTrailerSeparator.setFactory(clientFactory);
-		movieReviewSeparator.setFactory(clientFactory);
-		moviePlotSeparator.setName(I18N.instance.groupResume());
-		movieTrailerSeparator.setName(I18N.instance.groupBA());
-		movieReviewSeparator.setName(I18N.instance.groupCritiques());
+		separatorTrailer.setSource(movie.getId());
+		separatorReview.setSource(movie.getId());
+		separatorTrailer.setFactory(clientFactory);
+		separatorReview.setFactory(clientFactory);
 		clientFactory.getEventBusHandler().addHandler(SeparatorOpenEvent.TYPE, separatorHandler);
-		// groupMoviePlot.setHeader(new HTML("<font color=#FFFFFF>" + I18N.instance.groupResume() + "</font>"));
-		// groupMovieBA.setHeader(new HTML("<font color=#FFFFFF>" + I18N.instance.groupBA() + "</font>"));
-		// groupMovieCritique.setHeader(new HTML("<font color=#FFFFFF>" + I18N.instance.groupCritiques() + "</font>"));
 
 		movieName.setText(movie.getMovieName());
 		Date time = new Date(movie.getMovieTime());
@@ -147,7 +139,6 @@ public class MovieView extends Composite {
 		}
 		movieStyle.setText(movie.getStyle());
 		moviePlot.setText(movie.getDescription());
-		groupMoviePlot.setOpen(true);
 
 		if (movie.getRate() > 0) {
 			movieRateText.setText(movie.getRate() + " / 10");
@@ -221,12 +212,10 @@ public class MovieView extends Composite {
 			if ((name == null) || (source == null) || !source.equals(movie.getId())) {
 				return;
 			}
-			if (name.equals(I18N.instance.groupResume())) {
-				groupMoviePlot.setOpen(!groupMoviePlot.isOpen());
-			} else if (name.equals(I18N.instance.groupBA())) {
-				groupMovieBA.setOpen(!groupMovieBA.isOpen());
+			if (name.equals(I18N.instance.groupBA())) {
+				groupTrailer.setOpen(!groupTrailer.isOpen());
 			} else if (name.equals(I18N.instance.groupCritiques())) {
-				groupMovieCritique.setOpen(!groupMovieCritique.isOpen());
+				groupReview.setOpen(!groupReview.isOpen());
 			}
 
 		}

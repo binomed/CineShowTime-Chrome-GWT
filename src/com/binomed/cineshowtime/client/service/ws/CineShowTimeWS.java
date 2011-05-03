@@ -21,7 +21,6 @@ import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.http.client.URL;
-import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.maps.client.geocode.Placemark;
 
 /**
@@ -62,7 +61,8 @@ public class CineShowTimeWS extends AbstractCineShowTimeWS {
 		params.put(PARAM_LANG, lang != null ? lang.toLowerCase() : LocaleUtils.getLocale().toLowerCase());
 		Date currentTime = new Date();
 		params.put(PARAM_CURENT_TIME, String.valueOf(currentTime.getTime()));
-		params.put(PARAM_TIME_ZONE, DateTimeFormat.getFormat("z").format(currentTime));
+		// params.put(PARAM_TIME_ZONE, DateTimeFormat.getFormat("z").format(currentTime));
+		params.put(PARAM_TIME_ZONE, LocaleUtils.getTimeZone());
 		request = new RequestBean();
 		request.setLatitude(latitude);
 		request.setLongitude(longitude);
@@ -100,7 +100,8 @@ public class CineShowTimeWS extends AbstractCineShowTimeWS {
 		params.put(PARAM_LANG, lang != null ? lang.toLowerCase() : LocaleUtils.getLocale().toLowerCase());
 		Date currentTime = new Date();
 		params.put(PARAM_CURENT_TIME, String.valueOf(currentTime.getTime()));
-		params.put(PARAM_TIME_ZONE, DateTimeFormat.getFormat("z").format(currentTime));
+		// params.put(PARAM_TIME_ZONE, DateTimeFormat.getFormat("z").format(currentTime));
+		params.put(PARAM_TIME_ZONE, LocaleUtils.getTimeZone());
 
 		request = new RequestBean();
 		request.setCityName(cityName);
@@ -177,7 +178,8 @@ public class CineShowTimeWS extends AbstractCineShowTimeWS {
 			params.put(PARAM_THEATER_ID, theaterFav.getId());
 			params.put(PARAM_LANG, lang != null ? lang.toLowerCase() : LocaleUtils.getLocale().toLowerCase());
 			params.put(PARAM_CURENT_TIME, String.valueOf(currentTime.getTime()));
-			params.put(PARAM_TIME_ZONE, DateTimeFormat.getFormat("z").format(currentTime));
+			// params.put(PARAM_TIME_ZONE, DateTimeFormat.getFormat("z").format(currentTime));
+			params.put(PARAM_TIME_ZONE, LocaleUtils.getTimeZone());
 
 			doGet(URL_CONTEXT_SHOWTIME_NEAR, params, callBack);
 		}
@@ -214,9 +216,8 @@ public class CineShowTimeWS extends AbstractCineShowTimeWS {
 	 * @param callback
 	 *            Specific Callback
 	 */
-	public void requestImdbInfo(final MovieBean movie, final String ip, final String language, final String place, final String source) {
+	public void requestImdbInfo(final MovieBean movie, final String language, final String place, final String source) {
 		Map<String, String> params = new HashMap<String, String>();
-		params.put(HttpParamsCst.PARAM_IP, ip);
 		params.put(HttpParamsCst.PARAM_MOVIE_CUR_LANG_NAME, URL.encode(movie.getMovieName()));
 		params.put(HttpParamsCst.PARAM_MOVIE_NAME, URL.encode(movie.getEnglishMovieName()));
 		params.put(HttpParamsCst.PARAM_LANG, language.toLowerCase());
@@ -225,7 +226,8 @@ public class CineShowTimeWS extends AbstractCineShowTimeWS {
 		params.put(HttpParamsCst.PARAM_MOVIE_ID, movie.getId());
 		Date currentTime = new Date();
 		params.put(PARAM_CURENT_TIME, String.valueOf(currentTime.getTime()));
-		params.put(PARAM_TIME_ZONE, DateTimeFormat.getFormat("z").format(currentTime));
+		// params.put(PARAM_TIME_ZONE, DateTimeFormat.getFormat("z").format(currentTime));
+		params.put(PARAM_TIME_ZONE, LocaleUtils.getTimeZone());
 
 		movie.setState(MovieBean.STATE_IN_PROGRESS);
 		movieMap.put(movie.getId(), movie);

@@ -7,11 +7,15 @@
 	<ui:with field="res" type="com.binomed.cineshowtime.client.resources.CstResource" />
 	<ui:with field="i18n" type="com.binomed.cineshowtime.client.resources.I18N" />
 	
-	<g:VerticalPanel width="100%" >
-		<cst:TheaterViewHeader ui:field="theaterHeader" />
-		<g:DisclosurePanel ui:field="theaterPanel" styleName="{style.theaterDisclosure}">
-			<g:SimplePanel ui:field="theaterCoverflow" styleName="{style.theaterCoverlflow}"/>
-		</g:DisclosurePanel>
+	<g:VerticalPanel ui:field="resultHeaderPabel" styleName="{res.css.theaterResultHeader}">
+		<g:HTMLPanel>
+			<div style="float:left;">
+				<g:Label ui:field="firstLabel" styleName="{res.css.theaterResultLabel}"/>
+			</div>
+			<div style="float:right;">
+				<g:Label ui:field="secondLabel" styleName="{res.css.theaterResultLabel}" />
+			</div>		
+		</g:HTMLPanel>
 	</g:VerticalPanel>
 
 </ui:UiBinder> 
