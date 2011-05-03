@@ -19,7 +19,7 @@ import com.binomed.cineshowtime.client.service.ws.CineShowTimeWS;
 import com.binomed.cineshowtime.client.ui.coverflow.CoverData;
 import com.binomed.cineshowtime.client.ui.coverflow.Coverflow;
 import com.binomed.cineshowtime.client.ui.coverflow.event.ClickCoverListener;
-import com.binomed.cineshowtime.client.ui.coverflow.layout.BetterCoverflowLayout;
+import com.binomed.cineshowtime.client.ui.coverflow.layout.ZoomCoverflowLayout;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.event.logical.shared.OpenEvent;
@@ -74,7 +74,7 @@ public class TheaterView extends Composite {
 					isCoverflowLoaded = true;
 
 					// Add the coverflow
-					coverflow = new Coverflow(800, 300, new BetterCoverflowLayout());
+					coverflow = new Coverflow(800, 300, new ZoomCoverflowLayout());
 					coverflow.addClickCoverListener(movieOpenListener);
 
 					CineShowTimeWS service = clientFactory.getCineShowTimeService();
@@ -95,7 +95,8 @@ public class TheaterView extends Composite {
 								clientFactory.getEventBusHandler().addHandler(MovieLoadedEvent.TYPE, eventHandler);
 							}
 							// call the service
-							UserGeolocation.getInstance().getPlaceMark(theater.getPlace().getSearchQuery(), new TheaterLocationCallBack(movieTmp, theater, clientFactory));
+							UserGeolocation.getInstance().getPlaceMark(theater.getPlace().getSearchQuery(),
+									new TheaterLocationCallBack(movieTmp, theater, clientFactory));
 						} else if (movieTmp.getState() == MovieBean.STATE_IN_PROGRESS) {
 							// Register the service
 							if (!hasRegister) {
@@ -157,7 +158,8 @@ public class TheaterView extends Composite {
 		}
 
 		private void doSearch(String lang) {
-			clientFactory.getCineShowTimeService().requestImdbInfo(movieTmp, lang != null ? lang : clientFactory.getLanguage(), theater.getPlace().getSearchQuery(), theater.getId());
+			clientFactory.getCineShowTimeService().requestImdbInfo(movieTmp, lang != null ? lang : clientFactory.getLanguage(),
+					theater.getPlace().getSearchQuery(), theater.getId());
 		}
 	}
 

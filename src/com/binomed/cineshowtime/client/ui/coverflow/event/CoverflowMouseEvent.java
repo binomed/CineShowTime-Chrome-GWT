@@ -13,9 +13,11 @@ public abstract class CoverflowMouseEvent {
 	private int firstX = 0;
 	private int lastX = 0;
 
-	public abstract void onCoverMove(int direction, int distance);
+	public abstract void onCoverFling(int direction, int distance);
 
 	public abstract void onClickCover(int x);
+
+	public abstract void onCoverMove(int x);
 
 	public void setMouseDownCoordonates(int x) {
 		this.firstX = x;
@@ -31,9 +33,9 @@ public abstract class CoverflowMouseEvent {
 			onClickCover(firstX);
 		} else {
 			if (distance > 0) {
-				onCoverMove(Coverflow.MOVE_RIGHT, distance);
+				onCoverFling(Coverflow.MOVE_RIGHT, distance);
 			} else if (distance < 0) {
-				onCoverMove(Coverflow.MOVE_LEFT, distance);
+				onCoverFling(Coverflow.MOVE_LEFT, distance);
 			}
 		}
 		firstX = 0;

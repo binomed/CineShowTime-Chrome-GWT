@@ -5,7 +5,7 @@ import java.util.Map;
 import com.binomed.cineshowtime.client.ui.coverflow.CoverElement;
 import com.binomed.cineshowtime.client.ui.coverflow.GWTCoverflowCanvas;
 
-public class SimpleCoverflowLayout implements CoverflowLayout {
+public class LinearCoverflowLayout implements CoverflowLayout {
 
 	private final int TOP_PADDING = 20;
 	public static final int SPACE_BETWEEN_IMAGES = 20;
@@ -25,7 +25,6 @@ public class SimpleCoverflowLayout implements CoverflowLayout {
 	@Override
 	public void onUpdateCovers(String indexCoverCenter, final Map<String, CoverElement> covers, int totalTranslateX) {
 		for (CoverElement cover : covers.values()) {
-			// Juste translate the coverflow
 			cover.setLeftX(cover.getLeftX() + totalTranslateX);
 		}
 	}
@@ -36,4 +35,5 @@ public class SimpleCoverflowLayout implements CoverflowLayout {
 			cover.draw(coverflowCanvas.getCanvas());
 		}
 	}
+
 }

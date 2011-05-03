@@ -85,4 +85,7 @@ public interface CstResource extends ClientBundle {
 	@Source("com/binomed/cineshowtime/client/resources/images/imdb.png")
 	ImageResource imdb();
 
+	@Source("com/binomed/cineshowtime/client/resources/images/play.png")
+	ImageResource play();
+
 }
