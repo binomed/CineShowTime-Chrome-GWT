@@ -103,7 +103,7 @@ public class MovieView extends Composite {
 	private void updateMovieView() {
 		imgPoster.setUrl(movie.getUrlImg());
 		if ((movie.getYear() != null) && (movie.getYear() != -1)) {
-			movieYear.setText("(" + String.valueOf(movie.getYear()) + ")");
+			movieYear.setText(String.valueOf(movie.getYear()));
 		}
 		movieLinkImdb.setText(I18N.instance.imdbLink());
 		movieLinkWikipedia.setText(I18N.instance.wikipediaLink());

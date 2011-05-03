@@ -65,6 +65,23 @@
     padding: 10px;
 }
 
+
+.theaterResultHeader {
+	width: 100%;
+	border-radius: 5px;
+	padding: 5px;
+	margin-bottom: 10px;
+	-moz-box-shadow: 0 0 5px #888;
+	-webkit-box-shadow: 0 0 5px #888;
+	box-shadow: 0 0 5px #888;
+}
+
+.theaterResultLabel {
+	color:#FFF;
+	font-size:14px;
+	font-weight:bold; 
+}
+
 .theaterResultList{
 	width: 100%;
 	/*background: rgba(136,136,136,0.2);*/
@@ -113,19 +130,20 @@
 }
 
 /* Movie style */
+.movieContent {
+	padding: 10px;
+}
+
 .moviePoster{
-	padding-top:10px;
-	padding-bottom:10px;
-	padding-right:10px;
-	padding-left:10px;	
+	padding: 10px;	
 }
 .movieName {
-	padding-top:50px;
     font-weight:bold;
-    font-size:16px;
+    font-size:24px;
+	padding-bottom:10px;
     color:#ac171a;
-    padding-right:1em;
 }
+
 .movieLabel {
     color:#ac171a;
     font-weight:bold; 

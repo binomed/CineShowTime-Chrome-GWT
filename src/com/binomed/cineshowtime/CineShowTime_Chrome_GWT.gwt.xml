@@ -10,8 +10,7 @@
   <stylesheet src='CstStyle.css'/>
   
   <!-- Inherit the default GWT style sheet.  -->
-  <!-- <inherits name='com.binomed.cineshowtime.theme.Cst'/>-->
-  <inherits name="com.google.gwt.user.theme.chrome.Chrome"/>
+  <inherits name='com.binomed.cineshowtime.theme.Cst'/>
 
   <!-- Inherits modules -->
   <inherits name='com.google.gwt.maps.GoogleMaps' />

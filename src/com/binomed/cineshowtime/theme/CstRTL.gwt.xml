@@ -1,8 +1,0 @@
-<!-- Includes the source files for the theme, in RTL mode.       -->
-<!--                                                                    -->
-<!-- The way in which RTL-specific versions of CSS styles are included  -->
-<!-- is subject to change in the future.  Specifically, the RTL version -->
-<!-- will be automatically selected in locales with RTL languages.      -->
-<module>
-      <stylesheet src="gwt/cst/cst_rtl.css"/>
-</module>

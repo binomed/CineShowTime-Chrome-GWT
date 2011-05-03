@@ -7,7 +7,7 @@
 	<ui:with field="i18n" type="com.binomed.cineshowtime.client.resources.I18N" />
 	
 	<g:ScrollPanel>
-		<g:HTMLPanel width="100%">
+		<g:HTMLPanel width="100%" styleName="{res.css.movieContent}">
 			<div>
 				<div style="float:left;" >		
 					<g:Image resource="{res.no_poster}" ui:field="imgPoster" />
@@ -39,6 +39,8 @@
 					<g:HorizontalPanel>
 						<g:Label text="{i18n.rate}" styleName="{res.css.movieLabel}"/>
 						<g:Label ui:field="movieRateText"/>
+					</g:HorizontalPanel>
+					<g:HorizontalPanel>
 						<cst:RateView ui:field="movieRate" />
 					</g:HorizontalPanel>
 					<g:HorizontalPanel>
