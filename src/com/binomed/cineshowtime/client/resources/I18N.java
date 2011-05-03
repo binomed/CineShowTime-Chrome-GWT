@@ -24,6 +24,25 @@ public interface I18N extends Messages {
 
 	String theaterName(String theaterName, int nbMovies);
 
+	// Search result header
+	String loadingFavorite();
+
+	String resultFavorite();
+
+	String loadingNear();
+
+	String resultNear(String location);
+
+	String loadingSearch(String location, String date);
+
+	String resultSearch(String location, String date);
+
+	String searchResultDate(String date);
+
+	String searchResultToday();
+
+	String nbTheaters(int nbTheaters);
+
 	// Search panel
 	String searchTitle();
 
@@ -69,6 +88,7 @@ public interface I18N extends Messages {
 	String projectionFrom();
 
 	String projectionTo();
+
 	// Review View
 
 	String on();

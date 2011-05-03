@@ -1,6 +1,7 @@
 package com.binomed.cineshowtime.client.ui;
 
 import com.binomed.cineshowtime.client.resources.CstResource;
+import com.binomed.cineshowtime.client.resources.I18N;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -47,30 +48,30 @@ public class TheaterViewResult extends Composite {
 		}
 		if (isFavorite) {
 			if (isLoading) {
-				firstLabel.setText("Chargement des cinémas favoris...");
+				firstLabel.setText(I18N.instance.loadingFavorite());
 			} else {
-				firstLabel.setText("Mes cinémas favoris");
+				firstLabel.setText(I18N.instance.resultFavorite());
 			}
 		} else if (isNear) {
 			if (isLoading) {
-				firstLabel.setText("Chargement des cinémas proche de ma position...");
+				firstLabel.setText(I18N.instance.loadingNear());
 			} else {
-				firstLabel.setText("Cinémas proche de ma position : " + location);
+				firstLabel.setText(I18N.instance.resultNear(location));
 			}
-		} else if (isDateSearch) {
-			if (isLoading) {
-				firstLabel.setText("Chargement des cinémas de " + location + " à partir du " + dateSearch);
+		} else if (isDateSearch || cineSearch != null) {
+			String displayDate = null;
+			if (isDateSearch) {
+				displayDate = I18N.instance.searchResultDate(displayDate);
 			} else {
-				firstLabel.setText("Cinémas de " + location + " à partir du " + dateSearch);
+				displayDate = I18N.instance.searchResultToday();
 			}
-		} else if (cineSearch != null) {
 			if (isLoading) {
-				firstLabel.setText("Chargement des cinémas pour " + cineSearch);
+				firstLabel.setText(I18N.instance.loadingSearch(cineSearch != null ? cineSearch : location, displayDate));
 			} else {
-				firstLabel.setText("Cinémas trouvés pour " + cineSearch);
+				firstLabel.setText(I18N.instance.resultSearch(cineSearch != null ? cineSearch : location, displayDate));
 			}
 		}
-		secondLabel.setText(nbTheaters + " Cinémas");
+		secondLabel.setText(I18N.instance.nbTheaters(nbTheaters));
 		if (isLoading) {
 			addLoadingImage();
 		}

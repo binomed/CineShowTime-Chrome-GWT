@@ -9,7 +9,14 @@ public interface CineShowTimeCssResource extends CssResource {
 
 	String center();
 
-String theaterResultList();/* Separator View */	String separatorExpand();	String separatorTitle();	String separatorRed();	/* Main window styles */
+	String theaterResultList();/* Separator View */
+
+	String separatorExpand();
+
+	String separatorTitle();
+
+	String separatorRed(); /* Main window styles */
+
 	String mainPanel();
 
 	String tabPanel();
@@ -44,6 +51,8 @@ String theaterResultList();/* Separator View */	String separatorExpand();	String
 	String imgRight();
 
 	/* Movie style */
+	String movieContent();
+
 	String moviePoster();
 
 	String movieName();
