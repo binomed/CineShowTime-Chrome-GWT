@@ -60,7 +60,7 @@ public class TheaterViewResult extends Composite {
 				firstLabel.setText(I18N.instance.resultNear(location));
 			}
 		} else if (isDateSearch || (cineSearch != null)) {
-			String displayDate = null;
+			String displayDate = dateSearch;
 			if (isDateSearch) {
 				displayDate = I18N.instance.searchResultDate(displayDate);
 			} else {
