@@ -5,6 +5,8 @@ import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.CanvasGradient;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
+import com.google.gwt.event.dom.client.MouseMoveEvent;
+import com.google.gwt.event.dom.client.MouseMoveHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
 
@@ -15,6 +17,7 @@ public final class GWTCoverflowCanvas {
 
 	public Canvas canvas;
 	public CoverflowMouseEvent mouseMoveEvent;
+	boolean activeDrag = false;
 
 	public GWTCoverflowCanvas(int width, int height) {
 		canvas = Canvas.createIfSupported();
@@ -28,6 +31,7 @@ public final class GWTCoverflowCanvas {
 		canvas.addMouseDownHandler(new MouseDownHandler() {
 			@Override
 			public void onMouseDown(MouseDownEvent event) {
+				activeDrag = true;
 				int x = event.getClientX() - canvas.getAbsoluteLeft();
 				mouseMoveEvent.setMouseDownCoordonates(x);
 			}
@@ -36,9 +40,20 @@ public final class GWTCoverflowCanvas {
 		canvas.addMouseUpHandler(new MouseUpHandler() {
 			@Override
 			public void onMouseUp(MouseUpEvent event) {
+				activeDrag = false;
 				int x = event.getClientX() - canvas.getAbsoluteLeft();
 				mouseMoveEvent.setMouseUpCoordonates(x);
 				mouseMoveEvent.onCoverflowMouseEvent();
+			}
+		});
+
+		canvas.addMouseMoveHandler(new MouseMoveHandler() {
+			@Override
+			public void onMouseMove(MouseMoveEvent event) {
+				if (activeDrag) {
+					int x = event.getClientX() - canvas.getAbsoluteLeft();
+					mouseMoveEvent.onCoverMove(x);
+				}
 			}
 		});
 	}

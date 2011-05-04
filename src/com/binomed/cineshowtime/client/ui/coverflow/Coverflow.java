@@ -8,7 +8,7 @@ import com.binomed.cineshowtime.client.resources.CstResource;
 import com.binomed.cineshowtime.client.ui.coverflow.event.ClickCoverListener;
 import com.binomed.cineshowtime.client.ui.coverflow.event.CoverflowMouseEvent;
 import com.binomed.cineshowtime.client.ui.coverflow.layout.CoverflowLayout;
-import com.binomed.cineshowtime.client.ui.coverflow.layout.SimpleCoverflowLayout;
+import com.binomed.cineshowtime.client.ui.coverflow.layout.ZoomCoverflowLayout;
 import com.binomed.cineshowtime.client.util.StringUtils;
 import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.user.client.ui.Widget;
@@ -46,9 +46,7 @@ public class Coverflow {
 
 	/**
 	 * Initialize the coverflow with covers
-	 * 
-	 * @param covers
-	 *            All Covers elements with an unique String ID as key Images URLs
+	 * @param covers All Covers elements with an unique String ID as key Images URLs
 	 */
 	public void init(final List<CoverData> coversData) {
 		// Initialize Coverflow data
@@ -82,9 +80,14 @@ public class Coverflow {
 			}
 
 			@Override
-			public void onCoverMove(int direction, int distance) {
+			public void onCoverFling(int direction, int distance) {
 				coverCentered = false;
 				moveToCover(direction, distance);
+			}
+
+			@Override
+			public void onCoverMove(int x) {
+				System.out.println("XX=" + x);
 			}
 		});
 
@@ -103,11 +106,8 @@ public class Coverflow {
 
 	/**
 	 * Change the image of the specified cover (by the index)
-	 * 
-	 * @param index
-	 *            Index of the cover
-	 * @param imageUrl
-	 *            Image URL of the cover
+	 * @param index Index of the cover
+	 * @param imageUrl Image URL of the cover
 	 */
 	public void updateCover(String idCover, String imageUrl) {
 		if (StringUtils.isEmpty(imageUrl)) {
@@ -136,9 +136,7 @@ public class Coverflow {
 
 	/**
 	 * Move the specified cover id to the center of the coverflow
-	 * 
-	 * @param coverIndex
-	 *            Index of the cover
+	 * @param coverIndex Index of the cover
 	 */
 	private void moveToCover(String idCover) {
 		// Compute image center & move distance
@@ -160,11 +158,8 @@ public class Coverflow {
 	/**
 	 * Animate the coverflow moves <br/>
 	 * http://www.html5canvastutorials.com/advanced/html5-canvas-linear-motion-animation/
-	 * 
-	 * @param direction
-	 *            Direction of the coverflow
-	 * @param distance
-	 *            Distance to animate
+	 * @param direction Direction of the coverflow
+	 * @param distance Distance to animate
 	 */
 	private void animateCoverflow(final int direction, final int distance) {
 		if (covers.containsKey(idFirstCover)) {
@@ -184,7 +179,7 @@ public class Coverflow {
 						totalTranslateX -= linearDistEachFrame;
 					}
 
-					if (Math.abs(firstLeftX - firstCover.getLeftX()) >= (distance - SimpleCoverflowLayout.SPACE_BETWEEN_IMAGES)) {
+					if (Math.abs(firstLeftX - firstCover.getLeftX()) >= (distance - ZoomCoverflowLayout.SPACE_BETWEEN_IMAGES)) {
 						stop();
 						if (!coverCentered) {
 							// Finish the move and center to an image
@@ -216,15 +211,15 @@ public class Coverflow {
 
 	private void drawCoverflowWidget() {
 		// Draw the image
-		coverflowCanvas.getCanvas().getContext2d().save();
-		coverflowCanvas.getCanvas().getContext2d().translate(0, 0);
-		coverflowCanvas.getCanvas().getContext2d().scale(1, 1);
-		coverflowCanvas.getCanvas().getContext2d().setFillStyle("#FF0000");
-		coverflowCanvas.getCanvas().getContext2d().beginPath();
-		coverflowCanvas.getCanvas().getContext2d().arc(coverflowCanvas.getWidth() / 2, coverflowCanvas.getHeight() / 2, 2, 0, Math.PI * 2, true);
-		coverflowCanvas.getCanvas().getContext2d().closePath();
-		coverflowCanvas.getCanvas().getContext2d().fill();
-		coverflowCanvas.getCanvas().getContext2d().restore();
+		// coverflowCanvas.getCanvas().getContext2d().save();
+		// coverflowCanvas.getCanvas().getContext2d().translate(0, 0);
+		// coverflowCanvas.getCanvas().getContext2d().scale(1, 1);
+		// coverflowCanvas.getCanvas().getContext2d().setFillStyle("#FF0000");
+		// coverflowCanvas.getCanvas().getContext2d().beginPath();
+		// coverflowCanvas.getCanvas().getContext2d().arc(coverflowCanvas.getWidth() / 2, coverflowCanvas.getHeight() / 2, 2, 0, Math.PI * 2, true);
+		// coverflowCanvas.getCanvas().getContext2d().closePath();
+		// coverflowCanvas.getCanvas().getContext2d().fill();
+		// coverflowCanvas.getCanvas().getContext2d().restore();
 	}
 
 	public Widget getCanvas() {

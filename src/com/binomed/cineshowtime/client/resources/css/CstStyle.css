@@ -152,9 +152,7 @@
     font-weight:bold;
     font-size:24px;
    color: #AC171A;
-	-webkit-stroke-width: 1.2px;
-	-webkit-fill-color: #AC171A;
-	text-shadow: 1px 1px 1px #FFFFFF;
+	text-shadow: 1px 1px white, -1px -1px #AC171A;
 	padding-bottom:10px;
 }
 
@@ -225,7 +223,6 @@
 .projectionsCaption {
     font-weight:bold;
     font-size:14px;
-    width:100%;
 }
 .projectionsContent {
     font-size:12px;
