@@ -1,6 +1,7 @@
 package com.binomed.cineshowtime.client.db;
 
 import com.binomed.cineshowtime.client.IClientFactory;
+import com.binomed.cineshowtime.client.cst.CineshowtimeDbCst;
 import com.binomed.cineshowtime.client.db.callback.UpdateVersionDbDone;
 import com.google.code.gwt.database.client.service.DataServiceException;
 import com.google.code.gwt.database.client.service.VoidCallback;

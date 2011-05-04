@@ -21,9 +21,9 @@ public class TheaterViewResult extends Composite {
 	@UiField
 	Label firstLabel, secondLabel;
 
-	String location, dateSearch, cineSearch;
+	String location, dateSearch, cineSearch, msgError;
 	int nbTheaters;
-	boolean isLoading, isFavorite, isNear, isDateSearch;
+	boolean isLoading, isFavorite, isNear, isDateSearch, isError;
 
 	SimplePanel imageLoadingPanel;
 
@@ -40,6 +40,7 @@ public class TheaterViewResult extends Composite {
 		isFavorite = false;
 		isNear = false;
 		isDateSearch = false;
+		isError = false;
 	}
 
 	public void updateResultHeader() {
@@ -58,7 +59,7 @@ public class TheaterViewResult extends Composite {
 			} else {
 				firstLabel.setText(I18N.instance.resultNear(location));
 			}
-		} else if (isDateSearch || cineSearch != null) {
+		} else if (isDateSearch || (cineSearch != null)) {
 			String displayDate = null;
 			if (isDateSearch) {
 				displayDate = I18N.instance.searchResultDate(displayDate);
@@ -70,8 +71,16 @@ public class TheaterViewResult extends Composite {
 			} else {
 				firstLabel.setText(I18N.instance.resultSearch(cineSearch != null ? cineSearch : location, displayDate));
 			}
+		} else if (isError) {
+			firstLabel.setText(msgError);
+
 		}
-		secondLabel.setText(I18N.instance.nbTheaters(nbTheaters));
+		if (nbTheaters >= 0) {
+			secondLabel.setVisible(true);
+			secondLabel.setText(I18N.instance.nbTheaters(nbTheaters));
+		} else {
+			secondLabel.setVisible(false);
+		}
 		if (isLoading) {
 			addLoadingImage();
 		}
@@ -108,8 +117,10 @@ public class TheaterViewResult extends Composite {
 		if (cineSearch != null) {
 			isNear = false;
 			isFavorite = false;
+			isError = false;
 			isDateSearch = false;
 			dateSearch = null;
+			msgError = null;
 		}
 	}
 
@@ -126,8 +137,10 @@ public class TheaterViewResult extends Composite {
 		if (isFavorite) {
 			isNear = false;
 			isDateSearch = false;
+			isError = false;
 			cineSearch = null;
 			dateSearch = null;
+			msgError = null;
 		}
 	}
 
@@ -136,6 +149,21 @@ public class TheaterViewResult extends Composite {
 		if (isNear) {
 			isFavorite = false;
 			isDateSearch = false;
+			isError = false;
+			cineSearch = null;
+			dateSearch = null;
+			msgError = null;
+		}
+	}
+
+	public void setError(String errorMsg) {
+		this.msgError = errorMsg;
+		this.isError = errorMsg != null;
+		if (isError) {
+			isNear = false;
+			isFavorite = false;
+			isDateSearch = false;
+			isLoading = false;
 			cineSearch = null;
 			dateSearch = null;
 		}

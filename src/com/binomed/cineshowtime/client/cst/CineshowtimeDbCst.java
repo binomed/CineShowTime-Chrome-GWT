@@ -1,4 +1,4 @@
-package com.binomed.cineshowtime.client.db;
+package com.binomed.cineshowtime.client.cst;
 
 public interface CineshowtimeDbCst {
 
@@ -7,7 +7,7 @@ public interface CineshowtimeDbCst {
 	 */
 
 	static final int DATABASE_VERSION = 2;
-	static final String APP_VERSION = "1.1";
+	static final String APP_VERSION = "1.0";
 
 	/*
 	 * Data base Column

@@ -16,6 +16,9 @@ public interface CstResource extends ClientBundle {
 	// @ImageOptions(repeatStyle = RepeatStyle.Horizontal, height = 16, width = 16)
 	ImageResource star();
 
+	@Source("com/binomed/cineshowtime/client/resources/images/btn_donate.gif")
+	ImageResource btn_donate();
+
 	@Source("com/binomed/cineshowtime/client/resources/images/gps.png")
 	ImageResource gps();
 

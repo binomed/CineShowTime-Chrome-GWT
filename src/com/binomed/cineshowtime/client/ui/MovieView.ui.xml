@@ -44,12 +44,12 @@
 						<cst:RateView ui:field="movieRate" />
 					</g:HorizontalPanel>
 					<g:HorizontalPanel>
-						<g:Image resource="{res.imdb}" />
-						<g:Hyperlink ui:field="movieLinkImdb" text="{i18n.imdbLink}" />
+						<g:Image resource="{res.imdb}" ui:field="imgImdb" />
+						<g:Anchor ui:field="movieLinkImdb" text="{i18n.imdbLink}" />
 					</g:HorizontalPanel>
 					<g:HorizontalPanel>
-						<g:Image resource="{res.wikipedia}" />
-						<g:Hyperlink ui:field="movieLinkWikipedia" text="{i18n.wikipediaLink}" />
+						<g:Image resource="{res.wikipedia}" ui:field="imgWiki"/>
+						<g:Anchor ui:field="movieLinkWikipedia" text="{i18n.wikipediaLink}" />
 					</g:HorizontalPanel>
 				</div>
 				<div style="padding-left:100px;float:left;">
@@ -58,7 +58,7 @@
 			</div>
 			<div style="clear:both;">			
 				<cst:HeaderSeparator expandShow="false"  name="{i18n.groupResume}" ui:field="separatorResume"/>
-				<g:Label ui:field="moviePlot" />
+				<g:Label ui:field="moviePlot" width="95%"/>
 				<cst:HeaderSeparator expandShow="true"  name="{i18n.groupBA}" ui:field="separatorTrailer"/>
 				<g:DisclosurePanel ui:field="groupTrailer">
 					<g:VerticalPanel ui:field="movieTrailerCoverflow" />

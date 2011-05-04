@@ -7,12 +7,12 @@
 	<ui:with field="res" type="com.binomed.cineshowtime.client.resources.CstResource" />
 	<ui:with field="i18n" type="com.binomed.cineshowtime.client.resources.i18n.I18N" />
 
-	<g:DockLayoutPanel unit="EM" styleName="{res.css.mainPanel}" >
+	<g:DockLayoutPanel unit="PX" styleName="{res.css.mainPanel}" >
 		<!-- Header -->
-		<g:north size='5'>
+		<g:north size='150'>
 			<g:HTMLPanel>
 				<p align="center">
-					<g:Image resource='{res.logo}' />
+					<!-- <g:Image resource='{res.logo}' />-->
 				</p>
 			</g:HTMLPanel>
 		</g:north>
@@ -37,7 +37,7 @@
 					</g:tab>
 					<!-- Parameters Tab -->
 					<g:tab>
-						<g:customHeader><g:Label text="{i18n.parametersTabLabel}" /></g:customHeader>
+						<g:customHeader><g:Label text="{i18n.menuPreferences}" /></g:customHeader>
 						<g:ScrollPanel>
 							<cst:ParameterView ui:field="paramsContent" />
 						</g:ScrollPanel>
@@ -47,10 +47,12 @@
 		</g:center>
 		
 		<!-- Footer -->
-		<g:south size='2'>
+		<g:south size='30'>
 			<g:HTMLPanel>
 				<p align="center">
-					<g:Label text='links...' />
+					<g:HorizontalPanel>
+						<g:Label ui:field="menuAbout" text='{i18n.menuAbout}' styleName='{res.css.pointerHand}'/>
+					</g:HorizontalPanel>
 				</p>
 			</g:HTMLPanel>
 		</g:south>

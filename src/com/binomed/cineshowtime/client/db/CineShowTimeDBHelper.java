@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import com.binomed.cineshowtime.client.IClientFactory;
+import com.binomed.cineshowtime.client.cst.CineshowtimeDbCst;
 import com.binomed.cineshowtime.client.db.callback.DbBatchVoidCallBack;
 import com.binomed.cineshowtime.client.db.callback.EmptyRowInsertCallBack;
 import com.binomed.cineshowtime.client.db.callback.EmptyVoidCallBack;

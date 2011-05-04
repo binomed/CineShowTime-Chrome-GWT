@@ -3,6 +3,7 @@ package com.binomed.cineshowtime.client.ui.dialog;
 import com.binomed.cineshowtime.client.resources.i18n.I18N;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.ScrollPanel;
 
 public class LastChangeDialog extends DialogBox {
 
@@ -15,11 +16,12 @@ public class LastChangeDialog extends DialogBox {
 		setGlassEnabled(true);
 		setSize(WIDTH, HEIGHT);
 		setAutoHideEnabled(true);
-		// ScrollPanel scrollPanel = new ScrollPanel();
+		ScrollPanel scrollPanel = new ScrollPanel();
+		scrollPanel.setSize(WIDTH, HEIGHT);
 		HTMLPanel content = new HTMLPanel(I18N.instance.last_change());
-		// scrollPanel.add(content);
-		// setWidget(scrollPanel);
-		setWidget(content);
+		scrollPanel.add(content);
+		setWidget(scrollPanel);
+		// setWidget(content);
 
 	}
 }

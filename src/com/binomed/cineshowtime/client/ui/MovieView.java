@@ -20,13 +20,15 @@ import com.binomed.cineshowtime.client.ui.coverflow.Coverflow;
 import com.binomed.cineshowtime.client.ui.coverflow.event.ClickCoverListener;
 import com.binomed.cineshowtime.client.ui.coverflow.layout.SimpleCoverflowLayout;
 import com.binomed.cineshowtime.client.ui.dialog.VideoDialog;
+import com.binomed.cineshowtime.client.util.StringUtils;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DisclosurePanel;
-import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -41,13 +43,13 @@ public class MovieView extends Composite {
 	private final IClientFactory clientFactory;
 
 	@UiField
-	Image imgPoster;
+	Image imgPoster, imgImdb, imgWiki;
 	@UiField
 	RateView movieRate;
 	@UiField
 	Label movieName, movieYear, movieTime, movieStyle, moviePlot, movieDirector, movieActor, movieRateText;
 	@UiField
-	Hyperlink movieLinkImdb, movieLinkWikipedia;
+	Anchor movieLinkImdb, movieLinkWikipedia;
 	@UiField
 	ProjectionView movieProjections;
 	@UiField
@@ -86,7 +88,7 @@ public class MovieView extends Composite {
 
 		movieName.setText(movie.getMovieName());
 		Date time = new Date(movie.getMovieTime());
-		movieTime.setText(time.getHours() + "h" + time.getMinutes() + "m");
+		movieTime.setText(DateTimeFormat.getFormat("HH'h'mm'm'").format(time));
 
 		movieProjections.updateProjections(theater.getTheaterName(), movie.getMovieTime(), theater.getMovieMap().get(movie.getId()));
 
@@ -107,8 +109,21 @@ public class MovieView extends Composite {
 		if ((movie.getYear() != null) && (movie.getYear() != -1)) {
 			movieYear.setText(String.valueOf(movie.getYear()));
 		}
-		movieLinkImdb.setText(I18N.instance.imdbLink());
-		movieLinkWikipedia.setText(I18N.instance.wikipediaLink());
+		if (StringUtils.isNotEmpty(movie.getImdbId())) {
+			movieLinkImdb.setText(I18N.instance.imdbLink());
+			movieLinkImdb.setHref("http://www.imdb.com/title/tt" + movie.getImdbId());
+			movieLinkImdb.setTarget("_BLANK");
+		}
+		movieLinkImdb.setVisible(StringUtils.isNotEmpty(movie.getImdbId()));
+		imgImdb.setVisible(StringUtils.isNotEmpty(movie.getImdbId()));
+
+		if (StringUtils.isNotEmpty(movie.getUrlWikipedia())) {
+			movieLinkWikipedia.setText(I18N.instance.wikipediaLink());
+			movieLinkWikipedia.setHref(movie.getUrlWikipedia());
+			movieLinkWikipedia.setTarget("_BLANK");
+		}
+		movieLinkWikipedia.setVisible(StringUtils.isNotEmpty(movie.getUrlWikipedia()));
+		imgWiki.setVisible(StringUtils.isNotEmpty(movie.getUrlWikipedia()));
 		if (movie.getDirectorList() != null) {
 			String[] directorArray = movie.getDirectorList().split("\\|");
 			String directors = "";
@@ -150,7 +165,7 @@ public class MovieView extends Composite {
 		}
 
 		// Add the coverflow
-		if (movie.getYoutubeVideos() != null) {
+		if ((movie.getYoutubeVideos() != null) && (movie.getYoutubeVideos().size() > 0)) {
 			coverflow = new Coverflow(800, 300, new SimpleCoverflowLayout());
 			coverflow.addClickCoverListener(movieOpenListener);
 			final List<CoverData> coversData = new ArrayList<CoverData>();
@@ -159,12 +174,18 @@ public class MovieView extends Composite {
 			}
 			coverflow.init(coversData);
 			movieTrailerCoverflow.add(coverflow.getCanvas());
+		} else {
+			Label labelEmptyVideo = new Label(I18N.instance.noVideo());
+			movieTrailerCoverflow.add(labelEmptyVideo);
 		}
 
-		if (movie.getReviews() != null) {
+		if ((movie.getReviews() != null) && (movie.getReviews().size() > 0)) {
 			for (ReviewBean review : movie.getReviews()) {
 				movieReview.add(new ReviewView(review));
 			}
+		} else {
+			Label labelEmptyReview = new Label(I18N.instance.noReview());
+			movieReview.add(labelEmptyReview);
 		}
 	}
 

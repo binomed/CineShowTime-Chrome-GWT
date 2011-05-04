@@ -36,6 +36,8 @@
 	width: 100%;
     background-color: #000000; 
 	/*background: #000000 url(images/background.png) bottom right no-repeat;*/
+	background: #000000 url(images/total_background.jpg) top center no-repeat;
+	margin:auto;
 	background-attachment:fixed;
 	color: #FFFFFF;
 }
@@ -43,7 +45,8 @@
 	width:80%;	
 	height:100%;	
 	margin: auto;	
-	background: #000000 url(images/background.png) bottom right no-repeat;
+	/*background: #000000 url(images/background.png) bottom right no-repeat;*/
+	background-color: rgba(0,0,0,0.7);
 }
 .mainScroll {
 	width:100%;

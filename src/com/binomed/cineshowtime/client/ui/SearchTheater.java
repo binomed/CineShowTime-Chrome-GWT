@@ -67,15 +67,7 @@ public class SearchTheater extends Composite {
 		if (StringUtils.isNotEmpty(locationSearch.getText()) || (dateSearch.getValue() != null)) {
 			// If the city is empty, then we want the result for same request but for another day
 			if (StringUtils.isEmpty(locationSearch.getText())) {
-				int day = -1;
-				if (dateSearch.getValue() != null) {
-					Date currentTime = new Date();
-					day = dateSearch.getValue().getDay() - currentTime.getDay();
-					if ((day < 0) || (day > 7)) {
-						day = -1;
-					}
-
-				}
+				int day = getDaySearch();
 				// if date is not -1 we launch the last request we the new day
 				if (day != -1) {
 					RequestBean lastRequest = clientFactory.getCineShowTimeService().getRequest();
@@ -94,11 +86,18 @@ public class SearchTheater extends Composite {
 					}
 
 				} else {
+					clientFactory.getEventBusHandler().fireEvent(new SearchEvent(SearchEvent.SEARCH_DATE, String.valueOf(day)));
 					// TODO : Message d'erreur de date
 				}
 			} else {
-				clientFactory.getEventBusHandler().fireEvent(new SearchEvent(SearchEvent.SEARCH_CINE, locationSearch.getText()));
-				loadTheaterOfUserCityEnter(locationSearch.getText());
+				int day = getDaySearch();
+				// if date is not -1 we launch the last request we the new day
+				if (day != -1) {
+					clientFactory.getEventBusHandler().fireEvent(new SearchEvent(SearchEvent.SEARCH_CINE, locationSearch.getText()));
+					loadTheaterOfUserCityEnter(locationSearch.getText());
+				} else {
+					clientFactory.getEventBusHandler().fireEvent(new SearchEvent(SearchEvent.SEARCH_DATE, String.valueOf(day)));
+				}
 			}
 
 		} else {
@@ -107,15 +106,35 @@ public class SearchTheater extends Composite {
 		}
 	}
 
+	public int getDaySearch() {
+		int day = -1;
+		if (dateSearch.getValue() != null) {
+			Date currentTime = new Date();
+			int dayCurrent = Integer.valueOf(DateTimeFormat.getFormat("dd").format(currentTime));
+			int daySearch = Integer.valueOf(DateTimeFormat.getFormat("dd").format(dateSearch.getValue()));
+			day = daySearch - dayCurrent;
+			if ((day < 0) || (day > 7)) {
+				day = -1;
+			}
+
+		} else {
+			day = 0;
+		}
+		return day;
+	}
+
 	public void loadTheaterOfUserCityEnter(final String cityName) {
 		UserGeolocation.getInstance().getPlaceMark(cityName, new LocationCallback() {
 
 			@Override
 			public void onSuccess(JsArray<Placemark> locations) {
-
-				if ((locations != null) && (locations.length() > 0)) {
-					doSearch(locations.get(0).getCountry());
-				} else {
+				try {
+					if ((locations != null) && (locations.length() > 0)) {
+						doSearch(locations.get(0).getCountry());
+					} else {
+						doSearch(null);
+					}
+				} catch (Exception e) {
 					doSearch(null);
 				}
 			}
@@ -127,17 +146,10 @@ public class SearchTheater extends Composite {
 			}
 
 			private void doSearch(String lang) {
-				int day = -1;
-				if (dateSearch.getValue() != null) {
-					Date currentTime = new Date();
-					day = dateSearch.getValue().getDay() - currentTime.getDay();
-					if ((day < 0) || (day > 7)) {
-						day = -1;
-					}
-
-				}
+				int day = getDaySearch();
 				clientFactory.getCineShowTimeService().requestNearTheatersFromCityName(cityName, day, lang != null ? lang : LocaleUtils.getLocale());
 			}
+
 		});
 	}
 

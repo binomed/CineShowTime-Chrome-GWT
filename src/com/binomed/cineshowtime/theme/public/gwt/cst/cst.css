@@ -34,3 +34,22 @@
   background-color: rgba(136,136,136,0.4); 
   box-shadow: 0 0 5px #888;
 }
+
+.gwt-DisclosurePanel {
+}
+.gwt-DisclosurePanel-open {
+}
+.gwt-DisclosurePanel-closed {
+}
+.gwt-DisclosurePanel .header,
+.gwt-DisclosurePanel .header a,
+.gwt-DisclosurePanel .header td {
+  text-decoration: none;  /* Remove underline from header */
+  color: black; 
+  cursor: pointer;
+  cursor: hand;
+}
+.gwt-DisclosurePanel .content {
+  padding: 4px 0px 4px 8px;
+  margin-left: 6px;
+}

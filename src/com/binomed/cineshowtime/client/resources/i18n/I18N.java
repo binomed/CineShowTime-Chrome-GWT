@@ -10,12 +10,20 @@ public interface I18N extends Messages {
 	// Header
 	String appName();
 
+	String donateUrl();
+
 	// Main panel
 	String theaterTabLabel();
 
-	String parametersTabLabel();
-
 	String theaterResult();
+
+	String menuPreferences();
+
+	String menuAbout();
+
+	String menuHelp();
+
+	String msgDevelopped();
 
 	// Theater view
 	String addFavorites();
@@ -58,6 +66,30 @@ public interface I18N extends Messages {
 
 	String favoriteLink();
 
+	String msgNoCityName();
+
+	String msgNoGps();
+
+	String msgNoMovieName();
+
+	String msgNoPlaceMatch();
+
+	String msgNoDateMatch();
+
+	String msgNoUpComming();
+
+	String msgNoDFav();
+
+	String msgVersionTitle();
+
+	String msgVersionCode();
+
+	String msgVersionName();
+
+	String msgTraductorName();
+
+	String msgNoResultRetryLater();
+
 	// Movie view
 
 	String imdbLink();
@@ -83,6 +115,10 @@ public interface I18N extends Messages {
 	String genre();
 
 	String year();
+
+	String noReview();
+
+	String noVideo();
 
 	// Projection
 	String projectionFrom();

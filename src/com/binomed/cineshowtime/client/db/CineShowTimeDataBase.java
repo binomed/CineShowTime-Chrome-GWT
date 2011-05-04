@@ -1,5 +1,6 @@
 package com.binomed.cineshowtime.client.db;
 
+import com.binomed.cineshowtime.client.cst.CineshowtimeDbCst;
 import com.binomed.cineshowtime.client.model.LocalisationBean;
 import com.binomed.cineshowtime.client.model.MovieBean;
 import com.binomed.cineshowtime.client.model.ProjectionBean;

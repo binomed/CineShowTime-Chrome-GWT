@@ -2,8 +2,10 @@ package com.binomed.cineshowtime.client.ui;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import com.binomed.cineshowtime.client.IClientFactory;
+import com.binomed.cineshowtime.client.cst.HttpParamsCst;
 import com.binomed.cineshowtime.client.event.db.DataBaseReadyDBEvent;
 import com.binomed.cineshowtime.client.event.db.LastChangeDBEvent;
 import com.binomed.cineshowtime.client.event.db.LastRequestDBEvent;
@@ -22,20 +24,25 @@ import com.binomed.cineshowtime.client.model.NearResp;
 import com.binomed.cineshowtime.client.model.RequestBean;
 import com.binomed.cineshowtime.client.model.TheaterBean;
 import com.binomed.cineshowtime.client.resources.CstResource;
+import com.binomed.cineshowtime.client.resources.i18n.I18N;
 import com.binomed.cineshowtime.client.service.geolocation.UserGeolocation;
 import com.binomed.cineshowtime.client.service.geolocation.UserGeolocationCallback;
+import com.binomed.cineshowtime.client.ui.dialog.AboutDialog;
 import com.binomed.cineshowtime.client.ui.dialog.LastChangeDialog;
 import com.binomed.cineshowtime.client.ui.widget.MovieTabHeaderWidget;
 import com.binomed.cineshowtime.client.util.StringUtils;
 import com.google.code.gwt.database.client.service.DataServiceException;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JsArray;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.maps.client.geocode.Placemark;
 import com.google.gwt.maps.client.geom.LatLng;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TabLayoutPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -56,6 +63,8 @@ public class MainWindow extends Composite {
 	TheaterViewResult searchResultHeader;
 	@UiField
 	VerticalPanel theatersContent;
+	@UiField
+	Label menuAbout;
 
 	public MainWindow(IClientFactory clientFactory) {
 		this.clientFactory = clientFactory;
@@ -131,15 +140,15 @@ public class MainWindow extends Composite {
 					searchResultHeader.setLocation(locations.get(0).getCity());
 					searchResultHeader.updateResultHeader();
 				} else {
-					// TODO : Message
-					Window.alert("Error during geolocation !");
+					searchResultHeader.setError(I18N.instance.msgNoGps());
+					searchResultHeader.updateResultHeader();
 				}
 			}
 
 			@Override
 			public void onError() {
-				// TODO : Message
-				Window.alert("Error during geolocation !");
+				searchResultHeader.setError(I18N.instance.msgNoGps());
+				searchResultHeader.updateResultHeader();
 			}
 
 		});
@@ -176,9 +185,49 @@ public class MainWindow extends Composite {
 			theatersContent.clear();
 			// Display theaters
 			if (nearResp != null) {
-				searchResultHeader.setNbTheaters(nearResp.getTheaterList().size());
-				for (TheaterBean theater : nearResp.getTheaterList()) {
-					theatersContent.add(new TheaterView(clientFactory, theater));
+				List<TheaterBean> theaterList = nearResp.getTheaterList();
+				String errorMsg = null;
+				boolean error = false;
+				if ((theaterList != null) && (theaterList.size() == 1)) {
+					TheaterBean errorTheater = nearResp.getTheaterList().get(0);
+					if (errorTheater.getId().equals(String.valueOf(HttpParamsCst.ERROR_WRONG_DATE))//
+							|| errorTheater.getId().equals(String.valueOf(HttpParamsCst.ERROR_WRONG_PLACE)) //
+							|| errorTheater.getId().equals(String.valueOf(HttpParamsCst.ERROR_NO_DATA)) //
+							|| errorTheater.getId().equals(String.valueOf(HttpParamsCst.ERROR_CUSTOM_MESSAGE)) //
+					) {
+						error = true;
+						switch (Integer.valueOf(errorTheater.getId())) {
+						case HttpParamsCst.ERROR_WRONG_DATE:
+							errorMsg = I18N.instance.msgNoDateMatch();
+							break;
+						case HttpParamsCst.ERROR_WRONG_PLACE:
+							errorMsg = I18N.instance.msgNoPlaceMatch();
+							break;
+						case HttpParamsCst.ERROR_NO_DATA:
+							errorMsg = I18N.instance.msgNoResultRetryLater();
+							break;
+						case HttpParamsCst.ERROR_CUSTOM_MESSAGE:
+							errorMsg = errorTheater.getTheaterName();
+							// Nothing to do special the custom message is in theaterTitle
+							break;
+
+						default:
+							break;
+						}
+					}
+				} else if ((theaterList == null) || (theaterList.size() == 0)) {
+					error = true;
+					errorMsg = I18N.instance.msgNoResultRetryLater();
+				}
+				if (!error) {
+
+					searchResultHeader.setNbTheaters(nearResp.getTheaterList().size());
+					for (TheaterBean theater : nearResp.getTheaterList()) {
+						theatersContent.add(new TheaterView(clientFactory, theater));
+					}
+				} else {
+					searchResultHeader.setError(errorMsg);
+
 				}
 				removeLastTheaterBorderStyle();
 			} else {
@@ -307,6 +356,10 @@ public class MainWindow extends Composite {
 	 * 
 	 * UI Handlers
 	 */
+	@UiHandler("menuAbout")
+	public void onClickAbout(ClickEvent e) {
+		new AboutDialog().center();
+	}
 
 	private final FavOpenHandler favOpenHandler = new FavOpenHandler() {
 
@@ -315,6 +368,9 @@ public class MainWindow extends Composite {
 			ArrayList<TheaterBean> theaterFavList = clientFactory.getDataBaseHelper().getTheaterFavCache();
 			if ((theaterFavList != null) && (theaterFavList.size() > 0)) {
 				showTheaterFav(theaterFavList);
+			} else {
+				searchResultHeader.setError(I18N.instance.msgNoDFav());
+				searchResultHeader.updateResultHeader();
 			}
 
 		}
@@ -332,8 +388,11 @@ public class MainWindow extends Composite {
 			} else if (searchType == SearchEvent.SEARCH_CINE) {
 				searchResultHeader.setCineSearch(param);
 			} else if (searchType == SearchEvent.SEARCH_DATE) {
-				loadTheatersOfUserLocation(Integer.valueOf(param));
-				searchResultHeader.setDateSearch(param);
+				if (Integer.valueOf(param) != -1) {
+					searchResultHeader.setDateSearch(param);
+				} else {
+					searchResultHeader.setError(I18N.instance.msgNoDateMatch());
+				}
 			}
 			searchResultHeader.updateResultHeader();
 		}
@@ -353,9 +412,11 @@ public class MainWindow extends Composite {
 	 * Remove the last theater border down
 	 */
 	private void removeLastTheaterBorderStyle() {
-		Widget lastTheater = theatersContent.getWidget(theatersContent.getWidgetCount() - 1);
-		if (lastTheater != null) {
-			lastTheater.removeStyleName(CstResource.instance.css().theaterContent());
+		if (theatersContent.getWidgetCount() > 0) {
+			Widget lastTheater = theatersContent.getWidget(theatersContent.getWidgetCount() - 1);
+			if (lastTheater != null) {
+				lastTheater.removeStyleName(CstResource.instance.css().theaterContent());
+			}
 		}
 	}
 
