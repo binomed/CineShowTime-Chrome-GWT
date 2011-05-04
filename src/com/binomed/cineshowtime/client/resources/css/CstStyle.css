@@ -171,6 +171,9 @@
 	padding-right:5px;
 	margin-left: 20px;
 }
+.movieLink {
+    padding-left:5px;
+}
 
 
 /*Reviews*/
@@ -246,4 +249,13 @@
 	margin-left:5px;
     font-weight:normal; 
     color:lightgrey; 
+}
+
+/* Preferences */
+.preferenceLabel{
+    font-weight:bold; 
+    font-size:14px;
+	margin-right:10px;
+	margin-top:10px;
+	margin: auto;
 }

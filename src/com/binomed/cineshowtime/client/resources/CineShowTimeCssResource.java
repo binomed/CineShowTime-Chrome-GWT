@@ -61,6 +61,8 @@ public interface CineShowTimeCssResource extends CssResource {
 
 	String movieSeparator();
 
+	String movieLink();
+
 	/* Reviews */
 
 	String review();
@@ -86,4 +88,6 @@ public interface CineShowTimeCssResource extends CssResource {
 
 	String projectionFutur();
 
+	/* Preferences */
+	String preferenceLabel();
 }

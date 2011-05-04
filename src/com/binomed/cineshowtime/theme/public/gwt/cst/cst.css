@@ -1,3 +1,8 @@
+
+a, a:visited, a:hover {
+  color: #81BEF7;
+}
+
 .gwt-TabLayoutPanel {
 }
 
@@ -50,6 +55,7 @@
   cursor: hand;
 }
 .gwt-DisclosurePanel .content {
+  border-left: 0px solid #e3e3e3;
   padding: 4px 0px 4px 8px;
   margin-left: 6px;
 }

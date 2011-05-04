@@ -32,8 +32,10 @@ public class ReviewView extends Composite {
 		reviewContent.setText(review.getReview());
 		reviewLink.setHref(review.getUrlReview());
 		reviewTitle.setText(review.getAuthor());
+		reviewLink.setTarget("_BLANK");
 		reviewSourceLink.setText(review.getSource());
-		reviewSourceLink.setHref(review.getSource());
+		reviewSourceLink.setHref("http://" + review.getSource());
+		reviewSourceLink.setTarget("_BLANK");
 	}
 
 	interface ReviewViewUiBinder extends UiBinder<Widget, ReviewView> {

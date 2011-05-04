@@ -9,7 +9,17 @@
 	
 		<g:VerticalPanel width="100%">
 			<g:CaptionPanel ui:field="preferenceCatGen" width="95%">
-				<g:Button ui:field="preferenceGenResetDb" text="{i18n.preference_gen_reset_db}" />
+				<g:VerticalPanel width="100%">
+					<g:Button ui:field="preferenceGenResetDb" text="{i18n.preference_gen_reset_db}" />
+					<g:HorizontalPanel>
+						<g:Label text="{i18n.preference_gen_time_format}" styleName="{res.css.preferenceLabel}" />
+						<g:ListBox ui:field="preferenceGenTimeFormat"/>
+					</g:HorizontalPanel>
+					<g:HorizontalPanel>
+						<g:Label text="{i18n.preference_gen_time_adds}" styleName="{res.css.preferenceLabel}" />
+						<g:ListBox ui:field="preferenceGenTimeAdds"/>
+					</g:HorizontalPanel>
+				</g:VerticalPanel>
 			</g:CaptionPanel>
 		</g:VerticalPanel>
 	

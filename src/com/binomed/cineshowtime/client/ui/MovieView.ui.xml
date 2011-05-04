@@ -45,11 +45,11 @@
 					</g:HorizontalPanel>
 					<g:HorizontalPanel>
 						<g:Image resource="{res.imdb}" ui:field="imgImdb" />
-						<g:Anchor ui:field="movieLinkImdb" text="{i18n.imdbLink}" />
+						<g:Anchor ui:field="movieLinkImdb" text="{i18n.imdbLink}" styleName="{res.css.movieLink}"/>
 					</g:HorizontalPanel>
 					<g:HorizontalPanel>
 						<g:Image resource="{res.wikipedia}" ui:field="imgWiki"/>
-						<g:Anchor ui:field="movieLinkWikipedia" text="{i18n.wikipediaLink}" />
+						<g:Anchor ui:field="movieLinkWikipedia" text="{i18n.wikipediaLink}" styleName="{res.css.movieLink}"/>
 					</g:HorizontalPanel>
 				</div>
 				<div style="padding-left:100px;float:left;">

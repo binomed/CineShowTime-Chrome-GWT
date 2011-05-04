@@ -230,4 +230,46 @@ public interface I18N extends Messages {
 
 	String preference_user_agenda();
 
+	// Values for pref
+
+	String measure_1();
+
+	String measure_2();
+
+	String measure_code_1();
+
+	String measure_code_2();
+
+	String mode_localisation_1();
+
+	String mode_localisation_2();
+
+	String mode_localisation_3();
+
+	String mode_localisation_code_1();
+
+	String mode_localisation_code_2();
+
+	String mode_localisation_code_3();
+
+	String sort_theaters_values_1();
+
+	String sort_theaters_values_2();
+
+	String sort_theaters_values_3();
+
+	String sort_theaters_values_4();
+
+	String sort_theaters_values_5();
+
+	String sort_theaters_values_code_1();
+
+	String sort_theaters_values_code_2();
+
+	String sort_theaters_values_code_3();
+
+	String sort_theaters_values_code_4();
+
+	String sort_theaters_values_code_5();
+
 }
