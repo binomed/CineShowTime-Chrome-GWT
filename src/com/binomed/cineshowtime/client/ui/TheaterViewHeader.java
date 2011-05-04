@@ -62,12 +62,17 @@ public class TheaterViewHeader extends Composite {
 			clientFactory.getDataBaseHelper().removeFav(theater);
 		} else {
 			if (theater.getPlace().getCityName() == null) {
-				theater.getPlace().setCityName(clientFactory.getCineShowTimeService().getCurrentCityName().getLocality());
-				theater.getPlace().setCountryName(clientFactory.getCineShowTimeService().getCurrentCityName().getCountry());
-				theater.getPlace().setCountryNameCode(clientFactory.getCineShowTimeService().getCurrentCityName().getCountry());
-				theater.getPlace().setPostalCityNumber(clientFactory.getCineShowTimeService().getCurrentCityName().getPostalCode());
-				theater.getPlace().setLatitude(clientFactory.getCineShowTimeService().getCurrentCityName().getPoint().getLatitude());
-				theater.getPlace().setLongitude(clientFactory.getCineShowTimeService().getCurrentCityName().getPoint().getLongitude());
+				if (clientFactory.getCineShowTimeService().getCurrentPlaceMark() != null) {
+					theater.getPlace().setCityName(clientFactory.getCineShowTimeService().getCurrentPlaceMark().getLocality());
+					theater.getPlace().setCountryName(clientFactory.getCineShowTimeService().getCurrentPlaceMark().getCountry());
+					theater.getPlace().setCountryNameCode(clientFactory.getCineShowTimeService().getCurrentPlaceMark().getCountry());
+					theater.getPlace().setPostalCityNumber(clientFactory.getCineShowTimeService().getCurrentPlaceMark().getPostalCode());
+					if (clientFactory.getCineShowTimeService().getCurrentPlaceMark().getPoint() != null) {
+						theater.getPlace().setLatitude(clientFactory.getCineShowTimeService().getCurrentPlaceMark().getPoint().getLatitude());
+					}
+				} else {
+					theater.getPlace().setCityName(clientFactory.getCineShowTimeService().getCurrentCityName());
+				}
 			}
 			clientFactory.getDataBaseHelper().addFav(theater);
 		}

@@ -8,6 +8,7 @@ import com.binomed.cineshowtime.client.event.ui.FavOpenEvent;
 import com.binomed.cineshowtime.client.event.ui.SearchEvent;
 import com.binomed.cineshowtime.client.model.RequestBean;
 import com.binomed.cineshowtime.client.model.TheaterBean;
+import com.binomed.cineshowtime.client.resources.i18n.I18N;
 import com.binomed.cineshowtime.client.service.geolocation.UserGeolocation;
 import com.binomed.cineshowtime.client.util.LocaleUtils;
 import com.binomed.cineshowtime.client.util.StringUtils;
@@ -78,32 +79,34 @@ public class SearchTheater extends Composite {
 							clientFactory.getCineShowTimeService().requestNearTheatersFromFav(theaterFavList, day);
 						} else if ((lastRequest.getLongitude() != 0) && (lastRequest.getLatitude() != 0)) {
 							clientFactory.getEventBusHandler().fireEvent(new SearchEvent(SearchEvent.SEARCH_DATE, String.valueOf(day)));
+							loadTheaterOfUserCityEnter(lastRequest.getCityName());
 						} else {
 							clientFactory.getEventBusHandler().fireEvent(new SearchEvent(SearchEvent.SEARCH_CINE, locationSearch.getText()));
 							loadTheaterOfUserCityEnter(lastRequest.getCityName());
 						}
 					} else {
-						clientFactory.getEventBusHandler().fireEvent(new SearchEvent(SearchEvent.SEARCH_DATE, String.valueOf(day)));
+						Window.alert(I18N.instance.searchError());
 					}
 
 				} else {
-					clientFactory.getEventBusHandler().fireEvent(new SearchEvent(SearchEvent.SEARCH_DATE, String.valueOf(day)));
+					clientFactory.getEventBusHandler().fireEvent(new SearchEvent(SearchEvent.SEARCH_NEAR, String.valueOf(day)));
 					// TODO : Message d'erreur de date
 				}
 			} else {
 				int day = getDaySearch();
 				// if date is not -1 we launch the last request we the new day
 				if (day != -1) {
-					clientFactory.getEventBusHandler().fireEvent(new SearchEvent(SearchEvent.SEARCH_CINE, locationSearch.getText()));
+					clientFactory.getEventBusHandler().fireEvent(new SearchEvent(SearchEvent.SEARCH_DATE, String.valueOf(day)));
 					loadTheaterOfUserCityEnter(locationSearch.getText());
 				} else {
-					clientFactory.getEventBusHandler().fireEvent(new SearchEvent(SearchEvent.SEARCH_DATE, String.valueOf(day)));
+					clientFactory.getEventBusHandler().fireEvent(new SearchEvent(SearchEvent.SEARCH_CINE, locationSearch.getText()));
+					loadTheaterOfUserCityEnter(locationSearch.getText());
 				}
 			}
 
 		} else {
 			// TODO : Message
-			Window.alert("Type a search criteria please.");
+			Window.alert(I18N.instance.searchError());
 		}
 	}
 
@@ -131,17 +134,21 @@ public class SearchTheater extends Composite {
 			public void onSuccess(JsArray<Placemark> locations) {
 				try {
 					if ((locations != null) && (locations.length() > 0)) {
+						clientFactory.getCineShowTimeService().setCurrentCityName(locations.get(0), null);
 						doSearch(locations.get(0).getCountry());
 					} else {
+						clientFactory.getCineShowTimeService().setCurrentCityName(null, cityName);
 						doSearch(null);
 					}
 				} catch (Exception e) {
+					clientFactory.getCineShowTimeService().setCurrentCityName(null, cityName);
 					doSearch(null);
 				}
 			}
 
 			@Override
 			public void onFailure(int statusCode) {
+				clientFactory.getCineShowTimeService().setCurrentCityName(null, cityName);
 				doSearch(null);
 
 			}

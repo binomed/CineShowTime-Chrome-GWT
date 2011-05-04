@@ -51,6 +51,8 @@ public interface I18N extends Messages {
 
 	String nbTheaters(int nbTheaters);
 
+	String searchError();
+
 	// Search panel
 	String searchTitle();
 

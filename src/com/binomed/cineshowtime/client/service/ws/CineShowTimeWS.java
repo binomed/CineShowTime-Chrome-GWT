@@ -37,6 +37,7 @@ public class CineShowTimeWS extends AbstractCineShowTimeWS {
 	private Map<String, MovieBean> movieMap;
 	private final IClientFactory clientFactory;
 	private Placemark currentPlaceMark;
+	private String currentCityName;
 	private RequestBean request;
 
 	public CineShowTimeWS(IClientFactory clientFactory) {
@@ -270,12 +271,17 @@ public class CineShowTimeWS extends AbstractCineShowTimeWS {
 		return movieMap.get(movieId);
 	}
 
-	public Placemark getCurrentCityName() {
+	public Placemark getCurrentPlaceMark() {
 		return currentPlaceMark;
 	}
 
-	public void setCurrentCityName(Placemark cityName) {
-		this.currentPlaceMark = cityName;
+	public String getCurrentCityName() {
+		return currentCityName;
+	}
+
+	public void setCurrentCityName(Placemark placeMark, String cityName) {
+		this.currentPlaceMark = placeMark;
+		this.currentCityName = cityName;
 	}
 
 	public RequestBean getRequest() {

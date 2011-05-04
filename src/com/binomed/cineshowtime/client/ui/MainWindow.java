@@ -135,9 +135,8 @@ public class MainWindow extends Composite {
 			@Override
 			public void onLocationResponse(JsArray<Placemark> locations, LatLng latLng) {
 				if ((locations != null) && (locations.length() > 0)) {
-					clientFactory.getCineShowTimeService().setCurrentCityName(locations.get(0));
-					clientFactory.getCineShowTimeService().requestNearTheatersFromLatLng(latLng.getLatitude(), latLng.getLongitude(),
-							locations.get(0).getCountry(), day);
+					clientFactory.getCineShowTimeService().setCurrentCityName(locations.get(0), null);
+					clientFactory.getCineShowTimeService().requestNearTheatersFromLatLng(latLng.getLatitude(), latLng.getLongitude(), locations.get(0).getCountry(), day);
 					searchResultHeader.setLocation(locations.get(0).getCity());
 					searchResultHeader.updateResultHeader();
 					searchField.setUserLocation(locations.get(0).getCity());
