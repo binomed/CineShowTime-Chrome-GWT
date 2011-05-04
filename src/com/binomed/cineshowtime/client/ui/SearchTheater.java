@@ -49,6 +49,7 @@ public class SearchTheater extends Composite {
 
 		DateTimeFormat format = DateTimeFormat.getFormat("dd/MM/yyyy");
 		dateSearch.setFormat(new DateBox.DefaultFormat(format));
+		dateSearch.setValue(new Date());
 	}
 
 	@UiHandler("locationSearch")
@@ -165,5 +166,9 @@ public class SearchTheater extends Composite {
 	}
 
 	interface SearchTheaterUiBinder extends UiBinder<Widget, SearchTheater> {
+	}
+
+	public void setUserLocation(String city) {
+		locationSearch.setText(city);
 	}
 }

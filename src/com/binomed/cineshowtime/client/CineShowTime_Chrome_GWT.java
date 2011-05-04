@@ -31,7 +31,7 @@ public class CineShowTime_Chrome_GWT implements EntryPoint {
 	}
 
 	public void testCoverflow() {
-		Coverflow c = new Coverflow(800, 300, new ZoomCoverflowLayout());
+		Coverflow c = new Coverflow(800, 300, new ZoomCoverflowLayout(null));
 
 		List<CoverData> covers = new ArrayList<CoverData>();
 		covers.add(new SimpleCover("1", "Affiche 1, \nAffiche<br/> 1,Affiche 1",

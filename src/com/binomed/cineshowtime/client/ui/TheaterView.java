@@ -74,7 +74,7 @@ public class TheaterView extends Composite {
 					isCoverflowLoaded = true;
 
 					// Add the coverflow
-					coverflow = new Coverflow(800, 300, new ZoomCoverflowLayout());
+					coverflow = new Coverflow(800, 300, new ZoomCoverflowLayout(theater.getMovieMap()));
 					coverflow.addClickCoverListener(movieOpenListener);
 
 					CineShowTimeWS service = clientFactory.getCineShowTimeService();

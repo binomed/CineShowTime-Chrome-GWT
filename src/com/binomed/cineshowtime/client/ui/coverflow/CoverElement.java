@@ -117,14 +117,14 @@ public class CoverElement {
 	}
 
 	private void writeDataLabelTextBlock(Canvas canvas) {
-		final int MAX = 10;
+		final int MAX = 12;
 		canvas.getContext2d().save();
 		canvas.getContext2d().translate(0, 0);
 		canvas.getContext2d().scale(1, 1);
 		canvas.getContext2d().setFillStyle("#FFFFFF");
 		canvas.getContext2d().setTextAlign(TextAlign.CENTER);
 		canvas.getContext2d().setTextBaseline(TextBaseline.TOP);
-		canvas.getContext2d().setFont("bold 15px sans-serif");
+		canvas.getContext2d().setFont("bold 13px sans-serif");
 		String[] splitted = data.getLabel().split("\\s");
 		StringBuffer sb = new StringBuffer();
 		int index = 0;
@@ -199,6 +199,10 @@ public class CoverElement {
 
 	public void setScale(double scale) {
 		this.scale = scale;
+	}
+
+	public CoverData getData() {
+		return data;
 	}
 
 }
