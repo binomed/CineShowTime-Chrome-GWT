@@ -150,9 +150,8 @@
 }
 .movieName {
     font-weight:bold;
-    font-size:24px;
-   color: #AC171A;
-	text-shadow: 1px 1px white, -1px -1px #AC171A;
+    font-size:20px;
+    color: #AC171A;
 	padding-bottom:10px;
 }
 

@@ -12,8 +12,10 @@
 			</div>
 			<div style="float:right;">
 				<g:Label ui:field="theaterName" styleName="{res.css.theaterNameHeader}"/>
-				<g:Label ui:field="theaterPlace" styleName="{res.css.theaterInfoHeader}"/>
-				<g:Label ui:field="theaterPhone" styleName="{res.css.theaterInfoHeader}" />
+				<g:HorizontalPanel>
+					<g:Label ui:field="theaterPlace" styleName="{res.css.theaterInfoHeader}"/>
+					<g:Label ui:field="theaterPhone" styleName="{res.css.theaterInfoHeader}" />
+				</g:HorizontalPanel>
 			</div>
 		</div>
 		<div style="text-align:right;">

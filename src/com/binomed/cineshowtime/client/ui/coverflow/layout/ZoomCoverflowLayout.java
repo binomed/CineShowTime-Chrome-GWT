@@ -93,10 +93,10 @@ public class ZoomCoverflowLayout implements CoverflowLayout {
 		}
 	}
 
-	private static final int PROJECTIONS_Y = 250;
-	private static final int PROJECTIONS_X = 50;
-	private static final int LINE_HEIGHT = 15;
-	private static final int TIME_WIDTH = 30;
+	private static final int PROJECTIONS_Y = 235;
+	private static final int PROJECTIONS_X = 200;
+	private static final int LINE_HEIGHT = 20;
+	private static final int TIME_WIDTH = 40;
 
 	private void generateProjections(Canvas canvas, List<ProjectionBean> projections, MovieBean movie) {
 		StringBuilder movieInfo = new StringBuilder();
@@ -112,8 +112,8 @@ public class ZoomCoverflowLayout implements CoverflowLayout {
 		canvas.getContext2d().setTextBaseline(TextBaseline.TOP);
 		canvas.getContext2d().setTextAlign(TextAlign.LEFT);
 		canvas.getContext2d().setFillStyle("#FFFFFF");
-		canvas.getContext2d().setFont("bold 11px sans-serif");
-		canvas.getContext2d().fillText(movieInfo.toString(), 50, PROJECTIONS_Y);
+		canvas.getContext2d().setFont("bold 14px sans-serif");
+		canvas.getContext2d().fillText(movieInfo.toString(), PROJECTIONS_X, PROJECTIONS_Y);
 		canvas.getContext2d().restore();
 
 		// init text canvas
@@ -139,7 +139,7 @@ public class ZoomCoverflowLayout implements CoverflowLayout {
 				colY = PROJECTIONS_Y + (LINE_HEIGHT * nbLang);
 				timesXByLang.put(projection.getLang(), colY);
 				canvas.getContext2d().setFillStyle("#FFFFFF");
-				canvas.getContext2d().setFont("italic 10px sans-serif");
+				canvas.getContext2d().setFont("bold 14px sans-serif");
 				canvas.getContext2d().setTextAlign(TextAlign.LEFT);
 				colX = PROJECTIONS_X;
 				canvas.getContext2d().fillText(projection.getLang() + " : ", colX, colY);
@@ -161,14 +161,14 @@ public class ZoomCoverflowLayout implements CoverflowLayout {
 			// Set style
 			if (showtime.getTime() < currentTime.getTime()) {
 				canvas.getContext2d().setFillStyle("#999999");
-				canvas.getContext2d().setFont("italic 10px sans-serif");
+				canvas.getContext2d().setFont("italic 13px sans-serif");
 			} else if (nextShow) {
 				nextShow = false;
 				canvas.getContext2d().setFillStyle("#FFFFFF");
-				canvas.getContext2d().setFont("bold 11px sans-serif");
+				canvas.getContext2d().setFont("bold 14px sans-serif");
 			} else {
 				canvas.getContext2d().setFillStyle("#FFFFFF");
-				canvas.getContext2d().setFont("10px sans-serif");
+				canvas.getContext2d().setFont("13px sans-serif");
 			}
 
 			canvas.getContext2d().setTextAlign(TextAlign.LEFT);

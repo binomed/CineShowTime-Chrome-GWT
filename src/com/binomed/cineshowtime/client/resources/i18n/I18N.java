@@ -32,6 +32,8 @@ public interface I18N extends Messages {
 
 	String theaterName(String theaterName, int nbMovies);
 
+	String theaterPhone(String theaterPhone);
+
 	// Search result header
 	String loadingFavorite();
 

@@ -9,10 +9,10 @@
 	<g:ScrollPanel>
 		<g:HTMLPanel width="100%" styleName="{res.css.movieContent}">
 			<div>
-				<div style="float:left;" >		
+				<div width="25%" style="float:left;" >		
 					<g:Image resource="{res.no_poster}" ui:field="imgPoster" />
 				</div>
-				<div style="padding-left:10px;float:left;">
+				<div width="50%" style="padding-left:10px;float:left;">
 					<g:HorizontalPanel>
 						<g:Label ui:field="movieName" styleName="{res.css.movieName}"/>
 					</g:HorizontalPanel>
@@ -52,7 +52,7 @@
 						<g:Anchor ui:field="movieLinkWikipedia" text="{i18n.wikipediaLink}" styleName="{res.css.movieLink}"/>
 					</g:HorizontalPanel>
 				</div>
-				<div style="padding-left:100px;float:left;">
+				<div width="25%" style="padding-left:40px;float:left;">
 					<cst:ProjectionView ui:field="movieProjections"/>
 				</div>
 			</div>
