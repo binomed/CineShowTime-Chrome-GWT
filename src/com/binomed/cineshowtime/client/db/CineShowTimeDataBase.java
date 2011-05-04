@@ -56,6 +56,9 @@ public interface CineShowTimeDataBase extends DataService, CineshowtimeDbCst {
 	@Update(DATABASE_CREATE_VERSION_TABLE)
 	void initTableVersion(VoidCallback callBack);
 
+	@Update(DATABASE_CREATE_PREFERENCES_TABLE)
+	void initTablePreferences(VoidCallback callBack);
+
 	/*
 	 * 
 	 * SQL PART
@@ -340,6 +343,9 @@ public interface CineShowTimeDataBase extends DataService, CineshowtimeDbCst {
 
 	@Select("SELECT * FROM " + DATABASE_PREFERENCES_TABLE + " WHERE " + KEY_PREFERENCE_KEY + " = {key} ")
 	void fetchPreference(String key, ListCallback<GenericRow> callBack);
+
+	@Select("SELECT * FROM " + DATABASE_PREFERENCES_TABLE)
+	void fetchAllPreferences(ListCallback<GenericRow> callBack);
 
 	@Select("SELECT * " //
 			+ " FROM " + DATABASE_REVIEW_TABLE //

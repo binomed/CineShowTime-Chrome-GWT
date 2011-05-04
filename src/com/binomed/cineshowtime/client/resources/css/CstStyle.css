@@ -255,6 +255,15 @@
     font-weight:bold; 
     font-size:14px;
 	margin-right:10px;
+	margin-top:5px;
+}
+
+.preferenceDescription{
+	font-style:italic;
+	padding-left:15px;
+	margin-bottom:10px;
+}
+.preferenceData{
 	margin-top:10px;
-	margin: auto;
+	margin-bottom:10px;
 }

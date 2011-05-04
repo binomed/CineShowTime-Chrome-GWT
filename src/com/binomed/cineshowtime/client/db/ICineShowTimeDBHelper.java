@@ -25,6 +25,8 @@ public interface ICineShowTimeDBHelper {
 
 	void readPreference(String key);
 
+	void readAllPreferences();
+
 	void getLastRequest();
 
 	void getMovie(String movieId);
@@ -35,9 +37,15 @@ public interface ICineShowTimeDBHelper {
 
 	ArrayList<TheaterBean> getTheaterFavCache();
 
+	boolean isPreferenceInCache();
+
 	void removeFav(TheaterBean theater);
 
 	void addFav(TheaterBean theater);
+
+	void setPreference(String key, String value);
+
+	String readPref(String key);
 
 	void clean();
 

@@ -27,6 +27,8 @@ import com.binomed.cineshowtime.client.model.RequestBean;
 import com.binomed.cineshowtime.client.model.ReviewBean;
 import com.binomed.cineshowtime.client.model.TheaterBean;
 import com.binomed.cineshowtime.client.model.YoutubeBean;
+import com.binomed.cineshowtime.client.resources.i18n.I18N;
+import com.binomed.cineshowtime.client.util.StringUtils;
 import com.google.code.gwt.database.client.GenericRow;
 import com.google.code.gwt.database.client.service.DataServiceException;
 import com.google.code.gwt.database.client.service.ListCallback;
@@ -39,8 +41,10 @@ public class CineShowTimeDBHelper implements ICineShowTimeDBHelper, Cineshowtime
 	private IClientFactory clientFactory;
 	private ArrayList<TheaterBean> theaterFav = null;
 	private CineShowTimeVersionManager versionManager;
+	private HashMap<String, String> preferences;
 
 	private boolean showLastChange = false;
+	private boolean prefInLoad = false;
 	private boolean dataBaseReady = false;
 
 	private static EmptyRowInsertCallBack emptyInsertCallBack = new EmptyRowInsertCallBack();
@@ -59,6 +63,7 @@ public class CineShowTimeDBHelper implements ICineShowTimeDBHelper, Cineshowtime
 	public CineShowTimeDBHelper(IClientFactory clientFactory, CineShowTimeDataBase dataBase) {
 		super();
 		this.clientFactory = clientFactory;
+		preferences = null;
 		versionManager = new CineShowTimeVersionManager(dataBase, clientFactory, this, new UpdateVersionDbDone() {
 
 			@Override
@@ -73,7 +78,7 @@ public class CineShowTimeDBHelper implements ICineShowTimeDBHelper, Cineshowtime
 	public void initDataBase(CineShowTimeDataBase dataBase, final boolean launchRequest) {
 		this.dataBase = dataBase;
 
-		DbBatchVoidCallBack callBack = new DbBatchVoidCallBack(10, false, new IDbBatchFinalTask() {
+		DbBatchVoidCallBack callBack = new DbBatchVoidCallBack(11, false, new IDbBatchFinalTask() {
 
 			@Override
 			public void onError(Exception exception) {
@@ -86,9 +91,9 @@ public class CineShowTimeDBHelper implements ICineShowTimeDBHelper, Cineshowtime
 			}
 		});
 
+		dataBase.initTableVersion(callBack);
 		dataBase.initTableFavTheater(callBack);
 		dataBase.initTableLastChange(callBack);
-		dataBase.initTableVersion(callBack);
 		dataBase.initTableLocation(callBack);
 		dataBase.initTableMovie(callBack);
 		dataBase.initTableRequest(callBack);
@@ -96,6 +101,7 @@ public class CineShowTimeDBHelper implements ICineShowTimeDBHelper, Cineshowtime
 		dataBase.initTableShowtime(callBack);
 		dataBase.initTableTheater(callBack);
 		dataBase.initTableVideo(callBack);
+		dataBase.initTablePreferences(callBack);
 
 	}
 
@@ -178,6 +184,7 @@ public class CineShowTimeDBHelper implements ICineShowTimeDBHelper, Cineshowtime
 		dataBaseReady = true;
 		clientFactory.getEventBusHandler().fireEvent(new DataBaseReadyDBEvent());
 		getTheaterFav();
+		readAllPreferences();
 	}
 
 	@Override
@@ -317,6 +324,91 @@ public class CineShowTimeDBHelper implements ICineShowTimeDBHelper, Cineshowtime
 			}
 		});
 
+	}
+
+	@Override
+	public void readAllPreferences() {
+		prefInLoad = true;
+		dataBase.fetchAllPreferences(new ListCallback<GenericRow>() {
+
+			@Override
+			public void onFailure(DataServiceException error) {
+				clientFactory.getEventBusHandler().fireEvent(new PrefDBEvent(error));
+			}
+
+			@Override
+			public void onSuccess(List<GenericRow> result) {
+				preferences = new HashMap<String, String>();
+				if ((result != null) && (result.size() > 0)) {
+					for (GenericRow row : result) {
+						preferences.put(row.getString(KEY_PREFERENCE_KEY), row.getString(KEY_PREFERENCE_VALUE));
+					}
+				}
+				clientFactory.getEventBusHandler().fireEvent(new PrefDBEvent(preferences));
+			}
+		});
+
+	}
+
+	@Override
+	public void setPreference(final String key, final String value) {
+		if (preferences == null) {
+			preferences = new HashMap<String, String>();
+		}
+		preferences.put(key, value);
+		dataBase.deletePreference(key, new DbBatchVoidCallBack(1, false, new IDbBatchFinalTask() {
+
+			@Override
+			public void onError(Exception exception) {
+			}
+
+			@Override
+			public void finish() {
+				dataBase.createPreference(key, value, emptyInsertCallBack);
+
+			}
+		}));
+	}
+
+	@Override
+	public boolean isPreferenceInCache() {
+		return preferences != null;
+	}
+
+	@Override
+	public String readPref(String key) {
+		if ((preferences == null) && prefInLoad) {
+			preferences = new HashMap<String, String>();
+		} else if ((preferences == null) && !prefInLoad) {
+			preferences = new HashMap<String, String>();
+			readAllPreferences();
+		}
+		String value = preferences.get(key);
+		// On va gérer les valeurs par défaut
+		if (value == null) {
+			if (StringUtils.equalsIC(key, I18N.instance.preference_lang_key_auto_translate())) {
+				value = String.valueOf(false);
+			} else if (StringUtils.equalsIC(key, I18N.instance.preference_gen_key_auto_reload())) {
+				value = String.valueOf(true);
+			} else if (StringUtils.equalsIC(key, I18N.instance.preference_gen_key_theme())) {
+				value = "dark";
+			} else if (StringUtils.equalsIC(key, I18N.instance.preference_gen_key_time_format())) {
+				value = I18N.instance.preference_gen_default_time_format();
+			} else if (StringUtils.equalsIC(key, I18N.instance.preference_gen_key_time_adds())) {
+				value = I18N.instance.preference_gen_default_time_adds();
+			} else if (StringUtils.equalsIC(key, I18N.instance.preference_loc_key_measure())) {
+				value = I18N.instance.preference_loc_default_measure();
+			} else if (StringUtils.equalsIC(key, I18N.instance.preference_loc_key_time_direction())) {
+				value = String.valueOf(false);
+			} else if (StringUtils.equalsIC(key, I18N.instance.preference_loc_key_enable_localisation())) {
+				value = String.valueOf(true);
+			} else if (StringUtils.equalsIC(key, I18N.instance.preference_loc_key_localisation_provider())) {
+				value = I18N.instance.preference_loc_default_localisation_provider();
+			} else if (StringUtils.equalsIC(key, I18N.instance.preference_sort_key_sort_theater())) {
+				value = I18N.instance.preference_sort_default_sort_theater();
+			}
+		}
+		return value;
 	}
 
 	@Override
@@ -547,7 +639,7 @@ public class CineShowTimeDBHelper implements ICineShowTimeDBHelper, Cineshowtime
 
 	@Override
 	public void clean() {
-		DbBatchVoidCallBack callBack = new DbBatchVoidCallBack(10, false, new IDbBatchFinalTask() {
+		DbBatchVoidCallBack callBack = new DbBatchVoidCallBack(9, false, new IDbBatchFinalTask() {
 
 			@Override
 			public void onError(Exception exception) {
@@ -562,15 +654,15 @@ public class CineShowTimeDBHelper implements ICineShowTimeDBHelper, Cineshowtime
 		});
 
 		dataBase.dropFavorites(callBack);
+		dataBase.dropLastChange(callBack);
 		dataBase.dropLocation(callBack);
 		dataBase.dropMovies(callBack);
-		dataBase.dropPreferences(callBack);
 		dataBase.dropRequest(callBack);
 		dataBase.dropReview(callBack);
 		dataBase.dropShowtime(callBack);
 		dataBase.dropTheaters(callBack);
-		dataBase.dropVersions(callBack);
 		dataBase.dropVideo(callBack);
+		dataBase.dropPreferences(callBack);
 	}
 
 	/*
