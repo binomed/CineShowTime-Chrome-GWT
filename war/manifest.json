@@ -15,7 +15,7 @@
   "permissions": [
     "unlimitedStorage",
     "notifications",
-    "http://9.binomed-cineshowtime-chrome.appspot.com/",
+    "http://*.binomed-cineshowtime-chrome.appspot.com/",
     "tabs", 
     "http://www.google.com/"
   ]

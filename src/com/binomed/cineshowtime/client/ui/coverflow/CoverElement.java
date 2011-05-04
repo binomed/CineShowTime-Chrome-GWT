@@ -2,7 +2,6 @@ package com.binomed.cineshowtime.client.ui.coverflow;
 
 import com.binomed.cineshowtime.client.resources.CstResource;
 import com.google.gwt.canvas.client.Canvas;
-import com.google.gwt.canvas.dom.client.CanvasGradient;
 import com.google.gwt.canvas.dom.client.Context2d.TextAlign;
 import com.google.gwt.canvas.dom.client.Context2d.TextBaseline;
 import com.google.gwt.dom.client.ImageElement;
@@ -85,16 +84,32 @@ public class CoverElement {
 		}
 
 		// Add gradient to the mirror image
-		canvas.getContext2d().save();
-		canvas.getContext2d().translate(0, 0);
-		canvas.getContext2d().scale(1, 1);
-		CanvasGradient gradient = canvas.getContext2d().createLinearGradient(0, topY + (getHeight()), 0, topY + 2 * (getHeight()));
-		gradient.addColorStop(0, "transparent");
-		gradient.addColorStop(0.5, Coverflow.BACKGROUND_COLOR);
-		gradient.addColorStop(1, Coverflow.BACKGROUND_COLOR);
-		canvas.getContext2d().setFillStyle(gradient);
-		canvas.getContext2d().fillRect(leftX, topY + (getHeight()), getWidth(), getHeight());
-		canvas.getContext2d().restore();
+		// canvas.getContext2d().save();
+		// canvas.getContext2d().translate(0, 0);
+		// canvas.getContext2d().scale(1, 1);
+		// CanvasGradient gradient = canvas.getContext2d().createLinearGradient(0, topY + (getHeight()), 0, topY + 2 * (getHeight()));
+		// gradient.addColorStop(0, Coverflow.BACKGROUND_COLOR);
+		// gradient.addColorStop(0.5, Coverflow.BACKGROUND_BLACK);
+		// gradient.addColorStop(1, Coverflow.BACKGROUND_BLACK);
+		// canvas.getContext2d().setFillStyle(gradient);
+		// canvas.getContext2d().fillRect(leftX, topY + (getHeight()), getWidth(), getHeight());
+		// canvas.getContext2d().restore();
+
+		// double percent = 0;
+		// ImageData imgData = canvas.getContext2d().getImageData(leftX, -(topY + (getHeight())), getWidth(), getHeight());
+		// ImageData newImgData = canvas.getContext2d().createImageData(imgData);
+		// int height = imgData.getHeight();
+		// int width = imgData.getWidth();
+		// double x = 0;
+		// double h = height;
+		// for (int i = 0; i < height; i++) {
+		// x = i;
+		// percent = 1 - Double.valueOf(x / h);
+		// for (int j = 0; j < width; j++) {
+		// newImgData.setAlphaAt(Double.valueOf(percent * 255).intValue(), j, i);
+		// }
+		// }
+		// canvas.getContext2d().putImageData(newImgData, leftX, -(topY + (getHeight())));
 
 		// Draw cover label
 		writeDataLabelTextBlock(canvas);

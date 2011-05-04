@@ -57,7 +57,9 @@ public class ZoomCoverflowLayout implements CoverflowLayout {
 	@Override
 	public void onDrawCovers(GWTCoverflowCanvas coverflowCanvas, Map<String, CoverElement> covers) {
 		for (CoverElement cover : covers.values()) {
-			cover.draw(coverflowCanvas.getCanvas());
+			if (cover.getLeftX() > 0 && cover.getLeftX() < coverflowCanvas.getWidth()) {
+				cover.draw(coverflowCanvas.getCanvas());
+			}
 		}
 	}
 
