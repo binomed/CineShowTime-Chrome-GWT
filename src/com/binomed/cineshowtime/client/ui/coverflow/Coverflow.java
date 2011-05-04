@@ -47,9 +47,7 @@ public class Coverflow {
 
 	/**
 	 * Initialize the coverflow with covers
-	 * 
-	 * @param covers
-	 *            All Covers elements with an unique String ID as key Images URLs
+	 * @param covers All Covers elements with an unique String ID as key Images URLs
 	 */
 	public void init(final List<CoverData> coversData) {
 		// Initialize Coverflow data
@@ -90,7 +88,7 @@ public class Coverflow {
 
 			@Override
 			public void onCoverMove(int x) {
-				System.out.println("XX=" + x);
+
 			}
 		});
 
@@ -109,11 +107,8 @@ public class Coverflow {
 
 	/**
 	 * Change the image of the specified cover (by the index)
-	 * 
-	 * @param index
-	 *            Index of the cover
-	 * @param imageUrl
-	 *            Image URL of the cover
+	 * @param index Index of the cover
+	 * @param imageUrl Image URL of the cover
 	 */
 	public void updateCover(String idCover, String imageUrl) {
 		if (StringUtils.isEmpty(imageUrl)) {
@@ -142,9 +137,7 @@ public class Coverflow {
 
 	/**
 	 * Move the specified cover id to the center of the coverflow
-	 * 
-	 * @param coverIndex
-	 *            Index of the cover
+	 * @param coverIndex Index of the cover
 	 */
 	private void moveToCover(String idCover) {
 		// Compute image center & move distance
@@ -166,11 +159,8 @@ public class Coverflow {
 	/**
 	 * Animate the coverflow moves <br/>
 	 * http://www.html5canvastutorials.com/advanced/html5-canvas-linear-motion-animation/
-	 * 
-	 * @param direction
-	 *            Direction of the coverflow
-	 * @param distance
-	 *            Distance to animate
+	 * @param direction Direction of the coverflow
+	 * @param distance Distance to animate
 	 */
 	private void animateCoverflow(final int direction, final int distance) {
 		if (covers.containsKey(idFirstCover)) {

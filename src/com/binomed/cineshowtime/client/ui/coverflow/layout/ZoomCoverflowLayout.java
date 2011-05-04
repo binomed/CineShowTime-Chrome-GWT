@@ -6,7 +6,6 @@ import java.util.Map;
 
 import com.binomed.cineshowtime.client.model.MovieBean;
 import com.binomed.cineshowtime.client.model.ProjectionBean;
-import com.binomed.cineshowtime.client.resources.i18n.I18N;
 import com.binomed.cineshowtime.client.ui.coverflow.CoverElement;
 import com.binomed.cineshowtime.client.ui.coverflow.GWTCoverflowCanvas;
 import com.google.gwt.canvas.client.Canvas;
@@ -88,41 +87,79 @@ public class ZoomCoverflowLayout implements CoverflowLayout {
 			if (movieMap != null && movieMap.size() > 0 && movie != null) {
 				List<ProjectionBean> projections = movieMap.get(centerCoverId);
 				if (projections != null && projections.size() > 0) {
-					generateProjections(canvas, projections, movie.getMovieTime()); // TODO Movie time!
+					generateProjections(canvas, projections, movie); // TODO Movie time!
 				}
 			}
 		}
 	}
 
-	private void generateProjections(Canvas canvas, List<ProjectionBean> projections, Long movieTime) {
+	private static final int PROJECTIONS_Y = 250;
+	private static final int PROJECTIONS_X = 50;
+	private static final int LINE_HEIGHT = 15;
+	private static final int TIME_WIDTH = 30;
+
+	private void generateProjections(Canvas canvas, List<ProjectionBean> projections, MovieBean movie) {
+		StringBuilder movieInfo = new StringBuilder();
+		movieInfo.append(DateTimeFormat.getFormat("HH'h'mm'm'").format(new Date(movie.getMovieTime())));
+		if (movie.getStyle() != null) {
+			movieInfo.append(" - ").append(movie.getStyle());
+		}
+
+		// init text canvas
+		canvas.getContext2d().save();
+		canvas.getContext2d().translate(0, 0);
+		canvas.getContext2d().scale(1, 1);
+		canvas.getContext2d().setTextBaseline(TextBaseline.TOP);
+		canvas.getContext2d().setTextAlign(TextAlign.LEFT);
+		canvas.getContext2d().setFillStyle("#FFFFFF");
+		canvas.getContext2d().setFont("bold 11px sans-serif");
+		canvas.getContext2d().fillText(movieInfo.toString(), 50, PROJECTIONS_Y);
+		canvas.getContext2d().restore();
+
+		// init text canvas
+		canvas.getContext2d().save();
+		canvas.getContext2d().translate(0, 0);
+		canvas.getContext2d().scale(1, 1);
+		canvas.getContext2d().setTextBaseline(TextBaseline.TOP);
 		final Date currentTime = new Date();
 		boolean nextShow = true;
-		String text = null;
-		int index = 0, lineNb = 0, nbCol = 1, colX = 0;
-
-		if (projections.size() > 2 && projections.size() <= 6) {
-			nbCol = 2;
-		} else if (projections.size() > 6) {
-			nbCol = 3;
-		}
+		String times = null;
+		Date showtime = null;
+		int colX = 0;
+		int colY = 0;
+		int nbLang = 1;
+		Map<String, Integer> timesXByLang = new java.util.HashMap<String, Integer>();
 		for (ProjectionBean projection : projections) {
 			// build text
-			Date time = new Date(projection.getShowtime());
-			Date timeEnd = new Date(projection.getShowtime() + movieTime);
-			text = I18N.instance.projectionFrom() + " " + DateTimeFormat.getFormat("HH:mm").format(time) //
-					+ " " + I18N.instance.projectionTo() + " " + DateTimeFormat.getFormat("HH:mm").format(timeEnd);//
-			if (projection.getLang() != null) {
-				text += " (" + projection.getLang() + ")";
+			showtime = new Date(projection.getShowtime());
+			times = DateTimeFormat.getFormat("HH:mm").format(showtime);
+
+			// Group by lang
+			if (projection.getLang() != null && !timesXByLang.containsKey(projection.getLang())) {
+				colY = PROJECTIONS_Y + (LINE_HEIGHT * nbLang);
+				timesXByLang.put(projection.getLang(), colY);
+				canvas.getContext2d().setFillStyle("#FFFFFF");
+				canvas.getContext2d().setFont("italic 10px sans-serif");
+				canvas.getContext2d().setTextAlign(TextAlign.LEFT);
+				colX = PROJECTIONS_X;
+				canvas.getContext2d().fillText(projection.getLang() + " : ", colX, colY);
+				colX = (int) (colX + canvas.getContext2d().measureText(projection.getLang() + " : ").getWidth());
+				nbLang++;
+			} else if (projection.getLang() == null && !timesXByLang.containsKey("None")) {
+				colY = PROJECTIONS_Y + (LINE_HEIGHT * nbLang);
+				timesXByLang.put("None", colY);
+				colX = PROJECTIONS_X;
+				nbLang++;
 			}
 
-			// init text canvas
-			canvas.getContext2d().save();
-			canvas.getContext2d().translate(0, 0);
-			canvas.getContext2d().scale(1, 1);
-			canvas.getContext2d().setTextBaseline(TextBaseline.TOP);
+			if (timesXByLang.containsKey(projection.getLang())) {
+				colY = timesXByLang.get(projection.getLang());
+			} else {
+				colY = timesXByLang.get("None");
+			}
 
 			// Set style
-			if (time.getTime() < currentTime.getTime()) {
+			if (showtime.getTime() < currentTime.getTime()) {
 				canvas.getContext2d().setFillStyle("#999999");
 				canvas.getContext2d().setFont("italic 10px sans-serif");
 			} else if (nextShow) {
@@ -134,41 +171,10 @@ public class ZoomCoverflowLayout implements CoverflowLayout {
 				canvas.getContext2d().setFont("10px sans-serif");
 			}
 
-			// update column number & colX
-			if (nbCol == 1) {
-				canvas.getContext2d().setTextAlign(TextAlign.CENTER);
-				colX = 0;
-			} else if (nbCol == 2) {
-				if (index < projections.size() / 2) {
-					canvas.getContext2d().setTextAlign(TextAlign.LEFT);
-					colX = 10;
-				} else if (index >= projections.size() / 2) {
-					canvas.getContext2d().setTextAlign(TextAlign.RIGHT);
-					colX = -10;
-				}
-			} else if (nbCol == 3) {
-				if (index <= 2) {
-					canvas.getContext2d().setTextAlign(TextAlign.LEFT);
-					colX = 100;
-				} else if (index >= 3 && index <= 5) {
-					canvas.getContext2d().setTextAlign(TextAlign.CENTER);
-					colX = 0;
-				} else {
-					canvas.getContext2d().setTextAlign(TextAlign.RIGHT);
-					colX = -100;
-				}
-			}
-
+			canvas.getContext2d().setTextAlign(TextAlign.LEFT);
 			// draw text
-			canvas.getContext2d().fillText(text, (canvas.getCoordinateSpaceWidth() / 2) + colX, 230 + (lineNb * 15), Math.abs(colX));
-
-			// set next line number
-			if (lineNb < 2) {
-				lineNb++;
-			} else {
-				lineNb = 0;
-			}
-			index++;
+			canvas.getContext2d().fillText(times, colX, colY);
+			colX += TIME_WIDTH;
 		}
 		canvas.getContext2d().restore();
 	}
