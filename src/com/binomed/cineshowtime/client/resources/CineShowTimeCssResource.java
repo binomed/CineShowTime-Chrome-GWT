@@ -90,4 +90,8 @@ public interface CineShowTimeCssResource extends CssResource {
 
 	/* Preferences */
 	String preferenceLabel();
+
+	String preferenceData();
+
+	String preferenceDescription();
 }

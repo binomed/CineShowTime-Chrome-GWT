@@ -232,6 +232,8 @@ public interface I18N extends Messages {
 
 	String preference_user_agenda();
 
+	String preference_valid();
+
 	// Values for pref
 
 	String measure_1();
