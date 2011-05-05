@@ -44,6 +44,13 @@ public class SearchTheater extends Composite {
 		this.clientFactory = clientFactory;
 	}
 
+	public void setOmniBoxSearch(String omniSearch) {
+		if (StringUtils.isNotEmpty(omniSearch)) {
+			locationSearch.setText(omniSearch);
+			doSearch();
+		}
+	}
+
 	public SearchTheater() {
 		// Initialization
 		initWidget(uiBinder.createAndBindUi(this));

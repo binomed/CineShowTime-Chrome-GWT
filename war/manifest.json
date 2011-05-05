@@ -5,7 +5,7 @@
   "background_page": "CineShowTime_Chrome_GWT.html",
   "app": {
     "launch": {
-      "local_path": "CineShowTime_Chrome_GWT.html?locale=fr"
+      "local_path": "CineShowTime_Chrome_GWT.html"
     }
   },
   "omnibox": { "keyword" : "cine" },
@@ -19,5 +19,6 @@
     "http://*.binomed-cineshowtime-chrome.appspot.com/",
     "tabs", 
     "management"
-  ]
+  ],
+  "minimum_chrome_version": "9"
 }

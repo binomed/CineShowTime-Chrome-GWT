@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.binomed.cineshowtime.client.IClientFactory;
+import com.binomed.cineshowtime.client.Omnibox;
 import com.binomed.cineshowtime.client.cst.HttpParamsCst;
 import com.binomed.cineshowtime.client.event.db.DataBaseReadyDBEvent;
 import com.binomed.cineshowtime.client.event.db.LastChangeDBEvent;
@@ -76,11 +77,20 @@ public class MainWindow extends Composite {
 		initAndLoading();
 		// register to events
 
-		if (this.clientFactory.getDataBaseHelper().isDataBaseReady()) {
-			clientFactory.getDataBaseHelper().getLastRequest();
-			clientFactory.getEventBusHandler().addHandler(LastRequestDBEvent.TYPE, lastRequestHandler);
+		// We check if user enter a search from omnibox
+		String omniSearch = Omnibox.getSearchString();
+		boolean isOmniSearch = StringUtils.isNotEmpty(omniSearch);
+		if (!isOmniSearch) {
+			if (this.clientFactory.getDataBaseHelper().isDataBaseReady()) {
+				clientFactory.getDataBaseHelper().getLastRequest();
+				clientFactory.getEventBusHandler().addHandler(LastRequestDBEvent.TYPE, lastRequestHandler);
+			} else {
+				this.clientFactory.getEventBusHandler().addHandler(DataBaseReadyDBEvent.TYPE, dataReadyHandler);
+			}
 		} else {
-			this.clientFactory.getEventBusHandler().addHandler(DataBaseReadyDBEvent.TYPE, dataReadyHandler);
+			Omnibox.setSearchString("");
+			searchField.setOmniBoxSearch(omniSearch);
+
 		}
 		if (this.clientFactory.getDataBaseHelper().isShowLastChange()) {
 			new LastChangeDialog().center();
@@ -349,7 +359,6 @@ public class MainWindow extends Composite {
 		public void dataBaseReady() {
 			clientFactory.getDataBaseHelper().getLastRequest();
 			clientFactory.getEventBusHandler().addHandler(LastRequestDBEvent.TYPE, lastRequestHandler);
-
 		}
 	};
 
