@@ -51,6 +51,7 @@ public class ImageLoader {
 		var __this = this;
 		img.onload = function() {
 			if (!img.__isLoaded) {
+				img.style.cursor = "pointer";
 				__this.@com.binomed.cineshowtime.client.ui.coverflow.ImageLoader::onLoadComplete()();
 			}
 		}
