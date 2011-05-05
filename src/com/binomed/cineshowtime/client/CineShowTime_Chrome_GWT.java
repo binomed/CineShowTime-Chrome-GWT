@@ -26,6 +26,7 @@ public class CineShowTime_Chrome_GWT implements EntryPoint {
 		ClientFactory clientFactory = GWT.create(ClientFactory.class);
 		// Load and initialize the window
 		RootLayoutPanel.get().add(clientFactory.getMainWindow());
+
 		// testCoverflow();
 
 	}
@@ -34,10 +35,8 @@ public class CineShowTime_Chrome_GWT implements EntryPoint {
 		Coverflow c = new Coverflow(800, 300, new ZoomCoverflowLayout(null));
 
 		List<CoverData> covers = new ArrayList<CoverData>();
-		covers.add(new SimpleCover("1", "Affiche 1, \nAffiche<br/> 1,Affiche 1",
-				"http://imstars.aufeminin.com/stars/fan/black-eyed-peas/black-eyed-peas-20060403-119251.jpg"));
-		covers.add(new SimpleCover("2", "Affiche 2 Affiche 2 Affiche 2",
-				"http://imstars.aufeminin.com/stars/fan/black-eyed-peas/black-eyed-peas-20060403-119251.jpg"));
+		covers.add(new SimpleCover("1", "Affiche 1, \nAffiche<br/> 1,Affiche 1", "http://imstars.aufeminin.com/stars/fan/black-eyed-peas/black-eyed-peas-20060403-119251.jpg"));
+		covers.add(new SimpleCover("2", "Affiche 2 Affiche 2 Affiche 2", "http://imstars.aufeminin.com/stars/fan/black-eyed-peas/black-eyed-peas-20060403-119251.jpg"));
 		covers.add(new SimpleCover("3", "Affiche", "http://imstars.aufeminin.com/stars/fan/black-eyed-peas/black-eyed-peas-20060403-119251.jpg"));
 		covers.add(new SimpleCover("4", "Affiche 4", "http://imstars.aufeminin.com/stars/fan/black-eyed-peas/black-eyed-peas-20060403-119251.jpg"));
 		covers.add(new SimpleCover("5", "Affiche 5", "http://imstars.aufeminin.com/stars/fan/black-eyed-peas/black-eyed-peas-20060403-119251.jpg"));

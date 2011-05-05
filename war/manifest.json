@@ -2,6 +2,7 @@
   "name": "CineShowTime for Chrome",
   "version": "1.0",
   "description": "The best way to get your showtimes.",
+  "background_page": "CineShowTime_Chrome_GWT.html",
   "app": {
     "launch": {
       "local_path": "CineShowTime_Chrome_GWT.html?locale=fr"
@@ -17,6 +18,6 @@
     "notifications",
     "http://*.binomed-cineshowtime-chrome.appspot.com/",
     "tabs", 
-    "http://www.google.com/"
+    "management"
   ]
 }
