@@ -79,4 +79,9 @@ public class YoutubeBean implements CoverData {
 		return urlVideo;
 	}
 
+	@Override
+	public int getState() {
+		return -1;
+	}
+
 }

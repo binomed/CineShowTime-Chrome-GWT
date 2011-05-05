@@ -1,11 +1,12 @@
 {
-  "name": "CineShowTime for Chrome",
+  "name": "CineShowTime",
   "version": "1.0",
-  "description": "The best way to get your showtimes.",
-  "background_page": "CineShowTime_Chrome_GWT.html",
+  "default_locale":"en",
+  "description": "__MSG_appDescription__",
+  "background_page": "CstIndex.html",
   "app": {
     "launch": {
-      "local_path": "CineShowTime_Chrome_GWT.html"
+      "local_path": "CstIndex.html"
     }
   },
   "omnibox": { "keyword" : "cine" },

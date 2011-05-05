@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.binomed.cineshowtime.client.IClientFactory;
+import com.binomed.cineshowtime.client.event.service.RequestImdbEvent;
 import com.binomed.cineshowtime.client.model.MovieBean;
 import com.binomed.cineshowtime.client.model.ProjectionBean;
 import com.binomed.cineshowtime.client.resources.i18n.I18N;
@@ -24,10 +25,12 @@ public class ZoomCoverflowLayout implements CoverflowLayout {
 	private final Map<String, List<ProjectionBean>> movieMap;
 	private String centerCoverId;
 	private IClientFactory clientFactory;
+	private String theaterId;
 
-	public ZoomCoverflowLayout(IClientFactory clientFactory, Map<String, List<ProjectionBean>> movieMap) {
+	public ZoomCoverflowLayout(IClientFactory clientFactory, Map<String, List<ProjectionBean>> movieMap, String theaterId) {
 		this.movieMap = movieMap;
 		this.clientFactory = clientFactory;
+		this.theaterId = theaterId;
 	}
 
 	@Override
@@ -76,6 +79,11 @@ public class ZoomCoverflowLayout implements CoverflowLayout {
 	public void onDrawCovers(GWTCoverflowCanvas coverflowCanvas, Map<String, CoverElement> covers) {
 		for (CoverElement cover : covers.values()) {
 			if (cover.getLeftX() > (0 - cover.getWidth()) && cover.getLeftX() < coverflowCanvas.getWidth()) {
+				if (cover.getData().getState() != -1) {
+					if (cover.getData().getState() == MovieBean.STATE_NONE || cover.getData().getState() == MovieBean.STATE_IN_PROGRESS) {
+						clientFactory.getEventBusHandler().fireEvent(new RequestImdbEvent(theaterId, cover.getData().getId()));
+					}
+				}
 				cover.draw(coverflowCanvas.getCanvas());
 			}
 		}

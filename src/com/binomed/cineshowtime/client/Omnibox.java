@@ -70,7 +70,7 @@ public class Omnibox {
 						chrome.windows.getAll({"populate":true},function(windowArray){
 							var curWindow = null;
 							var nbWindow = 0;
-							var filter = "CineShowTime for Chrome";	
+							var filter = "CineShowTime";	
 							var tabName = "CineShowTime Chrome";					
 							for (var i = 0; i< windowArray.length; i++){
 								curWindow = windowArray[i];

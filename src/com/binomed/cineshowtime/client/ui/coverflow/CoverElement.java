@@ -60,28 +60,28 @@ public class CoverElement {
 			canvas.getContext2d().restore();
 		}
 
-		// Draw the mirror image
-		canvas.getContext2d().save();
-		canvas.getContext2d().setGlobalAlpha(0.5);
-		canvas.getContext2d().translate(0, getHeight());
-		canvas.getContext2d().scale(-1, 1);
-		canvas.getContext2d().rotate(Math.PI);
-		canvas.getContext2d().drawImage(image, leftX, -(topY + (getHeight())), getWidth(), getHeight());
-		canvas.getContext2d().restore();
-
-		// Draw the mirror image play
-		if (data != null && data.isVideo() && playVideoImg != null) {
-			canvas.getContext2d().save();
-			canvas.getContext2d().setGlobalAlpha(0.25);
-			canvas.getContext2d().translate(0, getHeight());
-			canvas.getContext2d().scale(-1, 1);
-			canvas.getContext2d().rotate(Math.PI);
-			canvas.getContext2d().drawImage(playVideoImg //
-					, leftX + ((getWidth()) / 2) - 24 //
-					, -(topY + (getHeight())) + ((getHeight()) / 2) - 24 //
-					, 48, 48);
-			canvas.getContext2d().restore();
-		}
+		// // Draw the mirror image
+		// canvas.getContext2d().save();
+		// canvas.getContext2d().setGlobalAlpha(0.5);
+		// canvas.getContext2d().translate(0, getHeight());
+		// canvas.getContext2d().scale(-1, 1);
+		// canvas.getContext2d().rotate(Math.PI);
+		// canvas.getContext2d().drawImage(image, leftX, -(topY + (getHeight())), getWidth(), getHeight());
+		// canvas.getContext2d().restore();
+		//
+		// // Draw the mirror image play
+		// if (data != null && data.isVideo() && playVideoImg != null) {
+		// canvas.getContext2d().save();
+		// canvas.getContext2d().setGlobalAlpha(0.25);
+		// canvas.getContext2d().translate(0, getHeight());
+		// canvas.getContext2d().scale(-1, 1);
+		// canvas.getContext2d().rotate(Math.PI);
+		// canvas.getContext2d().drawImage(playVideoImg //
+		// , leftX + ((getWidth()) / 2) - 24 //
+		// , -(topY + (getHeight())) + ((getHeight()) / 2) - 24 //
+		// , 48, 48);
+		// canvas.getContext2d().restore();
+		// }
 
 		// Add gradient to the mirror image
 		// canvas.getContext2d().save();

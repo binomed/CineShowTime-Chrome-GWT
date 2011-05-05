@@ -48,6 +48,8 @@ public class Coverflow {
 	/**
 	 * Initialize the coverflow with covers
 	 * 
+	 * @param lang
+	 * 
 	 * @param covers
 	 *            All Covers elements with an unique String ID as key Images URLs
 	 */

@@ -14,4 +14,6 @@ public interface CoverData {
 
 	String getVideoUrl();
 
+	int getState();
+
 }

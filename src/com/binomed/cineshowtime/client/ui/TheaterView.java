@@ -1,14 +1,14 @@
 package com.binomed.cineshowtime.client.ui;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.binomed.cineshowtime.client.IClientFactory;
 import com.binomed.cineshowtime.client.event.service.MovieLoadedEvent;
+import com.binomed.cineshowtime.client.event.service.RequestImdbEvent;
 import com.binomed.cineshowtime.client.event.ui.TheaterOpenEvent;
 import com.binomed.cineshowtime.client.handler.service.ImdbRespHandler;
+import com.binomed.cineshowtime.client.handler.service.RequestImdbHandler;
 import com.binomed.cineshowtime.client.handler.ui.TheaterOpenHandler;
 import com.binomed.cineshowtime.client.model.MovieBean;
 import com.binomed.cineshowtime.client.model.ProjectionBean;
@@ -51,11 +51,13 @@ public class TheaterView extends Composite {
 	@UiField
 	SimplePanel theaterCoverflow;
 	private Coverflow coverflow;
+	private String lang;
 
 	public TheaterView(final IClientFactory clientFactory, final TheaterBean theater) {
 		this.clientFactory = clientFactory;
 		this.theater = theater;
 		clientFactory.getEventBusHandler().addHandler(TheaterOpenEvent.TYPE, eventHandler);
+		lang = null;
 
 		// Create theater header
 		theaterHeader = new TheaterViewHeader(clientFactory, theater);
@@ -63,6 +65,11 @@ public class TheaterView extends Composite {
 		// Initialization
 		initWidget(uiBinder.createAndBindUi(this));
 		this.addStyleName(CstResource.instance.css().theaterContent());
+
+		final TheaterLocationCallBack callBack = new TheaterLocationCallBack();
+
+		// Request for localisation in order to get lang
+		UserGeolocation.getInstance().getPlaceMark(theater.getPlace().getSearchQuery(), callBack);
 
 		// Update theater informations
 		theaterPanel.setAnimationEnabled(true);
@@ -74,37 +81,15 @@ public class TheaterView extends Composite {
 					isCoverflowLoaded = true;
 
 					// Add the coverflow
-					coverflow = new Coverflow(800, 300, new ZoomCoverflowLayout(clientFactory, theater.getMovieMap()));
+					clientFactory.getEventBusHandler().addHandler(RequestImdbEvent.TYPE, eventHandler);
+					coverflow = new Coverflow(800, 300, new ZoomCoverflowLayout(clientFactory, theater.getMovieMap(), theater.getId()));
 					coverflow.addClickCoverListener(movieOpenListener);
 
 					CineShowTimeWS service = clientFactory.getCineShowTimeService();
 					// Images url to load in the coverflow
 					final List<CoverData> coversData = new ArrayList<CoverData>();
-					MovieBean movieTmp = null;
-					int i = 0;
-					Map<String, String> params = new HashMap<String, String>();
-					final Map<String, Integer> mapMovieIndex = new HashMap<String, Integer>();
 					for (java.util.Map.Entry<String, List<ProjectionBean>> entryMovie : theater.getMovieMap().entrySet()) {
-						movieTmp = service.getMovie(entryMovie.getKey());
-						mapMovieIndex.put(entryMovie.getKey(), i);
-						if (movieTmp.getState() == MovieBean.STATE_NONE) {
-							params.clear();
-							// Register to event
-							if (!hasRegister) {
-								hasRegister = true;
-								clientFactory.getEventBusHandler().addHandler(MovieLoadedEvent.TYPE, eventHandler);
-							}
-							// call the service
-							UserGeolocation.getInstance().getPlaceMark(theater.getPlace().getSearchQuery(), new TheaterLocationCallBack(movieTmp, theater, clientFactory));
-						} else if (movieTmp.getState() == MovieBean.STATE_IN_PROGRESS) {
-							// Register the service
-							if (!hasRegister) {
-								hasRegister = true;
-								clientFactory.getEventBusHandler().addHandler(MovieLoadedEvent.TYPE, eventHandler);
-							}
-						}
-						coversData.add(movieTmp);
-						i++;
+						coversData.add(service.getMovie(entryMovie.getKey()));
 					}
 					coverflow.init(coversData);
 					theaterCoverflow.add(coverflow.getCanvas());
@@ -128,17 +113,10 @@ public class TheaterView extends Composite {
 
 	};
 
-	static class TheaterLocationCallBack implements LocationCallback {
+	class TheaterLocationCallBack implements LocationCallback {
 
-		private final MovieBean movieTmp;
-		private final TheaterBean theater;
-		private final IClientFactory clientFactory;
-
-		public TheaterLocationCallBack(MovieBean movieTmp, TheaterBean theater, IClientFactory clientFactory) {
+		public TheaterLocationCallBack() {
 			super();
-			this.movieTmp = movieTmp;
-			this.theater = theater;
-			this.clientFactory = clientFactory;
 		}
 
 		@Override
@@ -157,12 +135,11 @@ public class TheaterView extends Composite {
 		}
 
 		private void doSearch(String lang) {
-			clientFactory.getCineShowTimeService().requestImdbInfo(movieTmp, lang != null ? lang : clientFactory.getLanguage(), theater.getPlace().getSearchQuery(),
-					theater.getId());
+			TheaterView.this.lang = lang;
 		}
 	}
 
-	class TheaterHandler implements ImdbRespHandler, TheaterOpenHandler {
+	class TheaterHandler implements ImdbRespHandler, TheaterOpenHandler, RequestImdbHandler {
 
 		@Override
 		public void onTheaterOpen(String source) {
@@ -189,6 +166,25 @@ public class TheaterView extends Composite {
 		@Override
 		public void onError(Throwable exception, String source) {
 			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void requestImdb(String source, String movieId) {
+			if (theater.getId().equals(source)) {
+
+				MovieBean movieTmp = clientFactory.getCineShowTimeService().getMovie(movieId);
+				if (movieTmp.getState() == MovieBean.STATE_NONE) {
+					// call the service
+					clientFactory.getCineShowTimeService().requestImdbInfo(movieTmp, lang != null ? lang : clientFactory.getLanguage(), theater.getPlace().getSearchQuery(), theater.getId());
+				}
+				// Register to event
+				if (!hasRegister) {
+					hasRegister = true;
+					clientFactory.getEventBusHandler().addHandler(MovieLoadedEvent.TYPE, eventHandler);
+				}
+
+			}
 
 		}
 

@@ -16,8 +16,8 @@
   <inherits name="com.google.code.gwt.storage.Html5Storage" />
   <!-- <inherits name="com.google.common.collect.Collect" />-->
   
-  <!-- <extend-property name="locale" values="en" />
-  <extend-property name="locale" values="fr" /> -->
+  <extend-property name="locale" values="en" />
+  <extend-property name="locale" values="fr" /> 
   
   <!-- Compile project only for Chrome -->
   <set-property name="user.agent" value="safari" /> 

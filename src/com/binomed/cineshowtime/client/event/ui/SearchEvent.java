@@ -13,11 +13,13 @@ public class SearchEvent extends GwtEvent<SearchHandler> {
 	public static final int SEARCH_DATE = 3;
 
 	private final int searchType;
-	private final String param;
+	private final String city;
+	private final int date;
 
-	public SearchEvent(final int searchType, final String param) {
+	public SearchEvent(final int searchType, final String city, final int date) {
 		this.searchType = searchType;
-		this.param = param;
+		this.city = city;
+		this.date = date;
 	}
 
 	@Override
@@ -27,7 +29,7 @@ public class SearchEvent extends GwtEvent<SearchHandler> {
 
 	@Override
 	protected void dispatch(SearchHandler handler) {
-		handler.onSearch(searchType, param);
+		handler.onSearch(searchType, city, date);
 	}
 
 }

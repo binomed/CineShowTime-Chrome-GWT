@@ -52,7 +52,10 @@ public class ProjectionView extends Composite {
 		if (StringUtils.equalsIC("12", clientFactory.getDataBaseHelper().readPref(I18N.instance.preference_gen_key_time_format()))) {
 			dateFormat = "hh:mm a";
 		}
-		int addsTime = Integer.valueOf(clientFactory.getDataBaseHelper().readPref(I18N.instance.preference_gen_key_time_adds()));
+		long addsTime = Long.valueOf(clientFactory.getDataBaseHelper().readPref(I18N.instance.preference_gen_key_time_adds())) * 60 * 1000;
+		Date dateMovieTime = new Date(movieTime);
+		long addMovieTime = Long.valueOf(DateTimeFormat.getFormat("HH").format(dateMovieTime)) * 60 * 60 * 1000 //
+				+ Long.valueOf(DateTimeFormat.getFormat("mm").format(dateMovieTime)) * 60 * 1000;
 
 		for (ProjectionBean projection : projections) {
 			movieStart.delete(0, movieStart.length());
@@ -60,7 +63,8 @@ public class ProjectionView extends Composite {
 				movieStart = movieStart.append(projection.getLang()).append(" : ");
 			}
 			Date time = new Date(projection.getShowtime());
-			Date timeEnd = new Date(projection.getShowtime() + movieTime + addsTime);
+			Date timeEnd = new Date(projection.getShowtime() + addMovieTime + addsTime);
+
 			text = I18N.instance.projectionFrom() + " " + DateTimeFormat.getFormat(dateFormat).format(time) //
 					+ " " + I18N.instance.projectionTo() + " " + DateTimeFormat.getFormat(dateFormat).format(timeEnd);//
 			if (projection.getLang() != null) {

@@ -2,6 +2,7 @@ package com.binomed.cineshowtime.client.ui;
 
 import com.binomed.cineshowtime.client.resources.CstResource;
 import com.binomed.cineshowtime.client.resources.i18n.I18N;
+import com.binomed.cineshowtime.client.util.StringUtils;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -61,7 +62,7 @@ public class TheaterViewResult extends Composite {
 			}
 		} else if (isDateSearch || (cineSearch != null)) {
 			String displayDate = dateSearch;
-			if (isDateSearch) {
+			if (isDateSearch && !StringUtils.equalsIC(displayDate, "0")) {
 				displayDate = I18N.instance.searchResultDate(displayDate);
 			} else {
 				displayDate = I18N.instance.searchResultToday();
@@ -112,16 +113,17 @@ public class TheaterViewResult extends Composite {
 		}
 	}
 
-	public void setCineSearch(String cineSearch) {
+	public void setCineSearch(String cineSearch, String dateSearch) {
 		this.cineSearch = cineSearch;
+		this.dateSearch = dateSearch;
 		if (cineSearch != null) {
 			isNear = false;
 			isFavorite = false;
 			isError = false;
-			isDateSearch = false;
-			dateSearch = null;
+			isDateSearch = dateSearch != null;
 			msgError = null;
 		}
+
 	}
 
 	public void setNbTheaters(int nbTheaters) {

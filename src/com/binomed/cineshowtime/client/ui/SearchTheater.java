@@ -85,10 +85,10 @@ public class SearchTheater extends Composite {
 							ArrayList<TheaterBean> theaterFavList = clientFactory.getDataBaseHelper().getTheaterFavCache();
 							clientFactory.getCineShowTimeService().requestNearTheatersFromFav(theaterFavList, day);
 						} else if ((lastRequest.getLongitude() != 0) && (lastRequest.getLatitude() != 0)) {
-							clientFactory.getEventBusHandler().fireEvent(new SearchEvent(SearchEvent.SEARCH_DATE, String.valueOf(day)));
+							clientFactory.getEventBusHandler().fireEvent(new SearchEvent(SearchEvent.SEARCH_DATE, null, day));
 							loadTheaterOfUserCityEnter(lastRequest.getCityName());
 						} else {
-							clientFactory.getEventBusHandler().fireEvent(new SearchEvent(SearchEvent.SEARCH_CINE, locationSearch.getText()));
+							clientFactory.getEventBusHandler().fireEvent(new SearchEvent(SearchEvent.SEARCH_CINE, lastRequest.getCityName(), day));
 							loadTheaterOfUserCityEnter(lastRequest.getCityName());
 						}
 					} else {
@@ -96,19 +96,14 @@ public class SearchTheater extends Composite {
 					}
 
 				} else {
-					clientFactory.getEventBusHandler().fireEvent(new SearchEvent(SearchEvent.SEARCH_NEAR, String.valueOf(day)));
+					clientFactory.getEventBusHandler().fireEvent(new SearchEvent(SearchEvent.SEARCH_NEAR, null, day));
 					// TODO : Message d'erreur de date
 				}
 			} else {
 				int day = getDaySearch();
 				// if date is not -1 we launch the last request we the new day
-				if (day != -1) {
-					clientFactory.getEventBusHandler().fireEvent(new SearchEvent(SearchEvent.SEARCH_DATE, String.valueOf(day)));
-					loadTheaterOfUserCityEnter(locationSearch.getText());
-				} else {
-					clientFactory.getEventBusHandler().fireEvent(new SearchEvent(SearchEvent.SEARCH_CINE, locationSearch.getText()));
-					loadTheaterOfUserCityEnter(locationSearch.getText());
-				}
+				clientFactory.getEventBusHandler().fireEvent(new SearchEvent(SearchEvent.SEARCH_CINE, locationSearch.getText(), day));
+				loadTheaterOfUserCityEnter(locationSearch.getText());
 			}
 
 		} else {
@@ -170,12 +165,12 @@ public class SearchTheater extends Composite {
 
 	@UiHandler("nearSearch")
 	void handleNearSearchClick(ClickEvent e) {
-		clientFactory.getEventBusHandler().fireEvent(new SearchEvent(SearchEvent.SEARCH_NEAR, null));
+		clientFactory.getEventBusHandler().fireEvent(new SearchEvent(SearchEvent.SEARCH_NEAR, null, 0));
 	}
 
 	@UiHandler("favoriteSearch")
 	void handleFavoriteSearchClick(ClickEvent e) {
-		clientFactory.getEventBusHandler().fireEvent(new SearchEvent(SearchEvent.SEARCH_FAV, null));
+		clientFactory.getEventBusHandler().fireEvent(new SearchEvent(SearchEvent.SEARCH_FAV, null, 0));
 		clientFactory.getEventBusHandler().fireEvent(new FavOpenEvent());
 	}
 

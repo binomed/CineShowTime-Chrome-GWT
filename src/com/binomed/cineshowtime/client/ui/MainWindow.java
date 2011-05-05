@@ -388,7 +388,7 @@ public class MainWindow extends Composite {
 
 	private final SearchHandler searchHandler = new SearchHandler() {
 		@Override
-		public void onSearch(int searchType, String param) {
+		public void onSearch(int searchType, String city, int day) {
 			initAndLoading();
 			if (searchType == SearchEvent.SEARCH_NEAR) {
 				loadTheatersOfUserLocation(0);
@@ -396,10 +396,14 @@ public class MainWindow extends Composite {
 			} else if (searchType == SearchEvent.SEARCH_FAV) {
 				searchResultHeader.setFavorite(true);
 			} else if (searchType == SearchEvent.SEARCH_CINE) {
-				searchResultHeader.setCineSearch(param);
+				if (day != -1) {
+					searchResultHeader.setCineSearch(city, String.valueOf(day));
+				} else {
+					searchResultHeader.setError(I18N.instance.msgNoDateMatch());
+				}
 			} else if (searchType == SearchEvent.SEARCH_DATE) {
-				if (Integer.valueOf(param) != -1) {
-					searchResultHeader.setDateSearch(param);
+				if (day != -1) {
+					searchResultHeader.setDateSearch(String.valueOf(day));
 				} else {
 					searchResultHeader.setError(I18N.instance.msgNoDateMatch());
 				}
