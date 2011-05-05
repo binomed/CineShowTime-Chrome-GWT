@@ -29,6 +29,8 @@ public class ProjectionView extends Composite {
 
 	private IClientFactory clientFactory;
 
+	private boolean isUpdated = false;
+
 	public void setClientFactory(IClientFactory clientFactory) {
 		this.clientFactory = clientFactory;
 	}
@@ -39,6 +41,7 @@ public class ProjectionView extends Composite {
 	}
 
 	public void updateProjections(String theaterName, long movieTime, List<ProjectionBean> projections) {
+		isUpdated = true;
 		movieSeanceGroup.setCaptionText(theaterName);
 		String text;
 		Label projectionTimeStart;
@@ -78,6 +81,10 @@ public class ProjectionView extends Composite {
 
 			movieSeanceList.add(projectionTimeStart);
 		}
+	}
+
+	public boolean isUpdated() {
+		return isUpdated;
 	}
 
 	interface ProjectionViewUiBinder extends UiBinder<Widget, ProjectionView> {

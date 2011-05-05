@@ -34,7 +34,7 @@ public class CineShowTime_Chrome_GWT implements EntryPoint {
 	}
 
 	public void testCoverflow() {
-		Coverflow c = new Coverflow(800, 300, new ZoomCoverflowLayout(null));
+		Coverflow c = new Coverflow(800, 300, new ZoomCoverflowLayout(null, null));
 
 		List<CoverData> covers = new ArrayList<CoverData>();
 		covers.add(new SimpleCover("1", "Affiche 1, \nAffiche<br/> 1,Affiche 1", "http://imstars.aufeminin.com/stars/fan/black-eyed-peas/black-eyed-peas-20060403-119251.jpg"));

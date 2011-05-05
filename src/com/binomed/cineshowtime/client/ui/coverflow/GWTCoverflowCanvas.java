@@ -50,10 +50,11 @@ public final class GWTCoverflowCanvas {
 		canvas.addMouseMoveHandler(new MouseMoveHandler() {
 			@Override
 			public void onMouseMove(MouseMoveEvent event) {
+				int x = event.getClientX() - canvas.getAbsoluteLeft();
 				if (activeDrag) {
-					int x = event.getClientX() - canvas.getAbsoluteLeft();
 					mouseMoveEvent.onCoverMove(x);
 				}
+				mouseMoveEvent.onCoverOver(x);
 			}
 		});
 	}

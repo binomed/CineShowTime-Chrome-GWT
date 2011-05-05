@@ -45,7 +45,9 @@ public class TheaterViewHeader extends Composite {
 		if (theater.getPlace() != null) {
 			theaterPlace.setText(theater.getPlace().getSearchQuery());
 		}
-		theaterPhone.setText(", " + I18N.instance.theaterPhone(theater.getPhoneNumber()));
+		if (theater.getPhoneNumber() != null) {
+			theaterPhone.setText(", " + I18N.instance.theaterPhone(theater.getPhoneNumber()));
+		}
 		theaterOpen.setResource(CstResource.instance.collapse());
 
 		theaterOpen.addStyleName(CstResource.instance.css().pointerHand());

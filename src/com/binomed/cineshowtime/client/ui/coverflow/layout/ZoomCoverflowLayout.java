@@ -4,10 +4,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.binomed.cineshowtime.client.IClientFactory;
 import com.binomed.cineshowtime.client.model.MovieBean;
 import com.binomed.cineshowtime.client.model.ProjectionBean;
+import com.binomed.cineshowtime.client.resources.i18n.I18N;
 import com.binomed.cineshowtime.client.ui.coverflow.CoverElement;
 import com.binomed.cineshowtime.client.ui.coverflow.GWTCoverflowCanvas;
+import com.binomed.cineshowtime.client.util.StringUtils;
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d.TextAlign;
 import com.google.gwt.canvas.dom.client.Context2d.TextBaseline;
@@ -20,9 +23,11 @@ public class ZoomCoverflowLayout implements CoverflowLayout {
 
 	private final Map<String, List<ProjectionBean>> movieMap;
 	private String centerCoverId;
+	private IClientFactory clientFactory;
 
-	public ZoomCoverflowLayout(Map<String, List<ProjectionBean>> movieMap) {
+	public ZoomCoverflowLayout(IClientFactory clientFactory, Map<String, List<ProjectionBean>> movieMap) {
 		this.movieMap = movieMap;
+		this.clientFactory = clientFactory;
 	}
 
 	@Override
@@ -70,7 +75,7 @@ public class ZoomCoverflowLayout implements CoverflowLayout {
 	@Override
 	public void onDrawCovers(GWTCoverflowCanvas coverflowCanvas, Map<String, CoverElement> covers) {
 		for (CoverElement cover : covers.values()) {
-			if (cover.getLeftX() > 0 && cover.getLeftX() < coverflowCanvas.getWidth()) {
+			if (cover.getLeftX() > (0 - cover.getWidth()) && cover.getLeftX() < coverflowCanvas.getWidth()) {
 				cover.draw(coverflowCanvas.getCanvas());
 			}
 		}
@@ -129,10 +134,14 @@ public class ZoomCoverflowLayout implements CoverflowLayout {
 		int colY = 0;
 		int nbLang = 1;
 		Map<String, Integer> timesXByLang = new java.util.HashMap<String, Integer>();
+		String dateFormat = "HH:mm";
+		if (StringUtils.equalsIC("12", clientFactory.getDataBaseHelper().readPref(I18N.instance.preference_gen_key_time_format()))) {
+			dateFormat = "hh:mm a";
+		}
 		for (ProjectionBean projection : projections) {
 			// build text
 			showtime = new Date(projection.getShowtime());
-			times = DateTimeFormat.getFormat("HH:mm").format(showtime);
+			times = DateTimeFormat.getFormat(dateFormat).format(showtime);
 
 			// Group by lang
 			if (projection.getLang() != null && !timesXByLang.containsKey(projection.getLang())) {

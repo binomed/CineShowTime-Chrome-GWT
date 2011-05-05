@@ -69,6 +69,8 @@ public class MovieView extends Composite {
 		// Initialization
 		initWidget(uiBinder.createAndBindUi(this));
 
+		movieProjections.setClientFactory(clientFactory);
+
 		this.movie = clientFactory.getCineShowTimeService().getMovie(idMovie);
 
 		if ((movie.getState() == MovieBean.STATE_NONE) || (movie.getState() == MovieBean.STATE_IN_PROGRESS)) {
@@ -98,10 +100,6 @@ public class MovieView extends Composite {
 			imgPoster.setUrl(CstResource.instance.no_poster().getURL());
 		}
 
-		imgPoster.setWidth("185px");
-		imgPoster.setHeight("245px");
-		imgPoster.removeStyleDependentName("gwt");
-		imgPoster.addStyleName(CstResource.instance.css().moviePoster());
 	}
 
 	private void updateMovieView() {
@@ -186,6 +184,13 @@ public class MovieView extends Composite {
 		} else {
 			Label labelEmptyReview = new Label(I18N.instance.noReview());
 			movieReview.add(labelEmptyReview);
+		}
+		imgPoster.setWidth("185px");
+		imgPoster.setHeight("245px");
+		imgPoster.removeStyleDependentName("gwt");
+		imgPoster.addStyleName(CstResource.instance.css().moviePoster());
+		if (!movieProjections.isUpdated()) {
+			movieProjections.updateProjections(theater.getTheaterName(), movie.getMovieTime(), theater.getMovieMap().get(movie.getId()));
 		}
 	}
 

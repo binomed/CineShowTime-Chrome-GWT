@@ -47,7 +47,9 @@ public class Coverflow {
 
 	/**
 	 * Initialize the coverflow with covers
-	 * @param covers All Covers elements with an unique String ID as key Images URLs
+	 * 
+	 * @param covers
+	 *            All Covers elements with an unique String ID as key Images URLs
 	 */
 	public void init(final List<CoverData> coversData) {
 		// Initialize Coverflow data
@@ -61,6 +63,7 @@ public class Coverflow {
 			covers.put(coverData.getId(), new CoverElement(coverData));
 		}
 		layout.onInitCovers(covers);
+		layout.onUpdateCovers(idMiddleCover, covers, (coverflowCanvas.getWidth() / 2) - (covers.get(idMiddleCover).getLeftX() + (covers.get(idMiddleCover).getWidth() / 2)));
 
 		// Add coverflow move listener
 		coverflowCanvas.setMouseMoveEvent(new CoverflowMouseEvent() {
@@ -90,6 +93,16 @@ public class Coverflow {
 			public void onCoverMove(int x) {
 
 			}
+
+			@Override
+			public void onCoverOver(int x) {
+				String idSelectedCover = CoverflowUtil.getIdOfCoverFromX(covers, x);
+				if (idSelectedCover != null) {
+					coverflowCanvas.getCanvas().setStyleName("pointerHand", true);
+				} else {
+					coverflowCanvas.getCanvas().setStyleName("pointerHand", false);
+				}
+			}
 		});
 
 		ImageLoader.loadImages(covers, new ImageLoader.LoadImageCallBack() {
@@ -98,17 +111,20 @@ public class Coverflow {
 				final CoverElement loadedCover = covers.get(coverId);
 				if (loadedCover != null) {
 					loadedCover.setImage(imageElement);
-					loadedCover.draw(coverflowCanvas.getCanvas());
+					layout.onDrawCovers(coverflowCanvas, covers);
 				}
 			}
 		});
-		moveToCover(idMiddleCover);
+
 	}
 
 	/**
 	 * Change the image of the specified cover (by the index)
-	 * @param index Index of the cover
-	 * @param imageUrl Image URL of the cover
+	 * 
+	 * @param index
+	 *            Index of the cover
+	 * @param imageUrl
+	 *            Image URL of the cover
 	 */
 	public void updateCover(String idCover, String imageUrl) {
 		if (StringUtils.isEmpty(imageUrl)) {
@@ -119,6 +135,7 @@ public class Coverflow {
 			public void onImageLoaded(String coverId, ImageElement imageElement) {
 				final CoverElement loadedCover = covers.get(coverId);
 				if (loadedCover != null) {
+					imageElement.setClassName("pointerHand");
 					loadedCover.setImage(imageElement);
 					drawCoverflow();
 				}
@@ -137,7 +154,9 @@ public class Coverflow {
 
 	/**
 	 * Move the specified cover id to the center of the coverflow
-	 * @param coverIndex Index of the cover
+	 * 
+	 * @param coverIndex
+	 *            Index of the cover
 	 */
 	private void moveToCover(String idCover) {
 		// Compute image center & move distance
@@ -159,8 +178,11 @@ public class Coverflow {
 	/**
 	 * Animate the coverflow moves <br/>
 	 * http://www.html5canvastutorials.com/advanced/html5-canvas-linear-motion-animation/
-	 * @param direction Direction of the coverflow
-	 * @param distance Distance to animate
+	 * 
+	 * @param direction
+	 *            Direction of the coverflow
+	 * @param distance
+	 *            Distance to animate
 	 */
 	private void animateCoverflow(final int direction, final int distance) {
 		if (covers.containsKey(idFirstCover)) {
@@ -217,7 +239,8 @@ public class Coverflow {
 		// coverflowCanvas.getCanvas().getContext2d().scale(1, 1);
 		// coverflowCanvas.getCanvas().getContext2d().setFillStyle("#FF0000");
 		// coverflowCanvas.getCanvas().getContext2d().beginPath();
-		// coverflowCanvas.getCanvas().getContext2d().arc(coverflowCanvas.getWidth() / 2, coverflowCanvas.getHeight() / 2, 2, 0, Math.PI * 2, true);
+		// coverflowCanvas.getCanvas().getContext2d().arc(coverflowCanvas.getWidth() / 2, coverflowCanvas.getHeight() /
+		// 2, 2, 0, Math.PI * 2, true);
 		// coverflowCanvas.getCanvas().getContext2d().closePath();
 		// coverflowCanvas.getCanvas().getContext2d().fill();
 		// coverflowCanvas.getCanvas().getContext2d().restore();
