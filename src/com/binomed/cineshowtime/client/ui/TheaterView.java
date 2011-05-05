@@ -74,7 +74,7 @@ public class TheaterView extends Composite {
 					isCoverflowLoaded = true;
 
 					// Add the coverflow
-					coverflow = new Coverflow(800, 300, new ZoomCoverflowLayout(theater.getMovieMap()));
+					coverflow = new Coverflow(800, 300, new ZoomCoverflowLayout(clientFactory, theater.getMovieMap()));
 					coverflow.addClickCoverListener(movieOpenListener);
 
 					CineShowTimeWS service = clientFactory.getCineShowTimeService();
@@ -95,8 +95,7 @@ public class TheaterView extends Composite {
 								clientFactory.getEventBusHandler().addHandler(MovieLoadedEvent.TYPE, eventHandler);
 							}
 							// call the service
-							UserGeolocation.getInstance().getPlaceMark(theater.getPlace().getSearchQuery(),
-									new TheaterLocationCallBack(movieTmp, theater, clientFactory));
+							UserGeolocation.getInstance().getPlaceMark(theater.getPlace().getSearchQuery(), new TheaterLocationCallBack(movieTmp, theater, clientFactory));
 						} else if (movieTmp.getState() == MovieBean.STATE_IN_PROGRESS) {
 							// Register the service
 							if (!hasRegister) {
@@ -158,8 +157,8 @@ public class TheaterView extends Composite {
 		}
 
 		private void doSearch(String lang) {
-			clientFactory.getCineShowTimeService().requestImdbInfo(movieTmp, lang != null ? lang : clientFactory.getLanguage(),
-					theater.getPlace().getSearchQuery(), theater.getId());
+			clientFactory.getCineShowTimeService().requestImdbInfo(movieTmp, lang != null ? lang : clientFactory.getLanguage(), theater.getPlace().getSearchQuery(),
+					theater.getId());
 		}
 	}
 

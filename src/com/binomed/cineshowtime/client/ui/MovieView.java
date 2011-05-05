@@ -189,7 +189,9 @@ public class MovieView extends Composite {
 		imgPoster.setHeight("245px");
 		imgPoster.removeStyleDependentName("gwt");
 		imgPoster.addStyleName(CstResource.instance.css().moviePoster());
-		movieProjections.updateProjections(theater.getTheaterName(), movie.getMovieTime(), theater.getMovieMap().get(movie.getId()));
+		if (!movieProjections.isUpdated()) {
+			movieProjections.updateProjections(theater.getTheaterName(), movie.getMovieTime(), theater.getMovieMap().get(movie.getId()));
+		}
 	}
 
 	public MovieBean getMovie() {

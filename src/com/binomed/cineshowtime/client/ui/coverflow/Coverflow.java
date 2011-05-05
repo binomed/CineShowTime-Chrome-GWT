@@ -93,6 +93,16 @@ public class Coverflow {
 			public void onCoverMove(int x) {
 
 			}
+
+			@Override
+			public void onCoverOver(int x) {
+				String idSelectedCover = CoverflowUtil.getIdOfCoverFromX(covers, x);
+				if (idSelectedCover != null) {
+					coverflowCanvas.getCanvas().setStyleName("pointerHand", true);
+				} else {
+					coverflowCanvas.getCanvas().setStyleName("pointerHand", false);
+				}
+			}
 		});
 
 		ImageLoader.loadImages(covers, new ImageLoader.LoadImageCallBack() {
@@ -100,7 +110,6 @@ public class Coverflow {
 			public void onImageLoaded(String coverId, ImageElement imageElement) {
 				final CoverElement loadedCover = covers.get(coverId);
 				if (loadedCover != null) {
-					imageElement.setClassName("pointerHand");
 					loadedCover.setImage(imageElement);
 					layout.onDrawCovers(coverflowCanvas, covers);
 				}

@@ -19,6 +19,8 @@ public abstract class CoverflowMouseEvent {
 
 	public abstract void onCoverMove(int x);
 
+	public abstract void onCoverOver(int x);
+
 	public void setMouseDownCoordonates(int x) {
 		this.firstX = x;
 	}
